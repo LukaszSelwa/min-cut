@@ -7,4 +7,8 @@ UndirectedWeightedGraph::UndirectedWeightedGraph(size_t size): vertices(std::vec
         vertices[i].SetMyIdx(i);
 }
 
+int UndirectedWeightedGraph::GetSize() const {
+    return vertices.size();
+}
+
 }

@@ -10,6 +10,7 @@ class UndirectedWeightedGraph {
 
   public:
     UndirectedWeightedGraph(size_t size);
+    int GetSize() const;
 };
 
 }

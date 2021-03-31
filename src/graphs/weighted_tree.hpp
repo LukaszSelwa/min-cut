@@ -11,6 +11,7 @@ class WeightedTree {
 
   public:
     WeightedTree(size_t size);
+    WeightedTree(): WeightedTree(0) { }
     void AddEdge(int idx1, int idx2, int weight);
 };
 
