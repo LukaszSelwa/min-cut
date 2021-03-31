@@ -1,0 +1,10 @@
+#ifndef RANGE_SEARCH_STRUCTURE
+#define RANGE_SEARCH_STRUCTURE
+
+class RangeSearchStructure {
+  public:
+    virtual void AddPoint(int x, int y) = 0;
+    virtual int GetSumInRectangle(int x0, int y0, int x1, int y1) = 0;
+};
+
+#endif /* RANGE_SEARCH_STRUCTURE */
