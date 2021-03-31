@@ -1,0 +1,22 @@
+{
+    "configurations": [
+        {
+            "name": "Mac",
+            "includePath": [
+                "${workspaceFolder}",
+                "${workspaceFolder}/src"
+            ],
+            "defines": [],
+            "macFrameworkPath": [],
+            "compilerPath": "${default}",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "macos-gcc-x64",
+            "browse": {
+                "path": ["${workspaceFolder}/src"],
+                "limitSymbolsToIncludedHeaders": true,
+                "databaseFilename": "${default}"
+            }
+        }
+    ],
+    "version": 4
+}

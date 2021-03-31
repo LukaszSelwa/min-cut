@@ -1,8 +1,8 @@
-#ifndef UNDIRECTED_WEIGHTED_GRAPH
-#define UNDIRECTED_WEIGHTED_GRAPH
+#ifndef VERTICES
+#define VERTICES
 #include <vector>
 
-namespace graph {
+namespace graphs {
 
 class WeightedEdge {
   public:
@@ -15,17 +15,16 @@ class WeightedEdge {
 };
 
 class Vertice {
+    int myIdx;
     std::vector<WeightedEdge> Neighbors;
-  public:
-    Vertice(): Neighbors(std::vector<WeightedEdge>(0)) { }
 
+  public:
+    Vertice(): myIdx(0), Neighbors(std::vector<WeightedEdge>(0)) { }
+    void SetMyIdx(int idx);
     void AddNeighbour(int idx, int weight);
     const std::vector<WeightedEdge> & GetNeighbors();
 };
 
-class UndirectedWeightedGraph {
-    
-};
-
 }
-#endif /* !UNDIRECTED_WEIGHTED_GRAPH */
+
+#endif /* VERTICES */
