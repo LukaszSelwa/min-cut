@@ -15,7 +15,7 @@ OFILES = $(HFILES:$(SRCDIR)/%.hpp=$(OBJDIR)/%.o)
 T_CFILES = $(shell find $(T_SRCDIR) -name "*.cpp")
 T_OFILES = $(T_CFILES:$(T_SRCDIR)/%.cpp=$(T_OBJDIR)/%.o)
 
-.PHONY: print
+.PHONY: run_tests build_tests
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(SRCDIR)/%.hpp
 	$(CC) $(CFLAGS) -o $@ -c $<
@@ -26,6 +26,8 @@ $(T_OBJDIR)/%.o: $(T_SRCDIR)/%.cpp
 $(T_EXEMAIN): $(T_OFILES) $(OFILES)
 	$(CC) $(CFLAGS) $(T_FLAGS) -o $@ $^ 
 
-print:
-	echo $(OFILES)
+build_tests: $(T_EXEMAIN)
+
+run_tests: $(T_EXEMAIN)
+	./$(T_EXEMAIN)
 

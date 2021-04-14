@@ -19,7 +19,7 @@ void IntervalTree::AddPoint(int idx, int val) {
 int IntervalTree::SumInRange(int begin, int end) {
     int sum = 0;
     int tBegin = getTreeIndex(begin), tEnd = getTreeIndex(end);
-    while (tBegin < tEnd) {
+    while (tBegin <= tEnd) {
         if (isRightChild(tBegin)) {
             sum += baseIntervals[tBegin];
             tBegin++;
@@ -41,4 +41,8 @@ void IntervalTree::updateBaseInterval (int tIdx) {
 
 int IntervalTree::getTreeIndex (int idx) {
     return idx + nrLeaves;
+}
+
+size_t IntervalTree::GetSize () const {
+    return size;
 }

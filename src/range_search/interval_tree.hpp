@@ -14,6 +14,7 @@ class IntervalTree {
     
     /* Inclusive range: [begin, end] */
     int SumInRange(int begin, int end);
+    size_t GetSize() const;
   private:
     void updateBaseInterval(int tIdx);
     inline int getTreeIndex(int idx);
