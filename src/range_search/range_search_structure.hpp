@@ -3,7 +3,7 @@
 
 class RangeSearchStructure {
   public:
-    virtual void AddPoint(int x, int y) = 0;
+    virtual void AddPoint(int x, int y, int val) = 0;
     virtual int GetSumInRectangle(int x0, int y0, int x1, int y1) = 0;
 };
 
