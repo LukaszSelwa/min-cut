@@ -8,8 +8,12 @@ IntervalTree::IntervalTree(size_t size): size(size) {
 }
 
 void IntervalTree::AddPoint(int idx, int val) {
+    SetPoint(idx, val + PointVal(idx));
+}
+
+void IntervalTree::SetPoint(int idx, int val) {
     int tIdx = getTreeIndex(idx);
-    baseIntervals[tIdx] += val;
+    baseIntervals[tIdx] = val;
     while (tIdx > 1) {
         tIdx = parentInterval(tIdx);
         updateBaseInterval(tIdx);
@@ -31,8 +35,11 @@ int IntervalTree::SumInRange(int begin, int end) {
         tBegin = parentInterval(tBegin);
         tEnd = parentInterval(tEnd);
     }
-    
     return sum;
+}
+
+int IntervalTree::PointVal(int idx) {
+    return baseIntervals[getTreeIndex(idx)];
 }
 
 void IntervalTree::updateBaseInterval (int tIdx) {

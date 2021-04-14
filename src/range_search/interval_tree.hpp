@@ -11,9 +11,11 @@ class IntervalTree {
     IntervalTree(size_t size);
     IntervalTree(): IntervalTree(0) { }
     void AddPoint(int idx, int val);
+    void SetPoint(int idx, int val);
     
     /* Inclusive range: [begin, end] */
     int SumInRange(int begin, int end);
+    int PointVal(int idx);
     size_t GetSize() const;
   private:
     void updateBaseInterval(int tIdx);
