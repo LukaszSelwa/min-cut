@@ -20,6 +20,7 @@ class Vertice {
 
   public:
     Vertice(): myIdx(0), Neighbors(std::vector<WeightedEdge>(0)) { }
+    int GetIdx();
     void SetMyIdx(int idx);
     void AddNeighbour(int idx, int weight);
     const std::vector<WeightedEdge> & GetNeighbors();

@@ -6,6 +6,10 @@ void Vertice::AddNeighbour(int idx, int weight) {
     Neighbors.push_back(WeightedEdge(myIdx, idx, weight));
 }
 
+int Vertice::GetIdx() {
+    return myIdx;
+}
+
 void Vertice::SetMyIdx(int idx) {
     myIdx = idx;
 }
