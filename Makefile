@@ -15,7 +15,7 @@ OFILES = $(HFILES:$(SRCDIR)/%.hpp=$(OBJDIR)/%.o)
 T_CFILES = $(shell find $(T_SRCDIR) -name "*.cpp")
 T_OFILES = $(T_CFILES:$(T_SRCDIR)/%.cpp=$(T_OBJDIR)/%.o)
 
-.PHONY: run_tests build_tests
+.PHONY: run_tests build_tests clear
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(SRCDIR)/%.hpp
 	$(CC) $(CFLAGS) -o $@ -c $<
@@ -31,3 +31,5 @@ build_tests: $(T_EXEMAIN)
 run_tests: $(T_EXEMAIN)
 	./$(T_EXEMAIN)
 
+clean:
+	rm $(OFILES) $(T_OFILES) $(T_EXEMAIN) 
