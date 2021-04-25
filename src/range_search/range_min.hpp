@@ -3,14 +3,14 @@
 
 #include <vector>
 
-class RangeMax {
+class RangeMin {
     std::vector<std::vector<int> > pow2mins;
     std::vector<int> florLog2lookup;
   public:
-    RangeMax() { }
+    RangeMin() { }
     void Initialize(int* begin, int* end);
     /* returns minimum value in range [beginIdx, endIdx]*/
-    int Max(int beginIdx, int endIdx);
+    int Min(int beginIdx, int endIdx);
 
   private:
     void SetUpLookup(size_t size);
