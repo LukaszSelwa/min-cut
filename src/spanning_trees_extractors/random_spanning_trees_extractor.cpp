@@ -10,10 +10,12 @@ size_t calcNumberOfSpanningTrees (size_t graphSize) {
     return result;
 }
 
-graphs::WeightedTree GenerateRandomSpanningTree(const graphs::UndirectedWeightedGraph & graph) {
+graphs::WeightedTree GenerateRandomSpanningTree (const graphs::UndirectedWeightedGraph & graph) {
     int n = graph.GetSize();
     graphs::WeightedTree spanningTree(n);
-    // TODO: random spanning tree
+    std::vector<bool> connected(n, false);
+
+
     return spanningTree;
 }
 
