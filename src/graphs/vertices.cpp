@@ -14,7 +14,7 @@ void Vertice::SetMyIdx(int idx) {
     myIdx = idx;
 }
 
-const std::vector<WeightedEdge> & Vertice::GetNeighbors() {
+std::vector<WeightedEdge> & Vertice::GetNeighbors() {
     return Neighbors;
 }
 

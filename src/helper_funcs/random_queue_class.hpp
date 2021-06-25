@@ -1,5 +1,6 @@
 #ifndef RANDOM_QUEUE_CLASS
 #define RANDOM_QUEUE_CLASS
+#include <algorithm>
 #include <memory>
 #include <random>
 #include <vector>

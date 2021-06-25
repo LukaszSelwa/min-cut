@@ -11,6 +11,8 @@ class UndirectedWeightedGraph {
   public:
     UndirectedWeightedGraph(size_t size);
     int GetSize() const;
+    void AddEdge();
+    Vertice & operator[] (size_t i);
 };
 
 }
