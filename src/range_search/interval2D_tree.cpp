@@ -17,6 +17,8 @@ void Interval2DTree::AddPoint(int x, int y, int val) {
 }
 
 int Interval2DTree::GetSumInRectangle(int x0, int x1, int y0, int y1) {
+    if (x0 > x1 || y0 > y1)
+        return 0;
     int sum = 0;
     int tY0 = getTreeIndex(y0), tY1 = getTreeIndex(y1);
     while (tY0 <= tY1) {

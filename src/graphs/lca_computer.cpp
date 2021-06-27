@@ -2,10 +2,10 @@
 
 namespace graphs {
 
-LCAComputer::LCAComputer(WeightedTree* tree): tree(tree) { }
+LCAComputer::LCAComputer(std::shared_ptr<graphs::WeightedTree> tree): tree(tree) { }
 
 void LCAComputer::Initialize() {
-    reIndex = reIndexInv = firstVisit = std::vector<int> (tree->vertices.size(), -1);
+    reIndex = reIndexInv = firstVisit = std::vector<int> (tree->size, -1);
     std::vector<int> visitList(0);
     int unusedIdx = 0;
 

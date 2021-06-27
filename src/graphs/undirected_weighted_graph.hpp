@@ -6,12 +6,12 @@
 namespace graphs {
 
 class UndirectedWeightedGraph {
-    std::vector<Vertice> vertices;
-
   public:
+    const size_t size;
+    std::vector<Vertice> vertices;
     UndirectedWeightedGraph(size_t size);
     int GetSize() const;
-    void AddEdge();
+    void AddEdge(const WeightedEdge edge);
     Vertice & operator[] (size_t i);
 };
 

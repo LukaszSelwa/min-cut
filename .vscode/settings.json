@@ -64,5 +64,10 @@
         "iomanip": "cpp",
         "typeindex": "cpp",
         "variant": "cpp"
-    }
+    },
+    "cSpell.words": [
+        "Gawrychowski",
+        "Karger",
+        "Mozes"
+    ]
 }
