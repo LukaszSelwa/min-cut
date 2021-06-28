@@ -8,11 +8,11 @@ int CalcCostBottomUp(std::shared_ptr<graphs::WeightedTree> &tree,
                      int p_idx);
 
 int GMWStructure::GetLowerEndpoint(graphs::WeightedEdge e) {
-    return postorder_visit[e.srcIdx] < postorder_visit[e.destIdx] ? e.destIdx : e.srcIdx;
+    return postorder_visit[e.srcIdx] < postorder_visit[e.destIdx] ? e.srcIdx : e.destIdx;
 }
 
 bool GMWStructure::IsDescendant(int u, int v) {
-    return subtree_postorder_visit[u] <= postorder_visit[v] && postorder_visit[v] <= postorder_visit[v];
+    return subtree_postorder_visit[u] <= postorder_visit[v] && postorder_visit[v] <= postorder_visit[u];
 }
 
 int GMWStructure::GetIndependentCost(int u, int v) {
@@ -24,7 +24,7 @@ int GMWStructure::GetIndependentCost(int u, int v) {
 int GMWStructure::GetDescendantCost(int u, int v) {
     return rs->GetSumInRectangle(
         subtree_postorder_visit[v], postorder_visit[v],
-        1, postorder_visit[u]-1
+        1, subtree_postorder_visit[u]-1
     ) + rs->GetSumInRectangle(
         subtree_postorder_visit[v], postorder_visit[v],
         postorder_visit[u]+1, n
@@ -49,7 +49,6 @@ void GMWStructure::Initialize(std::shared_ptr<graphs::UndirectedWeightedGraph> g
     }
     subtree_cost = postorder_visit = subtree_postorder_visit= std::vector<int>(n, 0);
     CalcCostBottomUp(tree, delta, subtree_cost, tree->rootIdx, -1);
-    
     int next_postorder = 1;
     tree->RunPostOrder([&](graphs::Vertice& v, int p_idx) {
         int idx = v.GetIdx();
@@ -62,9 +61,10 @@ void GMWStructure::Initialize(std::shared_ptr<graphs::UndirectedWeightedGraph> g
         }
     });
 
-    for (auto & v : graph->vertices) {
-        for (auto & ed : v.GetNeighbors())
-            rs->AddPoint(ed.srcIdx, ed.destIdx, ed.weight);
+    for (const auto & v : graph->vertices) {
+        for (const auto & ed : v.GetNeighbors()) {
+            rs->AddPoint(postorder_visit[ed.srcIdx], postorder_visit[ed.destIdx], ed.weight);
+        }
     }
 }
 
@@ -72,9 +72,9 @@ int GMWStructure::GetCutVal(graphs::WeightedEdge e1, graphs::WeightedEdge e2) {
     // According to Gawrychowski, Mozes, Weimann: A Note on a Recent Algorithm for Minimum Cut
     int u = GetLowerEndpoint(e1), v = GetLowerEndpoint(e2);
     int w = 0;
-    if (IsDescendant(v, u))
+    if (IsDescendant(u, v))
         w = GetDescendantCost(u, v);
-    else if (IsDescendant(u, v))
+    else if (IsDescendant(v, u))
         w = GetDescendantCost(v, u);
     else 
         w = GetIndependentCost(u, v);

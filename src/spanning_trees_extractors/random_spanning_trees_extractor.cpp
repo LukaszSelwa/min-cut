@@ -11,11 +11,11 @@ size_t calcNumberOfSpanningTrees (size_t graphSize) {
     return result;
 }
 
-graphs::WeightedTree GenerateRandomSpanningTree (graphs::UndirectedWeightedGraph & graph) {
+graphs::WeightedTree extractSingleRandomSpanningTree (graphs::UndirectedWeightedGraph & graph, std::shared_ptr<std::mt19937> seed) {
     int n = graph.GetSize();
-    graphs::WeightedTree spanningTree(n);
+    graphs::WeightedTree spanning_tree(n);
     std::vector<bool> connected(n, false);
-    RandomQueue<graphs::WeightedEdge> rq(0);
+    RandomQueue<graphs::WeightedEdge> rq(seed);
 
     connected[0] = true;
     for (auto edge : graph[0].GetNeighbors())
@@ -26,20 +26,20 @@ graphs::WeightedTree GenerateRandomSpanningTree (graphs::UndirectedWeightedGraph
         if (connected[edge.destIdx])
             continue;
         connected[edge.destIdx] = true;
-        spanningTree.AddEdge(edge.srcIdx, edge.destIdx, edge.weight);
+        spanning_tree.AddEdge(edge.srcIdx, edge.destIdx, edge.weight);
         for (auto & e : graph[edge.destIdx].GetNeighbors()) {
             if (!connected[e.destIdx])
                 rq.push(e);
         }
     }
     
-    return spanningTree;
+    return spanning_tree;
 }
 
-std::vector<graphs::WeightedTree> extractRandomSpanningTrees (graphs::UndirectedWeightedGraph & graph) {
+std::vector<graphs::WeightedTree> extractRandomSpanningTrees (graphs::UndirectedWeightedGraph & graph, std::shared_ptr<std::mt19937> seed) {
     int numberOfTrees = calcNumberOfSpanningTrees(graph.GetSize());
     std::vector<graphs::WeightedTree> trees_list(numberOfTrees);
     for (auto & tree : trees_list)
-        tree = GenerateRandomSpanningTree(graph);
+        tree = extractSingleRandomSpanningTree(graph, seed);
     return trees_list;
 }

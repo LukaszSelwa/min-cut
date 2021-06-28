@@ -1,5 +1,6 @@
 #ifndef TREE
 #define TREE
+#include <iostream>
 #include <functional>
 #include <vector>
 #include "vertices.hpp"
@@ -17,6 +18,7 @@ class WeightedTree {
     void AddEdge(int idx1, int idx2, int weight);
     void RunPreOrder(std::function<void(Vertice&, int)> func);
     void RunPostOrder(std::function<void(Vertice&, int)> func);
+    friend std::ostream & operator<< (std::ostream & o, const WeightedTree & tree);
 
   private:
     void RunPreOrder(int idx, int parentIdx, std::function<void(Vertice&, int)> func);

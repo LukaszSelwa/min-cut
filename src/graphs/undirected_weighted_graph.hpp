@@ -1,5 +1,6 @@
 #ifndef UNDIRECTED_WEIGHTED_GRAPH
 #define UNDIRECTED_WEIGHTED_GRAPH
+#include <iostream>
 #include <vector>
 #include "vertices.hpp"
 
@@ -13,6 +14,7 @@ class UndirectedWeightedGraph {
     int GetSize() const;
     void AddEdge(const WeightedEdge edge);
     Vertice & operator[] (size_t i);
+    friend std::ostream & operator<< (std::ostream & o, const UndirectedWeightedGraph & graph);
 };
 
 }

@@ -1,5 +1,6 @@
-#ifndef VERTICES
-#define VERTICES
+#ifndef VERTICES_H
+#define VERTICES_H
+#include <iostream>
 #include <vector>
 
 namespace graphs {
@@ -11,7 +12,10 @@ class WeightedEdge {
     int weight;
 
     WeightedEdge(int srcIdx, int destIdx, int weight): srcIdx(srcIdx), destIdx(destIdx), weight(weight) { }
+    WeightedEdge(int srcIdx, int destIdx): srcIdx(srcIdx), destIdx(destIdx), weight(1) { }
     WeightedEdge(): WeightedEdge(0, 0, 0) { }
+    bool IsEqual(const WeightedEdge & e);
+    friend std::ostream & operator<< (std::ostream &os, const WeightedEdge & e);
 };
 
 class Vertice {
@@ -20,12 +24,13 @@ class Vertice {
 
   public:
     Vertice(): myIdx(0), Neighbors(std::vector<WeightedEdge>(0)) { }
-    int GetIdx();
+    int GetIdx() const;
     void SetMyIdx(int idx);
     void AddNeighbour(int idx, int weight);
     std::vector<WeightedEdge> & GetNeighbors();
+    const std::vector<WeightedEdge> & GetNeighbors() const;
 };
 
 }
 
-#endif /* VERTICES */
+#endif /* VERTICES_H */

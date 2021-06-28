@@ -20,4 +20,16 @@ Vertice & UndirectedWeightedGraph::operator[] (size_t idx) {
     return vertices[idx];
 }
 
+std::ostream & operator<< (std::ostream & o, const UndirectedWeightedGraph & graph) {
+    o << "graph[size: " << graph.size << "]{\n";
+    for (auto & v : graph.vertices) {
+        o << v.GetIdx() << ": ";
+        for (auto & e : v.GetNeighbors())
+            o << e << ", ";
+        o << "\n";
+    }
+    o << "}";
+    return o;
+}
+
 }
