@@ -7,34 +7,34 @@
 #include <memory>
 #include <random>
 
-class GMWVerifier {
+class gmw_verifier {
     std::shared_ptr<graphs::UndirectedWeightedGraph> graph;
     std::shared_ptr<graphs::WeightedTree> tree;
 
   public:
-    GMWVerifier(std::shared_ptr<graphs::UndirectedWeightedGraph> graph, std::shared_ptr<graphs::WeightedTree> tree): graph(graph), tree(tree) { }
-    int GetCutVal(graphs::WeightedEdge e1, graphs::WeightedEdge e2) {
+    gmw_verifier(std::shared_ptr<graphs::UndirectedWeightedGraph> graph, std::shared_ptr<graphs::WeightedTree> tree): graph(graph), tree(tree) { }
+    int get_cut_val(graphs::WeightedEdge e1, graphs::WeightedEdge e2) {
         std::vector<bool> cut(graph->size, false);
 
-        std::function<void(int,bool)> calc_cut = [&](int idx, bool is_cut){
-            cut[idx] = is_cut;
+        std::function<void(int,bool)> calcCut = [&](int idx, bool isCut){
+            cut[idx] = isCut;
             for (auto & e : tree->vertices[idx].children) {
-                calc_cut(e.destIdx, (e.IsEqual(e1) || e.IsEqual(e2)) != is_cut);
+                calcCut(e.destIdx, (e.IsEqual(e1) || e.IsEqual(e2)) != isCut);
             }
         };
-        calc_cut(tree->rootIdx, true);
+        calcCut(tree->rootIdx, true);
 
-        int cut_val = 0;
+        int cutVal = 0;
         for (auto & v : graph->vertices) {
             for (auto & e : v.neighbors)
-                cut_val += cut[e.srcIdx] != cut[e.destIdx] ? e.weight : 0;
+                cutVal += cut[e.srcIdx] != cut[e.destIdx] ? e.weight : 0;
         }
-        return cut_val / 2;
+        return cutVal / 2;
     }
 };
 
-void verifyCutVals(GMWStructure & gmw_str, std::shared_ptr<graphs::UndirectedWeightedGraph> graph, std::shared_ptr<graphs::WeightedTree> tree) {
-    GMWVerifier gmw_ver(graph, tree);
+void verifyCutVals(gmw_structure & gmwStr, std::shared_ptr<graphs::UndirectedWeightedGraph> graph, std::shared_ptr<graphs::WeightedTree> tree) {
+    gmw_verifier gmwVer(graph, tree);
     std::vector<graphs::WeightedEdge> edges(0);
     for (auto & v : tree->vertices) {
         for (auto & e : v.children)
@@ -43,7 +43,7 @@ void verifyCutVals(GMWStructure & gmw_str, std::shared_ptr<graphs::UndirectedWei
 
     for (size_t i = 0; i < edges.size(); ++i) {
         for (int j = 0; j < i; ++j)
-            ASSERT_EQ(gmw_str.GetCutVal(edges[i], edges[j]), gmw_ver.GetCutVal(edges[i], edges[j])) 
+            ASSERT_EQ(gmwStr.get_cut_val(edges[i], edges[j]), gmwVer.get_cut_val(edges[i], edges[j])) 
                 << "should calc cut value for edges: " << edges[i] << ", " << edges[j] << "\n" << *graph << "\n" << *tree;
     }
 }
@@ -71,18 +71,18 @@ TEST(Graphs_GMWStructure, GMWExampleTest) {
     tree->AddChildEdge(3, 7, 2);
     tree->AddChildEdge(5, 6, 1);
 
-    GMWStructure gmw(std::make_unique<Interval2DTree>(9, 9));
-    gmw.Initialize(graph, tree);
+    gmw_structure gmw(std::make_unique<Interval2DTree>(9, 9));
+    gmw.initialize(graph, tree);
 
-    std::vector<int> exp_cost{0, 5, 10, 9, 6, 12, 8, 5};
-    std::vector<int> exp_post{8, 6, 3, 2, 7, 5, 4, 1};
-    std::vector<int> exp_s_post{1, 1, 1, 1, 7, 4, 4, 1};
-    EXPECT_EQ(gmw.GetSubtreeCost(), exp_cost);
-    EXPECT_EQ(gmw.GetPostorderVisit(), exp_post);
-    EXPECT_EQ(gmw.GetSubtreePostorderVisit(), exp_s_post);
+    std::vector<int> expCost{0, 5, 10, 9, 6, 12, 8, 5};
+    std::vector<int> expPost{8, 6, 3, 2, 7, 5, 4, 1};
+    std::vector<int> expSPost{1, 1, 1, 1, 7, 4, 4, 1};
+    EXPECT_EQ(gmw.get_subtree_cost(), expCost);
+    EXPECT_EQ(gmw.get_postorder_visit(), expPost);
+    EXPECT_EQ(gmw.get_subtree_postorder_visit(), expSPost);
 
-    EXPECT_EQ(gmw.GetCutVal(graphs::WeightedEdge(1, 5), graphs::WeightedEdge(2, 3)), 11);
-    EXPECT_EQ(gmw.GetCutVal(graphs::WeightedEdge(0, 1), graphs::WeightedEdge(2, 3)), 14);
+    EXPECT_EQ(gmw.get_cut_val(graphs::WeightedEdge(1, 5), graphs::WeightedEdge(2, 3)), 11);
+    EXPECT_EQ(gmw.get_cut_val(graphs::WeightedEdge(0, 1), graphs::WeightedEdge(2, 3)), 14);
     verifyCutVals(gmw, graph, tree);
 }
 
@@ -115,43 +115,43 @@ TEST(Graphs_GMWStructure, GMWExampleTest_1) {
     tree->AddChildEdge(8, 3, 0);
     tree->AddChildEdge(9, 7, 6);
 
-    GMWStructure gmw(std::make_unique<Interval2DTree>(11, 11));
-    gmw.Initialize(graph, tree);
-    EXPECT_EQ(gmw.GetCutVal(graphs::WeightedEdge(0, 8), graphs::WeightedEdge(0, 9)), 16);
+    gmw_structure gmw(std::make_unique<Interval2DTree>(11, 11));
+    gmw.initialize(graph, tree);
+    EXPECT_EQ(gmw.get_cut_val(graphs::WeightedEdge(0, 8), graphs::WeightedEdge(0, 9)), 16);
 }
 
 
-void testRandomGraph(int n, int max_weight, std::shared_ptr<std::mt19937> seed) {
+void testRandomGraph(int n, int maxWeight, std::shared_ptr<std::mt19937> seed) {
     std::uniform_int_distribution<> dist(n-1, n * (n-1) / 2);
     int m = dist(*seed);
-    auto graph = graphs::generateRandomGraph(n, m, max_weight, seed);
+    auto graph = graphs::generateRandomGraph(n, m, maxWeight, seed);
     std::shared_ptr<graphs::WeightedTree> tree(new graphs::WeightedTree(extractSingleRandomSpanningTree(*graph, seed)));
 
-    GMWStructure gmw(std::make_unique<Interval2DTree>(n+1, n+1));
-    gmw.Initialize(graph, tree);
+    gmw_structure gmw(std::make_unique<Interval2DTree>(n+1, n+1));
+    gmw.initialize(graph, tree);
     verifyCutVals(gmw, graph, tree);
 }
 
-TEST(Graphs_GMWStructure, GMWRandomTest) {
-    int test_cases = 50;
-    int max_n = 50;
-    int max_weight = 10;
+TEST(Graphs_gmw_structure, GMWRandomTest) {
+    int testCases = 50;
+    int maxN = 50;
+    int maxWeight = 10;
 
     std::random_device rd;
     std::shared_ptr<std::mt19937> seed(new std::mt19937(rd()));
-    std::uniform_int_distribution<> dist_n(1, max_n);
-    while (test_cases--)
-        testRandomGraph(dist_n(*seed), max_weight, seed);
+    std::uniform_int_distribution<> distN(1, maxN);
+    while (testCases--)
+        testRandomGraph(distN(*seed), maxWeight, seed);
 }
 
 TEST(Graphs_GMWStructure, GMWRandomLargeTest) {
-    int test_cases = 2;
-    int max_n = 200;
-    int max_weight = 300;
+    int testCases = 2;
+    int maxN = 200;
+    int maxWeight = 300;
 
     std::random_device rd;
     std::shared_ptr<std::mt19937> seed(new std::mt19937(rd()));
-    std::uniform_int_distribution<> dist_n(1, max_n);
-    while (test_cases--)
-        testRandomGraph(dist_n(*seed), max_weight, seed);
+    std::uniform_int_distribution<> distN(1, maxN);
+    while (testCases--)
+        testRandomGraph(distN(*seed), maxWeight, seed);
 }

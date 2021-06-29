@@ -7,18 +7,18 @@ TEST(Graphs_LCAComputer, SmallTreeTest) {
     tree->AddChildEdge(0, 1, 1);
     tree->AddChildEdge(0, 2, 1);
 
-    graphs::LCAComputer computer(tree);
-    computer.Initialize();
+    graphs::lca_computer computer(tree);
+    computer.initialize();
 
     for (int i = 0; i < 3; ++i)
-        EXPECT_EQ(computer.LCA(i, i), i) << "lca in single element";
+        EXPECT_EQ(computer.calc_lca(i, i), i) << "lca in single element";
 
-    EXPECT_EQ(computer.LCA(1, 2), 0) << "lca in root";
-    EXPECT_EQ(computer.LCA(2, 1), 0) << "lca in root";
-    EXPECT_EQ(computer.LCA(0, 2), 0) << "lca in root";
-    EXPECT_EQ(computer.LCA(2, 0), 0) << "lca in root";
-    EXPECT_EQ(computer.LCA(0, 1), 0) << "lca in root";
-    EXPECT_EQ(computer.LCA(1, 0), 0) << "lca in root";
+    EXPECT_EQ(computer.calc_lca(1, 2), 0) << "lca in root";
+    EXPECT_EQ(computer.calc_lca(2, 1), 0) << "lca in root";
+    EXPECT_EQ(computer.calc_lca(0, 2), 0) << "lca in root";
+    EXPECT_EQ(computer.calc_lca(2, 0), 0) << "lca in root";
+    EXPECT_EQ(computer.calc_lca(0, 1), 0) << "lca in root";
+    EXPECT_EQ(computer.calc_lca(1, 0), 0) << "lca in root";
 }
 
 TEST(Graphs_LCAComputer, Medium_Test) {
@@ -31,9 +31,9 @@ TEST(Graphs_LCAComputer, Medium_Test) {
     tree->AddChildEdge(3, 7, 2);
     tree->AddChildEdge(5, 6, 1);
 
-    graphs::LCAComputer computer(tree);
-    computer.Initialize();
+    graphs::lca_computer computer(tree);
+    computer.initialize();
 
     for (int i = 0; i < 8; ++i)
-        EXPECT_EQ(computer.LCA(i, i), i) << "lca in single element";
+        EXPECT_EQ(computer.calc_lca(i, i), i) << "lca in single element";
 }

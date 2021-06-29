@@ -7,7 +7,7 @@
 
 namespace graphs {
 
-class LCAComputer {
+class lca_computer {
     std::shared_ptr<graphs::WeightedTree> tree;
     RangeMin minInOrder;
     std::vector<int> reIndex;
@@ -15,10 +15,10 @@ class LCAComputer {
     std::vector<int> firstVisit;
 
   public:
-    LCAComputer(std::shared_ptr<graphs::WeightedTree> tree);
-    void Initialize();
-    int LCA(int aIdx, int bIdx);
-    void inOrderTraverse(int idx, int *unusedIdx, std::vector<int>* visitList);
+    lca_computer(std::shared_ptr<graphs::WeightedTree> tree);
+    void initialize();
+    int calc_lca(int aIdx, int bIdx);
+    void in_order_traverse(int idx, int *unusedIdx, std::vector<int>* visitList);
 };
 
 }

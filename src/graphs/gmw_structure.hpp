@@ -7,29 +7,29 @@
 #include "weighted_tree.hpp"
 #include "../range_search/range_search_structure.cpp"
 
-class GMWStructure {
+class gmw_structure {
     std::unique_ptr<RangeSearchStructure> rs;
-    std::vector<int> subtree_cost;
-    std::vector<int> postorder_visit;
-    std::vector<int> subtree_postorder_visit;
+    std::vector<int> subtreeCost;
+    std::vector<int> postorderVisit;
+    std::vector<int> subtreePostorderVisit;
     int n;
 
-    int GetLowerEndpoint(graphs::WeightedEdge e);
-    bool IsDescendant(int u, int v);
-    int GetIndependentCost(int u, int v);
-    int GetDescendantCost(int u, int v);
+    int get_lower_endpoint(graphs::WeightedEdge e);
+    bool is_descendant(int u, int v);
+    int get_independent_cost(int u, int v);
+    int get_descendant_cost(int u, int v);
     
   public:
-    GMWStructure(std::unique_ptr<RangeSearchStructure> rs);
-    void Initialize(std::shared_ptr<graphs::UndirectedWeightedGraph> graph, std::shared_ptr<graphs::WeightedTree> tree);
-    int GetCutVal(graphs::WeightedEdge e1, graphs::WeightedEdge e2);
-    bool IsCrossInterested(graphs::WeightedEdge e1, graphs::WeightedEdge e2);
-    bool IsDownInterested(graphs::WeightedEdge e1, graphs::WeightedEdge e2);
+    gmw_structure(std::unique_ptr<RangeSearchStructure> rs);
+    void initialize(std::shared_ptr<graphs::UndirectedWeightedGraph> graph, std::shared_ptr<graphs::WeightedTree> tree);
+    int get_cut_val(graphs::WeightedEdge e1, graphs::WeightedEdge e2);
+    bool is_crossinterested(graphs::WeightedEdge e1, graphs::WeightedEdge e2);
+    bool is_downinterested(graphs::WeightedEdge e1, graphs::WeightedEdge e2);
 
     // for testing
-    std::vector<int> GetSubtreeCost() { return subtree_cost; }
-    std::vector<int> GetPostorderVisit() { return postorder_visit; }
-    std::vector<int> GetSubtreePostorderVisit() { return subtree_postorder_visit; }
+    std::vector<int> get_subtree_cost() { return subtreeCost; }
+    std::vector<int> get_postorder_visit() { return postorderVisit; }
+    std::vector<int> get_subtree_postorder_visit() { return subtreePostorderVisit; }
 };
 
 #endif /* MN_STRUCTURE_H */

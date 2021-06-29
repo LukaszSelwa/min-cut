@@ -1,42 +1,42 @@
 #include "gmw_structure.hpp"
 #include <algorithm>
 
-int CalcCostBottomUp(std::shared_ptr<graphs::WeightedTree> &tree,
+int calc_cost_bottomup(std::shared_ptr<graphs::WeightedTree> &tree,
                      std::vector<int> &delta,
                      std::vector<int> &cost,
                      int idx,
                      int p_idx);
 
-int GMWStructure::GetLowerEndpoint(graphs::WeightedEdge e) {
-    return postorder_visit[e.srcIdx] < postorder_visit[e.destIdx] ? e.srcIdx : e.destIdx;
+int gmw_structure::get_lower_endpoint(graphs::WeightedEdge e) {
+    return postorderVisit[e.srcIdx] < postorderVisit[e.destIdx] ? e.srcIdx : e.destIdx;
 }
 
-bool GMWStructure::IsDescendant(int u, int v) {
-    return subtree_postorder_visit[u] <= postorder_visit[v] && postorder_visit[v] <= postorder_visit[u];
+bool gmw_structure::is_descendant(int u, int v) {
+    return subtreePostorderVisit[u] <= postorderVisit[v] && postorderVisit[v] <= postorderVisit[u];
 }
 
-int GMWStructure::GetIndependentCost(int u, int v) {
+int gmw_structure::get_independent_cost(int u, int v) {
     return rs->GetSumInRectangle(
-        subtree_postorder_visit[u], postorder_visit[u],
-        subtree_postorder_visit[v], postorder_visit[v]
+        subtreePostorderVisit[u], postorderVisit[u],
+        subtreePostorderVisit[v], postorderVisit[v]
     );
 }
-int GMWStructure::GetDescendantCost(int u, int v) {
+int gmw_structure::get_descendant_cost(int u, int v) {
     return rs->GetSumInRectangle(
-        subtree_postorder_visit[v], postorder_visit[v],
-        1, subtree_postorder_visit[u]-1
+        subtreePostorderVisit[v], postorderVisit[v],
+        1, subtreePostorderVisit[u]-1
     ) + rs->GetSumInRectangle(
-        subtree_postorder_visit[v], postorder_visit[v],
-        postorder_visit[u]+1, n
+        subtreePostorderVisit[v], postorderVisit[v],
+        postorderVisit[u]+1, n
     );
 }
 
 
-GMWStructure::GMWStructure(std::unique_ptr<RangeSearchStructure> rs): rs(std::move(rs)) { }
+gmw_structure::gmw_structure(std::unique_ptr<RangeSearchStructure> rs): rs(std::move(rs)) { }
 
-void GMWStructure::Initialize(std::shared_ptr<graphs::UndirectedWeightedGraph> graph, std::shared_ptr<graphs::WeightedTree> tree) {
-    graphs::LCAComputer lca(tree);
-    lca.Initialize();
+void gmw_structure::initialize(std::shared_ptr<graphs::UndirectedWeightedGraph> graph, std::shared_ptr<graphs::WeightedTree> tree) {
+    graphs::lca_computer lca(tree);
+    lca.initialize();
     n = tree->size;
     // Algorithm according to Karger: Minimum Cuts in Near-Linear Time
     // (sum weights of outgoing edges from v_i) - 2 * (sum of edges whose endpoints' lca is v_i)
@@ -44,65 +44,65 @@ void GMWStructure::Initialize(std::shared_ptr<graphs::UndirectedWeightedGraph> g
     for (auto & v : graph->vertices) {
         for (auto & ed : v.neighbors) {
             delta[v.GetIdx()] += ed.weight;
-            delta[lca.LCA(ed.srcIdx, ed.destIdx)] -= ed.weight;
+            delta[lca.calc_lca(ed.srcIdx, ed.destIdx)] -= ed.weight;
         }
     }
-    subtree_cost = postorder_visit = subtree_postorder_visit= std::vector<int>(n, 0);
-    CalcCostBottomUp(tree, delta, subtree_cost, tree->rootIdx, -1);
-    int next_postorder = 1;
+    subtreeCost = postorderVisit = subtreePostorderVisit= std::vector<int>(n, 0);
+    calc_cost_bottomup(tree, delta, subtreeCost, tree->rootIdx, -1);
+    int nextPostorder = 1;
 
     tree->RunPostOrder([&](graphs::TreeVertice& v) {
-        postorder_visit[v.idx] = next_postorder++;
-        subtree_postorder_visit[v.idx] = postorder_visit[v.idx]; 
+        postorderVisit[v.idx] = nextPostorder++;
+        subtreePostorderVisit[v.idx] = postorderVisit[v.idx]; 
         for (auto & ed : v.children) {
-            subtree_postorder_visit[v.idx] = std::min(subtree_postorder_visit[ed.destIdx], subtree_postorder_visit[v.idx]);
+            subtreePostorderVisit[v.idx] = std::min(subtreePostorderVisit[ed.destIdx], subtreePostorderVisit[v.idx]);
         }
     });
 
     for (const auto & v : graph->vertices) {
         for (const auto & ed : v.neighbors) {
-            rs->AddPoint(postorder_visit[ed.srcIdx], postorder_visit[ed.destIdx], ed.weight);
+            rs->AddPoint(postorderVisit[ed.srcIdx], postorderVisit[ed.destIdx], ed.weight);
         }
     }
 }
 
-int GMWStructure::GetCutVal(graphs::WeightedEdge e1, graphs::WeightedEdge e2) {
+int gmw_structure::get_cut_val(graphs::WeightedEdge e1, graphs::WeightedEdge e2) {
     // According to Gawrychowski, Mozes, Weimann: A Note on a Recent Algorithm for Minimum Cut
-    int u = GetLowerEndpoint(e1), v = GetLowerEndpoint(e2);
+    int u = get_lower_endpoint(e1), v = get_lower_endpoint(e2);
     int w = 0;
-    if (IsDescendant(u, v))
-        w = GetDescendantCost(u, v);
-    else if (IsDescendant(v, u))
-        w = GetDescendantCost(v, u);
+    if (is_descendant(u, v))
+        w = get_descendant_cost(u, v);
+    else if (is_descendant(v, u))
+        w = get_descendant_cost(v, u);
     else 
-        w = GetIndependentCost(u, v);
-    return subtree_cost[u] + subtree_cost[v] - 2*w;
+        w = get_independent_cost(u, v);
+    return subtreeCost[u] + subtreeCost[v] - 2*w;
 }
 
-bool GMWStructure::IsCrossInterested(graphs::WeightedEdge e1, graphs::WeightedEdge e2) {
-    int u = GetLowerEndpoint(e1), v = GetLowerEndpoint(e2);
-    if (IsDescendant(u, v) || IsDescendant(v, u))
+bool gmw_structure::is_crossinterested(graphs::WeightedEdge e1, graphs::WeightedEdge e2) {
+    int u = get_lower_endpoint(e1), v = get_lower_endpoint(e2);
+    if (is_descendant(u, v) || is_descendant(v, u))
         return false;
-    int w = GetIndependentCost(u, v);
-    return subtree_cost[u] < subtree_cost[u] + subtree_cost[v] - 2*w;
+    int w = get_independent_cost(u, v);
+    return subtreeCost[u] < subtreeCost[u] + subtreeCost[v] - 2*w;
 }
 
-bool GMWStructure::IsDownInterested(graphs::WeightedEdge e1, graphs::WeightedEdge e2) {
-    int u = GetLowerEndpoint(e1), v = GetLowerEndpoint(e2);
-    if (!IsDescendant(u,v))
+bool gmw_structure::is_downinterested(graphs::WeightedEdge e1, graphs::WeightedEdge e2) {
+    int u = get_lower_endpoint(e1), v = get_lower_endpoint(e2);
+    if (!is_descendant(u,v))
         return false;
-    int w = GetDescendantCost(v, u);
-    return subtree_cost[u] < subtree_cost[u] + subtree_cost[v] - 2*w;
+    int w = get_descendant_cost(v, u);
+    return subtreeCost[u] < subtreeCost[u] + subtreeCost[v] - 2*w;
 }
 
-int CalcCostBottomUp(std::shared_ptr<graphs::WeightedTree> &tree,
+int calc_cost_bottomup(std::shared_ptr<graphs::WeightedTree> &tree,
                      std::vector<int> &delta,
                      std::vector<int> &cost,
                      int idx,
                      int p_idx) {
     cost[idx] = delta[idx];
     for (auto & ed : tree->vertices[idx].children)
-        cost[idx] += CalcCostBottomUp(tree, delta, cost, ed.destIdx, idx);
+        cost[idx] += calc_cost_bottomup(tree, delta, cost, ed.destIdx, idx);
     cost[idx];
     return cost[idx]; 
 }
