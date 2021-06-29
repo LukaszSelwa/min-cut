@@ -42,7 +42,7 @@ void GMWStructure::Initialize(std::shared_ptr<graphs::UndirectedWeightedGraph> g
     // (sum weights of outgoing edges from v_i) - 2 * (sum of edges whose endpoints' lca is v_i)
     std::vector<int> delta(n, 0);
     for (auto & v : graph->vertices) {
-        for (auto & ed : v.GetNeighbors()) {
+        for (auto & ed : v.neighbors) {
             delta[v.GetIdx()] += ed.weight;
             delta[lca.LCA(ed.srcIdx, ed.destIdx)] -= ed.weight;
         }
@@ -50,19 +50,17 @@ void GMWStructure::Initialize(std::shared_ptr<graphs::UndirectedWeightedGraph> g
     subtree_cost = postorder_visit = subtree_postorder_visit= std::vector<int>(n, 0);
     CalcCostBottomUp(tree, delta, subtree_cost, tree->rootIdx, -1);
     int next_postorder = 1;
-    tree->RunPostOrder([&](graphs::Vertice& v, int p_idx) {
-        int idx = v.GetIdx();
-        postorder_visit[idx] = next_postorder++;
-        subtree_postorder_visit[idx] = postorder_visit[idx]; 
-        for (auto & ed : v.GetNeighbors()) {
-            if (ed.destIdx == p_idx)
-                continue;
-            subtree_postorder_visit[idx] = std::min(subtree_postorder_visit[ed.destIdx], subtree_postorder_visit[idx]);
+
+    tree->RunPostOrder([&](graphs::TreeVertice& v) {
+        postorder_visit[v.idx] = next_postorder++;
+        subtree_postorder_visit[v.idx] = postorder_visit[v.idx]; 
+        for (auto & ed : v.children) {
+            subtree_postorder_visit[v.idx] = std::min(subtree_postorder_visit[ed.destIdx], subtree_postorder_visit[v.idx]);
         }
     });
 
     for (const auto & v : graph->vertices) {
-        for (const auto & ed : v.GetNeighbors()) {
+        for (const auto & ed : v.neighbors) {
             rs->AddPoint(postorder_visit[ed.srcIdx], postorder_visit[ed.destIdx], ed.weight);
         }
     }
@@ -103,11 +101,8 @@ int CalcCostBottomUp(std::shared_ptr<graphs::WeightedTree> &tree,
                      int idx,
                      int p_idx) {
     cost[idx] = delta[idx];
-    for (auto & ed : tree->vertices[idx].GetNeighbors()) {
-        if (ed.destIdx == p_idx) 
-            continue;
+    for (auto & ed : tree->vertices[idx].children)
         cost[idx] += CalcCostBottomUp(tree, delta, cost, ed.destIdx, idx);
-    }
     cost[idx];
     return cost[idx]; 
 }

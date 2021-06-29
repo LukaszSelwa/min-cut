@@ -18,7 +18,7 @@ graphs::WeightedTree extractSingleRandomSpanningTree (graphs::UndirectedWeighted
     RandomQueue<graphs::WeightedEdge> rq(seed);
 
     connected[0] = true;
-    for (auto edge : graph[0].GetNeighbors())
+    for (auto edge : graph[0].neighbors)
         rq.push(edge);
 
     while (!rq.empty()) {
@@ -26,8 +26,8 @@ graphs::WeightedTree extractSingleRandomSpanningTree (graphs::UndirectedWeighted
         if (connected[edge.destIdx])
             continue;
         connected[edge.destIdx] = true;
-        spanning_tree.AddEdge(edge.srcIdx, edge.destIdx, edge.weight);
-        for (auto & e : graph[edge.destIdx].GetNeighbors()) {
+        spanning_tree.AddChildEdge(edge.srcIdx, edge.destIdx, edge.weight);
+        for (auto & e : graph[edge.destIdx].neighbors) {
             if (!connected[e.destIdx])
                 rq.push(e);
         }

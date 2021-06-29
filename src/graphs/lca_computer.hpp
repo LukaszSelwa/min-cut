@@ -18,7 +18,7 @@ class LCAComputer {
     LCAComputer(std::shared_ptr<graphs::WeightedTree> tree);
     void Initialize();
     int LCA(int aIdx, int bIdx);
-    void inOrderTraverse(int idx, int parentIdx, int *unusedIdx, std::vector<int>* visitList);
+    void inOrderTraverse(int idx, int *unusedIdx, std::vector<int>* visitList);
 };
 
 }

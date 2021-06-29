@@ -20,15 +20,14 @@ class WeightedEdge {
 
 class Vertice {
     int myIdx;
-    std::vector<WeightedEdge> Neighbors;
 
   public:
-    Vertice(): myIdx(0), Neighbors(std::vector<WeightedEdge>(0)) { }
+    std::vector<WeightedEdge> neighbors;
+    
+    Vertice(): myIdx(0), neighbors(std::vector<WeightedEdge>(0)) { }
     int GetIdx() const;
     void SetMyIdx(int idx);
     void AddNeighbour(int idx, int weight);
-    std::vector<WeightedEdge> & GetNeighbors();
-    const std::vector<WeightedEdge> & GetNeighbors() const;
 };
 
 }

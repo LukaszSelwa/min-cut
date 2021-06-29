@@ -12,7 +12,7 @@ std::ostream & operator<< (std::ostream &os, const WeightedEdge & e) {
 }
 
 void Vertice::AddNeighbour(int idx, int weight) {
-    Neighbors.push_back(WeightedEdge(myIdx, idx, weight));
+    neighbors.push_back(WeightedEdge(myIdx, idx, weight));
 }
 
 int Vertice::GetIdx() const {
@@ -21,14 +21,6 @@ int Vertice::GetIdx() const {
 
 void Vertice::SetMyIdx(int idx) {
     myIdx = idx;
-}
-
-std::vector<WeightedEdge> & Vertice::GetNeighbors() {
-    return Neighbors;
-}
-
-const std::vector<WeightedEdge> & Vertice::GetNeighbors() const {
-    return Neighbors;
 }
 
 }

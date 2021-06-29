@@ -9,7 +9,7 @@ void LCAComputer::Initialize() {
     std::vector<int> visitList(0);
     int unusedIdx = 0;
 
-    inOrderTraverse(tree->rootIdx, -1, &unusedIdx, &visitList);
+    inOrderTraverse(tree->rootIdx, &unusedIdx, &visitList);
     minInOrder.Initialize(visitList.data(), visitList.data() + visitList.size());
 }
 
@@ -20,17 +20,15 @@ int LCAComputer::LCA(int aIdx, int bIdx) {
     return reIndexInv[reLca];
 }
 
-void LCAComputer::inOrderTraverse(int idx, int parentIdx, int* unusedIdx, std::vector<int>* visitList) {
+void LCAComputer::inOrderTraverse(int idx, int* unusedIdx, std::vector<int>* visitList) {
     reIndex[idx] = (*unusedIdx)++;
     reIndexInv[reIndex[idx]] = idx;
 
     firstVisit[idx] = visitList->size();
     visitList->push_back(reIndex[idx]);
-    for (auto edge : tree->vertices[idx].GetNeighbors()) {
-        if (edge.destIdx != parentIdx) {
-            inOrderTraverse(edge.destIdx, idx, unusedIdx, visitList);
+    for (auto edge : tree->vertices[idx].children) {
+        inOrderTraverse(edge.destIdx, unusedIdx, visitList);
             visitList->push_back(reIndex[idx]);
-        }
     }
 }
 

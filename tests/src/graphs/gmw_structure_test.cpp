@@ -16,19 +16,17 @@ class GMWVerifier {
     int GetCutVal(graphs::WeightedEdge e1, graphs::WeightedEdge e2) {
         std::vector<bool> cut(graph->size, false);
 
-        std::function<void(int,int,bool)> calc_cut = [&](int idx, int p_idx, bool is_cut){
+        std::function<void(int,bool)> calc_cut = [&](int idx, bool is_cut){
             cut[idx] = is_cut;
-            for (auto & e : tree->vertices[idx].GetNeighbors()) {
-                if (p_idx == e.destIdx)
-                    continue;
-                calc_cut(e.destIdx, idx, (e.IsEqual(e1) || e.IsEqual(e2)) != is_cut);
+            for (auto & e : tree->vertices[idx].children) {
+                calc_cut(e.destIdx, (e.IsEqual(e1) || e.IsEqual(e2)) != is_cut);
             }
         };
-        calc_cut(tree->rootIdx, -1, true);
+        calc_cut(tree->rootIdx, true);
 
         int cut_val = 0;
         for (auto & v : graph->vertices) {
-            for (auto & e : v.GetNeighbors())
+            for (auto & e : v.neighbors)
                 cut_val += cut[e.srcIdx] != cut[e.destIdx] ? e.weight : 0;
         }
         return cut_val / 2;
@@ -39,10 +37,8 @@ void verifyCutVals(GMWStructure & gmw_str, std::shared_ptr<graphs::UndirectedWei
     GMWVerifier gmw_ver(graph, tree);
     std::vector<graphs::WeightedEdge> edges(0);
     for (auto & v : tree->vertices) {
-        for (auto & e : v.GetNeighbors()) {
-            if (e.srcIdx < e.destIdx)
-                edges.push_back(e);
-        }
+        for (auto & e : v.children)
+            edges.push_back(e);
     }
 
     for (size_t i = 0; i < edges.size(); ++i) {
@@ -67,13 +63,13 @@ TEST(Graphs_GMWStructure, GMWExampleTest) {
     graph->AddEdge(graphs::WeightedEdge(6, 7, 3));
 
     std::shared_ptr<graphs::WeightedTree> tree(new graphs::WeightedTree(8));
-    tree->AddEdge(0, 1, 2);
-    tree->AddEdge(0, 4, 3);
-    tree->AddEdge(1, 2, 3);
-    tree->AddEdge(1, 5, 2);
-    tree->AddEdge(2, 3, 4);
-    tree->AddEdge(3, 7, 2);
-    tree->AddEdge(5, 6, 1);
+    tree->AddChildEdge(0, 1, 2);
+    tree->AddChildEdge(0, 4, 3);
+    tree->AddChildEdge(1, 2, 3);
+    tree->AddChildEdge(1, 5, 2);
+    tree->AddChildEdge(2, 3, 4);
+    tree->AddChildEdge(3, 7, 2);
+    tree->AddChildEdge(5, 6, 1);
 
     GMWStructure gmw(std::make_unique<Interval2DTree>(9, 9));
     gmw.Initialize(graph, tree);
@@ -109,15 +105,15 @@ TEST(Graphs_GMWStructure, GMWExampleTest_1) {
     graph->AddEdge(graphs::WeightedEdge(7, 9, 6));
     
     std::shared_ptr<graphs::WeightedTree> tree(new graphs::WeightedTree(10));
-    tree->AddEdge(0, 9, 6);
-    tree->AddEdge(0, 8, 1);
-    tree->AddEdge(0, 6, 9);
-    tree->AddEdge(4, 9, 1);
-    tree->AddEdge(1, 4, 0);
-    tree->AddEdge(2, 6, 0);
-    tree->AddEdge(5, 8, 5);
-    tree->AddEdge(3, 8, 0);
-    tree->AddEdge(7, 9, 6);
+    tree->AddChildEdge(0, 9, 6);
+    tree->AddChildEdge(0, 8, 1);
+    tree->AddChildEdge(0, 6, 9);
+    tree->AddChildEdge(9, 4, 1);
+    tree->AddChildEdge(4, 1, 0);
+    tree->AddChildEdge(6, 2, 0);
+    tree->AddChildEdge(8, 5, 5);
+    tree->AddChildEdge(8, 3, 0);
+    tree->AddChildEdge(9, 7, 6);
 
     GMWStructure gmw(std::make_unique<Interval2DTree>(11, 11));
     gmw.Initialize(graph, tree);
@@ -126,7 +122,7 @@ TEST(Graphs_GMWStructure, GMWExampleTest_1) {
 
 
 void testRandomGraph(int n, int max_weight, std::shared_ptr<std::mt19937> seed) {
-    std::uniform_int_distribution<> dist(n-1, std::max(n * (n-1) / 4, n));
+    std::uniform_int_distribution<> dist(n-1, n * (n-1) / 2);
     int m = dist(*seed);
     auto graph = graphs::generateRandomGraph(n, m, max_weight, seed);
     std::shared_ptr<graphs::WeightedTree> tree(new graphs::WeightedTree(extractSingleRandomSpanningTree(*graph, seed)));

@@ -24,7 +24,7 @@ std::ostream & operator<< (std::ostream & o, const UndirectedWeightedGraph & gra
     o << "graph[size: " << graph.size << "]{\n";
     for (auto & v : graph.vertices) {
         o << v.GetIdx() << ": ";
-        for (auto & e : v.GetNeighbors())
+        for (auto & e : v.neighbors)
             o << e << ", ";
         o << "\n";
     }
