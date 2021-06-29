@@ -132,7 +132,7 @@ void testRandomGraph(int n, int maxWeight, std::shared_ptr<std::mt19937> seed) {
     verifyCutVals(gmw, graph, tree);
 }
 
-TEST(Graphs_gmw_structure, GMWRandomTest) {
+TEST(Graphs_GMWStructure, GMWRandomTest) {
     int testCases = 50;
     int maxN = 50;
     int maxWeight = 10;
@@ -150,7 +150,7 @@ TEST(Graphs_GMWStructure, GMWRandomLargeTest) {
     int maxWeight = 300;
 
     std::random_device rd;
-    std::shared_ptr<std::mt19937> seed(new std::mt19937(rd()));
+    std::shared_ptr<std::mt19937> seed(new std::mt19937());
     std::uniform_int_distribution<> distN(1, maxN);
     while (testCases--)
         testRandomGraph(distN(*seed), maxWeight, seed);
