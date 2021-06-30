@@ -9,6 +9,7 @@ void binarized_tree::initialize() {
         size += std::max((size_t)1, v.children.size());
     
     vertices = std::vector<binarized_node>(size);
+    mapOrg = std::vector<binarized_node*>(orgTree->size);
     unusedItr = 0;
     vertices[unusedItr++] = binarized_node{
         .parent=nullptr, .left=nullptr, .right=nullptr,
@@ -26,6 +27,7 @@ void binarized_tree::initialize() {
 void binarized_tree::build_binarized(binarized_node *nd, int orgIdx) {
     auto & v = orgTree->vertices[orgIdx];
     int degree = v.children.size();
+    mapOrg[orgIdx] = nd;
     if (degree >= 1) {
         add_left_edge(nd, v.children[0]);
         build_binarized(nd->left, v.children[0].destIdx);
@@ -111,6 +113,10 @@ centroid* binarized_tree::calc_centroid_decomposition(binarized_node *nd) {
     if (nd->right != nullptr && !(nd->right->marked))
         c->right = calc_centroid_decomposition(nd->right);
     return c;
+}
+
+int binarized_tree::find_bottom_crossinterested(WeightedEdge ed, std::shared_ptr<gmw_structure> gmw) {
+    return 0;
 }
 
 }

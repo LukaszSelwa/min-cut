@@ -34,7 +34,7 @@ int gmw_structure::get_descendant_cost(int u, int v) {
 
 gmw_structure::gmw_structure(std::unique_ptr<RangeSearchStructure> rs): rs(std::move(rs)) { }
 
-void gmw_structure::initialize(std::shared_ptr<graphs::UndirectedWeightedGraph> graph, std::shared_ptr<graphs::WeightedTree> tree) {
+void gmw_structure::initialize(std::shared_ptr<graphs::weighted_graph> graph, std::shared_ptr<graphs::WeightedTree> tree) {
     graphs::lca_computer lca(tree);
     lca.initialize();
     n = tree->size;

@@ -6,15 +6,14 @@
 
 namespace graphs {
 
-class UndirectedWeightedGraph {
+class weighted_graph {
   public:
     const size_t size;
     std::vector<Vertice> vertices;
-    UndirectedWeightedGraph(size_t size);
-    int GetSize() const;
-    void AddEdge(const WeightedEdge edge);
+    weighted_graph(size_t size);
+    void add_edge(const WeightedEdge edge);
     Vertice & operator[] (size_t i);
-    friend std::ostream & operator<< (std::ostream & o, const UndirectedWeightedGraph & graph);
+    friend std::ostream & operator<< (std::ostream & o, const weighted_graph & graph);
 };
 
 }

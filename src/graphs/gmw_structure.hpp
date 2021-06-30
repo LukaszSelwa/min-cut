@@ -21,7 +21,7 @@ class gmw_structure {
     
   public:
     gmw_structure(std::unique_ptr<RangeSearchStructure> rs);
-    void initialize(std::shared_ptr<graphs::UndirectedWeightedGraph> graph, std::shared_ptr<graphs::WeightedTree> tree);
+    void initialize(std::shared_ptr<graphs::weighted_graph> graph, std::shared_ptr<graphs::WeightedTree> tree);
     int get_cut_val(graphs::WeightedEdge e1, graphs::WeightedEdge e2);
     bool is_crossinterested(graphs::WeightedEdge e1, graphs::WeightedEdge e2);
     bool is_downinterested(graphs::WeightedEdge e1, graphs::WeightedEdge e2);

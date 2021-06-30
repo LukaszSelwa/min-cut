@@ -1,6 +1,7 @@
 #ifndef BINARIZED_TREE_H
 #define BINARIZED_TREE_H
 #include "weighted_tree.hpp"
+#include "gmw_structure.hpp"
 #include <memory>
 
 namespace graphs {
@@ -20,6 +21,7 @@ struct centroid {
 
 class binarized_tree {
     std::shared_ptr<WeightedTree> orgTree;
+    std::vector<binarized_node*> mapOrg;
     int unusedItr;
     void build_binarized(binarized_node *nd, int orgIdx);
     void add_left_edge(binarized_node *nd, WeightedEdge & edge);
@@ -33,6 +35,7 @@ class binarized_tree {
     std::vector<centroid> centroids;
     binarized_tree(std::shared_ptr<WeightedTree> orgTree): orgTree(orgTree) { }
     void initialize();
+    int find_bottom_crossinterested(WeightedEdge ed, std::shared_ptr<gmw_structure> gmw);
 };
 
 }

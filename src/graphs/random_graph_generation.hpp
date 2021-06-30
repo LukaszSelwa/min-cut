@@ -9,7 +9,7 @@ namespace graphs {
  * @n - should be positive integer
  * @m - should be in range [n-1, n(n-1)/2]
  */
-std::shared_ptr<graphs::UndirectedWeightedGraph> generateRandomGraph(size_t n, size_t m, int max_weight, std::shared_ptr<std::mt19937> seed);
+std::shared_ptr<graphs::weighted_graph> generate_random_graph(size_t n, size_t m, int maxWeight, std::shared_ptr<std::mt19937> seed);
 
 }
 
