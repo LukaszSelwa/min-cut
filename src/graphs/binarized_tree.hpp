@@ -6,23 +6,31 @@
 namespace graphs {
 
 struct binarized_node {
-    int parentIdx;
-    int children[2];
+    binarized_node *parent, *left, *right;
     int orgIdx;
+    WeightedEdge parentEd, leftEd, rightEd;
     int weight;
-    WeightedEdge* parentEdge;
-    WeightedEdge* childrenEdges[2];
+    bool marked;
+};
+
+struct centroid {
+    binarized_node *bNode;
+    centroid *left, *right, *top;
 };
 
 class binarized_tree {
     std::shared_ptr<WeightedTree> orgTree;
-    void build_binarized(int idx, int orgIdx);
-    void add_left_edge(int idx, WeightedEdge & edge);
-    void add_right_edge(int idx, int orgIdx);
-    int calc_weight(int idx);
+    int unusedItr;
+    void build_binarized(binarized_node *nd, int orgIdx);
+    void add_left_edge(binarized_node *nd, WeightedEdge & edge);
+    void add_right_edge(binarized_node *nd, int orgIdx, int edgeNr);
+    int calc_weight(binarized_node *nd);
+    binarized_node* find_centroid(binarized_node *nd, int weight);
+    centroid* calc_centroid_decomposition(binarized_node *nd);
 
   public:
     std::vector<binarized_node> vertices;
+    std::vector<centroid> centroids;
     binarized_tree(std::shared_ptr<WeightedTree> orgTree): orgTree(orgTree) { }
     void initialize();
 };

@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include "../../../src/examples/graph_examples.hpp"
 #include "../../../src/graphs/gmw_structure.hpp"
 #include "../../../src/graphs/random_graph_generation.hpp"
 #include "../../../src/range_search/interval2D_tree.hpp"
@@ -48,28 +49,10 @@ void verifyCutVals(gmw_structure & gmwStr, std::shared_ptr<graphs::UndirectedWei
     }
 }
 
-TEST(Graphs_GMWStructure, GMWExampleTest) {
-    std::shared_ptr<graphs::UndirectedWeightedGraph> graph(new graphs::UndirectedWeightedGraph(8));
-    graph->AddEdge(graphs::WeightedEdge(0, 1, 2));
-    graph->AddEdge(graphs::WeightedEdge(0, 4, 3));
-    graph->AddEdge(graphs::WeightedEdge(1, 2, 3));
-    graph->AddEdge(graphs::WeightedEdge(1, 5, 2));
-    graph->AddEdge(graphs::WeightedEdge(2, 3, 4));
-    graph->AddEdge(graphs::WeightedEdge(2, 6, 2));
-    graph->AddEdge(graphs::WeightedEdge(3, 6, 2));
-    graph->AddEdge(graphs::WeightedEdge(3, 7, 2));
-    graph->AddEdge(graphs::WeightedEdge(4, 5, 3));
-    graph->AddEdge(graphs::WeightedEdge(5, 6, 1));
-    graph->AddEdge(graphs::WeightedEdge(6, 7, 3));
-
-    std::shared_ptr<graphs::WeightedTree> tree(new graphs::WeightedTree(8));
-    tree->AddChildEdge(0, 1, 2);
-    tree->AddChildEdge(0, 4, 3);
-    tree->AddChildEdge(1, 2, 3);
-    tree->AddChildEdge(1, 5, 2);
-    tree->AddChildEdge(2, 3, 4);
-    tree->AddChildEdge(3, 7, 2);
-    tree->AddChildEdge(5, 6, 1);
+TEST(Graphs_GMWStructure, GMWExampleTest_1) {
+    auto example = examples::get_example(1);
+    auto graph = example.graph;
+    auto tree = example.spanningTree;
 
     gmw_structure gmw(std::make_unique<Interval2DTree>(9, 9));
     gmw.initialize(graph, tree);
@@ -86,34 +69,10 @@ TEST(Graphs_GMWStructure, GMWExampleTest) {
     verifyCutVals(gmw, graph, tree);
 }
 
-TEST(Graphs_GMWStructure, GMWExampleTest_1) {
-    std::shared_ptr<graphs::UndirectedWeightedGraph> graph(new graphs::UndirectedWeightedGraph(10));
-    graph->AddEdge(graphs::WeightedEdge(0, 6, 9));
-    graph->AddEdge(graphs::WeightedEdge(0, 8, 1));
-    graph->AddEdge(graphs::WeightedEdge(0, 9, 6));
-    graph->AddEdge(graphs::WeightedEdge(0, 2, 8));
-    graph->AddEdge(graphs::WeightedEdge(1, 5, 1));
-    graph->AddEdge(graphs::WeightedEdge(1, 4, 0));
-    graph->AddEdge(graphs::WeightedEdge(2, 6, 0));
-    graph->AddEdge(graphs::WeightedEdge(3, 6, 3));
-    graph->AddEdge(graphs::WeightedEdge(3, 8, 0));
-    graph->AddEdge(graphs::WeightedEdge(4, 9, 1));
-    graph->AddEdge(graphs::WeightedEdge(4, 7, 0));
-    graph->AddEdge(graphs::WeightedEdge(5, 8, 5));    
-    graph->AddEdge(graphs::WeightedEdge(6, 8, 6));
-    graph->AddEdge(graphs::WeightedEdge(7, 8, 1));
-    graph->AddEdge(graphs::WeightedEdge(7, 9, 6));
-    
-    std::shared_ptr<graphs::WeightedTree> tree(new graphs::WeightedTree(10));
-    tree->AddChildEdge(0, 9, 6);
-    tree->AddChildEdge(0, 8, 1);
-    tree->AddChildEdge(0, 6, 9);
-    tree->AddChildEdge(9, 4, 1);
-    tree->AddChildEdge(4, 1, 0);
-    tree->AddChildEdge(6, 2, 0);
-    tree->AddChildEdge(8, 5, 5);
-    tree->AddChildEdge(8, 3, 0);
-    tree->AddChildEdge(9, 7, 6);
+TEST(Graphs_GMWStructure, GMWExampleTest_2) {
+    auto example = examples::get_example(2);
+    auto graph = example.graph;
+    auto tree = example.spanningTree;
 
     gmw_structure gmw(std::make_unique<Interval2DTree>(11, 11));
     gmw.initialize(graph, tree);

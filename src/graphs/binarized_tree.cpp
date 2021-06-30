@@ -1,67 +1,116 @@
 #include "binarized_tree.hpp"
+#include <algorithm>
 
 namespace graphs {
 
 void binarized_tree::initialize() {
-    vertices = std::vector<binarized_node>{binarized_node{
-        .parentIdx = -1,
-        .children={-1, -1},
-        .orgIdx=orgTree->rootIdx, 
-        .parentEdge=nullptr,
-        .childrenEdges={nullptr, nullptr}
-    }};
-    build_binarized(0, orgTree->rootIdx);
-    calc_weight(0);
+    size_t size = 0;
+    for (auto & v : orgTree->vertices)
+        size += std::max((size_t)1, v.children.size());
+    
+    vertices = std::vector<binarized_node>(size);
+    unusedItr = 0;
+    vertices[unusedItr++] = binarized_node{
+        .parent=nullptr, .left=nullptr, .right=nullptr,
+        .orgIdx=orgTree->rootIdx
+    };
+    build_binarized(&vertices[0], orgTree->rootIdx);
+
+    for (auto & v : vertices)
+        v.marked = false;
+    centroids = std::vector<centroid>(size);
+    unusedItr = 0;
+    calc_centroid_decomposition(&vertices[0]);
 }
 
-void binarized_tree::build_binarized(int idx, int orgIdx) {
+void binarized_tree::build_binarized(binarized_node *nd, int orgIdx) {
     auto & v = orgTree->vertices[orgIdx];
     int degree = v.children.size();
     if (degree >= 1) {
-        add_left_edge(idx, v.children[0]);
-        build_binarized(vertices[idx].children[0], v.children[0].destIdx);
+        add_left_edge(nd, v.children[0]);
+        build_binarized(nd->left, v.children[0].destIdx);
     }
     int i = 1;
     for (; i < degree; ++i) {
         auto & edge = v.children[i];
-        add_right_edge(idx, orgIdx);
-        idx = vertices[idx].children[1];
-        add_left_edge(idx, edge);
-        build_binarized(vertices[idx].children[0], edge.destIdx);
+        add_right_edge(nd, orgIdx, i);
+        nd = nd->right;
+        add_left_edge(nd, edge);
+        build_binarized(nd->left, edge.destIdx);
     }
 }
 
-void binarized_tree::add_left_edge(int idx, WeightedEdge & edge) {
-    vertices[idx].children[0] = vertices.size();
-    vertices[idx].childrenEdges[0] = &(edge);
-    vertices.push_back(binarized_node{
-        .parentIdx = idx,
-        .children={-1, -1},
+void binarized_tree::add_left_edge(binarized_node *nd, WeightedEdge & edge) {
+    vertices[unusedItr] = binarized_node{
+        .parent=nd, .left=nullptr, .right=nullptr,
         .orgIdx=edge.destIdx, 
-        .parentEdge=&(edge),
-        .childrenEdges={nullptr, nullptr}
-    });
+        .parentEd=edge,
+    };
+    nd->left = &vertices[unusedItr++];
+    nd->leftEd = edge;
 }
 
-void binarized_tree::add_right_edge(int idx, int orgIdx) {
-    vertices[idx].children[1] = vertices.size();
-    vertices[idx].childrenEdges[1] = nullptr;
-    vertices.push_back(binarized_node{
-        .parentIdx = idx,
-        .children={-1, -1},
+void binarized_tree::add_right_edge(binarized_node *nd, int orgIdx, int edgeNr) {
+    WeightedEdge edge(orgIdx, orgIdx, edgeNr);
+    vertices[unusedItr] = binarized_node{
+        .parent=nd, .left=nullptr, .right=nullptr,
         .orgIdx=orgIdx,
-        .parentEdge = nullptr,
-        .childrenEdges={nullptr, nullptr}
-    });
+        .parentEd=edge
+    };
+    nd->right = &vertices[unusedItr++];
+    nd->rightEd = edge;
 }
 
-int binarized_tree::calc_weight(int idx) {
-    vertices[idx].weight = 1;
-    for (int i = 0; i < 2; ++i) {
-        if (vertices[idx].children[i] != -1)
-            vertices[idx].weight += calc_weight(vertices[idx].children[i]);
+int binarized_tree::calc_weight(binarized_node *nd) {
+    nd->weight = 1;
+    if (nd->left != nullptr && !(nd->left->marked))
+        nd->weight += calc_weight(nd->left);
+    if (nd->right != nullptr && !(nd->right->marked))
+        nd->weight += calc_weight(nd->right);
+    return nd->weight;
+}
+
+binarized_node* binarized_tree::find_centroid(binarized_node *nd, int weight) {
+    while (true) {
+        if (nd->parent != nullptr && !(nd->parent->marked) 
+                && 2*(weight - nd->weight) > weight) {
+            nd = nd->parent;
+            continue;
+        }
+        if (nd->left != nullptr && !(nd->left->marked) 
+                && 2*(nd->left->weight) > weight) {
+            nd = nd->left;
+            continue;
+        }
+        if (nd->right != nullptr && !(nd->right->marked) 
+                && 2*(nd->right->weight) > weight) {
+            nd = nd->right;
+            continue;
+        }
+        break;
     }
-    return vertices[idx].weight;
+    return nd;
+}
+
+centroid* binarized_tree::calc_centroid_decomposition(binarized_node *nd) {
+    while (nd->parent != nullptr && !(nd->parent->marked))
+        nd = nd->parent;
+    int weight = calc_weight(nd);
+    nd = find_centroid(nd, weight);
+    nd->marked = true;
+    centroids[unusedItr] = centroid{
+        .bNode=nd,
+        .left=nullptr, .right=nullptr, .top=nullptr
+    };
+    centroid *c = &centroids[unusedItr++];
+    
+    if (nd->parent != nullptr && !(nd->parent->marked))
+        c->top = calc_centroid_decomposition(nd->parent);
+    if (nd->left != nullptr && !(nd->left->marked))
+        c->left = calc_centroid_decomposition(nd->left);
+    if (nd->right != nullptr && !(nd->right->marked))
+        c->right = calc_centroid_decomposition(nd->right);
+    return c;
 }
 
 }

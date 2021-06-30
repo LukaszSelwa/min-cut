@@ -1,38 +1,77 @@
 #include <gtest/gtest.h>
 #include <algorithm>
 #include <functional>
+#include "../../../src/examples/graph_examples.hpp"
 #include "../../../src/graphs/binarized_tree.hpp"
 
 void test_visited_all_nodes(std::shared_ptr<graphs::WeightedTree> tree, graphs::binarized_tree & bTree) {
     std::vector<int> visit_ctr(tree->size, 0);
     std::vector<int> exp_visit_ctr(tree->size, 0);
 
-    std::function<void(int)> dfs = [&](int idx) {
-        auto & v = bTree.vertices[idx];
-        visit_ctr[v.orgIdx]++;
-        if (v.children[0] != -1)
-            dfs(v.children[0]);
-        if (v.children[1] != -1)
-            dfs(v.children[1]);
+    std::function<void(graphs::binarized_node*)> dfs = [&](graphs::binarized_node *nd) {
+        visit_ctr[nd->orgIdx]++;
+        if (nd->left != nullptr)
+            dfs(nd->left);
+        if (nd->right != nullptr)
+            dfs(nd->right);
     };
-    dfs(0);
+    dfs(&bTree.vertices[0]);
     for (auto & v : tree->vertices)
         exp_visit_ctr[v.idx] = std::max(1, (int)v.children.size());
     EXPECT_EQ(visit_ctr, exp_visit_ctr);
 }
 
+void test_visited_all_centroids(std::shared_ptr<graphs::WeightedTree> tree, graphs::binarized_tree & bTree) {
+    std::vector<int> visit_ctr(tree->size, 0);
+    std::vector<int> exp_visit_ctr(tree->size, 0);
+
+    std::function<void(graphs::centroid*)> dfs = [&](graphs::centroid *c) {
+        visit_ctr[c->bNode->orgIdx]++;
+        if (c->top != nullptr)
+            dfs(c->top);
+        if (c->left != nullptr)
+            dfs(c->left);
+        if (c->right != nullptr)
+            dfs(c->right);
+    };
+    dfs(&bTree.centroids[0]);
+    for (auto & v : tree->vertices)
+        exp_visit_ctr[v.idx] = std::max(1, (int)v.children.size());
+    EXPECT_EQ(visit_ctr, exp_visit_ctr);
+}
+
+void test_centroids_size(std::shared_ptr<graphs::WeightedTree> tree, graphs::binarized_tree & bTree) {
+    std::function<int(graphs::centroid*)> dfs = [&](graphs::centroid *c)->int {
+        int sizes[3] = {0, 0, 0};
+        if (c->top != nullptr)
+            sizes[0] = dfs(c->top);
+        if (c->left != nullptr)
+            sizes[1] = dfs(c->left);
+        if (c->right != nullptr)
+            sizes[2] = dfs(c->right);
+        int size = sizes[0] + sizes[1] + sizes[2];
+        for (int i = 0; i < 3; ++i)
+            EXPECT_TRUE(sizes[i] <= size / 2);
+        return size;
+    };
+}
 
 TEST(Graphs_BinarizedTree, InitializeSmallTest_1) {
-    std::shared_ptr<graphs::WeightedTree> tree(new graphs::WeightedTree(8));
-    tree->AddChildEdge(0, 1, 2);
-    tree->AddChildEdge(0, 4, 3);
-    tree->AddChildEdge(1, 2, 3);
-    tree->AddChildEdge(1, 5, 2);
-    tree->AddChildEdge(2, 3, 4);
-    tree->AddChildEdge(3, 7, 2);
-    tree->AddChildEdge(5, 6, 1);
+    auto tree = examples::get_example(1).spanningTree;
 
     graphs::binarized_tree bTree(tree);
     bTree.initialize();
     test_visited_all_nodes(tree, bTree);
+    test_visited_all_centroids(tree, bTree);
+    test_centroids_size(tree, bTree);
+}
+
+TEST(Graphs_BinarizedTree, InitializeSmallTest_2) {
+    auto tree = examples::get_example(2).spanningTree;
+
+    graphs::binarized_tree bTree(tree);
+    bTree.initialize();
+    test_visited_all_nodes(tree, bTree);
+    test_visited_all_centroids(tree, bTree);
+    test_centroids_size(tree, bTree);
 }
