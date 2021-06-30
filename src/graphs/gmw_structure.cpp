@@ -8,26 +8,26 @@ int calc_cost_bottomup(std::shared_ptr<graphs::WeightedTree> &tree,
                      int p_idx);
 
 int gmw_structure::get_lower_endpoint(graphs::WeightedEdge e) {
-    return postorderVisit[e.srcIdx] < postorderVisit[e.destIdx] ? e.srcIdx : e.destIdx;
+    return postorder[e.srcIdx].end < postorder[e.destIdx].end ? e.srcIdx : e.destIdx;
 }
 
 bool gmw_structure::is_descendant(int u, int v) {
-    return subtreePostorderVisit[u] <= postorderVisit[v] && postorderVisit[v] <= postorderVisit[u];
+    return postorder[u].begin <= postorder[v].end && postorder[v].end <= postorder[u].end;
 }
 
 int gmw_structure::get_independent_cost(int u, int v) {
     return rs->GetSumInRectangle(
-        subtreePostorderVisit[u], postorderVisit[u],
-        subtreePostorderVisit[v], postorderVisit[v]
+        postorder[u].begin, postorder[u].end,
+        postorder[v].begin, postorder[v].end
     );
 }
 int gmw_structure::get_descendant_cost(int u, int v) {
     return rs->GetSumInRectangle(
-        subtreePostorderVisit[v], postorderVisit[v],
-        1, subtreePostorderVisit[u]-1
+        postorder[v].begin, postorder[v].end,
+        1, postorder[u].begin-1
     ) + rs->GetSumInRectangle(
-        subtreePostorderVisit[v], postorderVisit[v],
-        postorderVisit[u]+1, n
+        postorder[v].begin, postorder[v].end,
+        postorder[u].end+1, n
     );
 }
 
@@ -47,21 +47,21 @@ void gmw_structure::initialize(std::shared_ptr<graphs::weighted_graph> graph, st
             delta[lca.calc_lca(ed.srcIdx, ed.destIdx)] -= ed.weight;
         }
     }
-    subtreeCost = postorderVisit = subtreePostorderVisit= std::vector<int>(n, 0);
+    subtreeCost = std::vector<int>(n, 0);
+    postorder = std::vector<postord_range>(n);
     calc_cost_bottomup(tree, delta, subtreeCost, tree->rootIdx, -1);
     int nextPostorder = 1;
 
     tree->RunPostOrder([&](graphs::TreeVertice& v) {
-        postorderVisit[v.idx] = nextPostorder++;
-        subtreePostorderVisit[v.idx] = postorderVisit[v.idx]; 
+        postorder[v.idx].begin = postorder[v.idx].end = nextPostorder++;
         for (auto & ed : v.children) {
-            subtreePostorderVisit[v.idx] = std::min(subtreePostorderVisit[ed.destIdx], subtreePostorderVisit[v.idx]);
+            postorder[v.idx].begin = std::min(postorder[ed.destIdx].begin, postorder[v.idx].begin);
         }
     });
 
     for (const auto & v : graph->vertices) {
         for (const auto & ed : v.neighbors) {
-            rs->AddPoint(postorderVisit[ed.srcIdx], postorderVisit[ed.destIdx], ed.weight);
+            rs->AddPoint(postorder[ed.srcIdx].end, postorder[ed.destIdx].end, ed.weight);
         }
     }
 }
@@ -84,7 +84,15 @@ bool gmw_structure::is_crossinterested(graphs::WeightedEdge e1, graphs::Weighted
     if (is_descendant(u, v) || is_descendant(v, u))
         return false;
     int w = get_independent_cost(u, v);
-    return subtreeCost[u] < subtreeCost[u] + subtreeCost[v] - 2*w;
+    return subtreeCost[u] < 2*w;
+}
+
+bool gmw_structure::is_crossinterested(int idx, postord_range pr) {
+    int w = rs->GetSumInRectangle(
+        postorder[idx].begin, postorder[idx].end,
+        pr.begin, pr.end
+    );
+    return subtreeCost[idx] < 2*w;
 }
 
 bool gmw_structure::is_downinterested(graphs::WeightedEdge e1, graphs::WeightedEdge e2) {
@@ -92,7 +100,7 @@ bool gmw_structure::is_downinterested(graphs::WeightedEdge e1, graphs::WeightedE
     if (!is_descendant(u,v))
         return false;
     int w = get_descendant_cost(v, u);
-    return subtreeCost[u] < subtreeCost[u] + subtreeCost[v] - 2*w;
+    return subtreeCost[u] < 2*w;
 }
 
 int calc_cost_bottomup(std::shared_ptr<graphs::WeightedTree> &tree,

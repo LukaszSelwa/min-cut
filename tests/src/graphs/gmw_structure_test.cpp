@@ -58,11 +58,9 @@ TEST(Graphs_GMWStructure, GMWExampleTest_1) {
     gmw.initialize(graph, tree);
 
     std::vector<int> expCost{0, 5, 10, 9, 6, 12, 8, 5};
-    std::vector<int> expPost{8, 6, 3, 2, 7, 5, 4, 1};
-    std::vector<int> expSPost{1, 1, 1, 1, 7, 4, 4, 1};
-    EXPECT_EQ(gmw.get_subtree_cost(), expCost);
-    EXPECT_EQ(gmw.get_postorder_visit(), expPost);
-    EXPECT_EQ(gmw.get_subtree_postorder_visit(), expSPost);
+    std::vector<postord_range> expPost{{1,8}, {1,6}, {1,3}, {1,2}, {7,7}, {4,5}, {4,4}, {1,1}};
+    EXPECT_EQ(gmw.subtreeCost, expCost);
+    EXPECT_EQ(gmw.postorder, expPost);
 
     EXPECT_EQ(gmw.get_cut_val(graphs::WeightedEdge(1, 5), graphs::WeightedEdge(2, 3)), 11);
     EXPECT_EQ(gmw.get_cut_val(graphs::WeightedEdge(0, 1), graphs::WeightedEdge(2, 3)), 14);
