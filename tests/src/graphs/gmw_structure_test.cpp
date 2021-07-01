@@ -14,13 +14,13 @@ class gmw_verifier {
 
   public:
     gmw_verifier(std::shared_ptr<graphs::weighted_graph> graph, std::shared_ptr<graphs::WeightedTree> tree): graph(graph), tree(tree) { }
-    int get_cut_val(graphs::WeightedEdge e1, graphs::WeightedEdge e2) {
+    int get_cut_val(graphs::w_edge e1, graphs::w_edge e2) {
         std::vector<bool> cut(graph->size, false);
 
         std::function<void(int,bool)> calcCut = [&](int idx, bool isCut){
             cut[idx] = isCut;
             for (auto & e : tree->vertices[idx].children) {
-                calcCut(e.destIdx, (e.IsEqual(e1) || e.IsEqual(e2)) != isCut);
+                calcCut(e.destIdx, (e.is_equal(e1) || e.is_equal(e2)) != isCut);
             }
         };
         calcCut(tree->rootIdx, true);
@@ -36,7 +36,7 @@ class gmw_verifier {
 
 void verifyCutVals(gmw_structure & gmwStr, std::shared_ptr<graphs::weighted_graph> graph, std::shared_ptr<graphs::WeightedTree> tree) {
     gmw_verifier gmwVer(graph, tree);
-    std::vector<graphs::WeightedEdge> edges(0);
+    std::vector<graphs::w_edge> edges(0);
     for (auto & v : tree->vertices) {
         for (auto & e : v.children)
             edges.push_back(e);
@@ -62,8 +62,8 @@ TEST(Graphs_GMWStructure, GMWExampleTest_1) {
     EXPECT_EQ(gmw.subtreeCost, expCost);
     EXPECT_EQ(gmw.postorder, expPost);
 
-    EXPECT_EQ(gmw.get_cut_val(graphs::WeightedEdge(1, 5), graphs::WeightedEdge(2, 3)), 11);
-    EXPECT_EQ(gmw.get_cut_val(graphs::WeightedEdge(0, 1), graphs::WeightedEdge(2, 3)), 14);
+    EXPECT_EQ(gmw.get_cut_val(graphs::w_edge(1, 5), graphs::w_edge(2, 3)), 11);
+    EXPECT_EQ(gmw.get_cut_val(graphs::w_edge(0, 1), graphs::w_edge(2, 3)), 14);
     verifyCutVals(gmw, graph, tree);
 }
 
@@ -74,7 +74,7 @@ TEST(Graphs_GMWStructure, GMWExampleTest_2) {
 
     gmw_structure gmw(std::make_unique<Interval2DTree>(11, 11));
     gmw.initialize(graph, tree);
-    EXPECT_EQ(gmw.get_cut_val(graphs::WeightedEdge(0, 8), graphs::WeightedEdge(0, 9)), 16);
+    EXPECT_EQ(gmw.get_cut_val(graphs::w_edge(0, 8), graphs::w_edge(0, 9)), 16);
 }
 
 

@@ -37,8 +37,8 @@ class binarized_tree {
     int calc_weight(binarized_node *nd);
     int find_bottom_interested(centroid* c,binarized_node* nd,
                                std::function<bool(binarized_tree&,binarized_node*,binarized_node*)> is_interested);
-    void add_left_edge(binarized_node *nd, WeightedEdge & edge);
-    void add_right_edge(binarized_node *nd, WeightedEdge & edge);
+    void add_left_edge(binarized_node *nd, w_edge & edge);
+    void add_right_edge(binarized_node *nd, w_edge & edge);
     void build_binarized(binarized_node *nd, int orgIdx);
     void calc_order(binarized_node *nd, int & unusedPre, int &unusedPost);
 
@@ -48,8 +48,8 @@ class binarized_tree {
     
     binarized_tree(std::shared_ptr<WeightedTree> orgTree, std::shared_ptr<gmw_structure> gmw): orgTree(orgTree), gmw(gmw) { }
     
-    int find_bottom_crossinterested(WeightedEdge ed);
-    int find_bottom_downinterested(WeightedEdge ed);
+    int find_bottom_crossinterested(w_edge ed);
+    int find_bottom_downinterested(w_edge ed);
     void initialize();
 };
 

@@ -2,24 +2,24 @@
 
 namespace graphs {
 
-weighted_graph::weighted_graph (size_t size): size(size), vertices(std::vector<Vertice>(size)) {
+weighted_graph::weighted_graph (size_t size): size(size), vertices(std::vector<vertice>(size)) {
     for (int i = 0; i < size; ++i)
-        vertices[i].SetMyIdx(i);
+        vertices[i].set_idx(i);
 }
 
-void weighted_graph::add_edge(const WeightedEdge edge) {
-    vertices[edge.srcIdx].AddNeighbour(edge.destIdx, edge.weight);
-    vertices[edge.destIdx].AddNeighbour(edge.srcIdx, edge.weight);
+void weighted_graph::add_edge(const w_edge edge) {
+    vertices[edge.srcIdx].add_neighbour(edge.destIdx, edge.weight);
+    vertices[edge.destIdx].add_neighbour(edge.srcIdx, edge.weight);
 }
 
-Vertice & weighted_graph::operator[] (size_t idx) {
+vertice & weighted_graph::operator[] (size_t idx) {
     return vertices[idx];
 }
 
 std::ostream & operator<< (std::ostream & o, const weighted_graph & graph) {
     o << "graph[size: " << graph.size << "]{\n";
     for (auto & v : graph.vertices) {
-        o << "\t" << v.GetIdx() << ": ";
+        o << "\t" << v.get_idx() << ": ";
         for (auto & e : v.neighbors)
             o << e << ", ";
         o << "\n";

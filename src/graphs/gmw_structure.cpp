@@ -11,7 +11,7 @@ int calc_cost_bottomup(std::shared_ptr<graphs::WeightedTree> &tree,
                      int idx,
                      int p_idx);
 
-int gmw_structure::get_lower_endpoint(graphs::WeightedEdge e) {
+int gmw_structure::get_lower_endpoint(graphs::w_edge e) {
     return postorder[e.srcIdx].end < postorder[e.destIdx].end ? e.srcIdx : e.destIdx;
 }
 
@@ -47,7 +47,7 @@ void gmw_structure::initialize(std::shared_ptr<graphs::weighted_graph> graph, st
     std::vector<int> delta(n, 0);
     for (auto & v : graph->vertices) {
         for (auto & ed : v.neighbors) {
-            delta[v.GetIdx()] += ed.weight;
+            delta[v.get_idx()] += ed.weight;
             delta[lca.calc_lca(ed.srcIdx, ed.destIdx)] -= ed.weight;
         }
     }
@@ -70,7 +70,7 @@ void gmw_structure::initialize(std::shared_ptr<graphs::weighted_graph> graph, st
     }
 }
 
-int gmw_structure::get_cut_val(graphs::WeightedEdge e1, graphs::WeightedEdge e2) {
+int gmw_structure::get_cut_val(graphs::w_edge e1, graphs::w_edge e2) {
     // According to Gawrychowski, Mozes, Weimann: A Note on a Recent Algorithm for Minimum Cut
     int u = get_lower_endpoint(e1), v = get_lower_endpoint(e2);
     int w = 0;
@@ -83,7 +83,7 @@ int gmw_structure::get_cut_val(graphs::WeightedEdge e1, graphs::WeightedEdge e2)
     return subtreeCost[u] + subtreeCost[v] - 2*w;
 }
 
-bool gmw_structure::is_crossinterested(graphs::WeightedEdge e1, graphs::WeightedEdge e2) {
+bool gmw_structure::is_crossinterested(graphs::w_edge e1, graphs::w_edge e2) {
     int u = get_lower_endpoint(e1), v = get_lower_endpoint(e2);
     if (is_descendant(u, v))
         return false;
@@ -119,7 +119,7 @@ bool gmw_structure::is_crossinterested(int idx, postord_range pr) {
     return subtreeCost[idx] < 2*w;
 }
 
-bool gmw_structure::is_downinterested(graphs::WeightedEdge e1, graphs::WeightedEdge e2) {
+bool gmw_structure::is_downinterested(graphs::w_edge e1, graphs::w_edge e2) {
     int u = get_lower_endpoint(e1), v = get_lower_endpoint(e2);
     return is_descendant(v, u) || (is_descendant(u, v) && subtreeCost[u] < 2*get_descendant_cost(u, v));
 }

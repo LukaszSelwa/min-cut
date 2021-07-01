@@ -17,18 +17,18 @@ std::shared_ptr<graphs::weighted_graph> generate_random_graph(size_t n, size_t m
     while (!disconnected.empty()) {
         int x = connected.pop();
         int y = disconnected.pop();
-        graph->add_edge(graphs::WeightedEdge(x, y, distWeight(*seed)));
+        graph->add_edge(graphs::w_edge(x, y, distWeight(*seed)));
         adjMtx[x][y] = adjMtx[y][x] = true;
         connected.push(x);
         connected.push(y);
     }
 
     // list possible unused edges
-    RandomQueue<graphs::WeightedEdge> posEdges(seed);
+    RandomQueue<graphs::w_edge> posEdges(seed);
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < i; ++j) {
             if (!adjMtx[i][j])
-                posEdges.push(graphs::WeightedEdge(i, j, distWeight(*seed)));
+                posEdges.push(graphs::w_edge(i, j, distWeight(*seed)));
         }
     }
 

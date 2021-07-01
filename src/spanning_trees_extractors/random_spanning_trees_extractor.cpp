@@ -15,7 +15,7 @@ graphs::WeightedTree extractSingleRandomSpanningTree (graphs::weighted_graph & g
     int n = graph.size;
     graphs::WeightedTree spanning_tree(n);
     std::vector<bool> connected(n, false);
-    RandomQueue<graphs::WeightedEdge> rq(seed);
+    RandomQueue<graphs::w_edge> rq(seed);
 
     connected[0] = true;
     for (auto edge : graph[0].neighbors)

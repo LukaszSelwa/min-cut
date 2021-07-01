@@ -9,7 +9,7 @@ WeightedTree::WeightedTree(size_t size): size(size), rootIdx(0), vertices(std::v
 
 void WeightedTree::AddChildEdge(int parent, int child, int weight) {
     vertices[parent].children.emplace_back(parent, child, weight);
-    vertices[child].parentEdge = WeightedEdge(child, parent, weight);
+    vertices[child].parentEdge = w_edge(child, parent, weight);
 }
 
 void WeightedTree::RunPreOrder(std::function<void(TreeVertice&)> func) {

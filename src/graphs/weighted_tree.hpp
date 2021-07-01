@@ -10,8 +10,8 @@ namespace graphs {
 class TreeVertice {
   public:
     int idx;
-    WeightedEdge parentEdge;
-    std::vector<WeightedEdge> children;
+    w_edge parentEdge;
+    std::vector<w_edge> children;
 
     TreeVertice(): idx(0), parentEdge(0, -1, 0), children(0) { }
 };

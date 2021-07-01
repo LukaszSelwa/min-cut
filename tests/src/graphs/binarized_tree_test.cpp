@@ -62,8 +62,8 @@ void test_centroids_size(std::shared_ptr<graphs::WeightedTree> tree, graphs::bin
     };
 }
 
-int find_bottom_interested(graphs::WeightedEdge ed, std::shared_ptr<graphs::WeightedTree> tree, 
-                           std::function<bool(graphs::WeightedEdge, graphs::WeightedEdge)> is_interested) {
+int find_bottom_interested(graphs::w_edge ed, std::shared_ptr<graphs::WeightedTree> tree, 
+                           std::function<bool(graphs::w_edge, graphs::w_edge)> is_interested) {
     std::function<int(int)> search = [&](int idx)->int {
         for (auto & ed2 : tree->vertices[idx].children) {
             if (is_interested(ed, ed2))
@@ -78,7 +78,7 @@ void test_crossinterested_points(graphs::binarized_tree & bTree,
                                  std::shared_ptr<graphs::WeightedTree> tree,
                                  std::shared_ptr<graphs::weighted_graph> graph,
                                  std::shared_ptr<gmw_structure> gmw) {
-    auto is_crossinterested = [&](graphs::WeightedEdge e1, graphs::WeightedEdge e2)->bool {
+    auto is_crossinterested = [&](graphs::w_edge e1, graphs::w_edge e2)->bool {
         return gmw->is_crossinterested(e1, e2);
     };
     for (auto & v : tree->vertices) {
@@ -96,7 +96,7 @@ void test_downinterested_points(graphs::binarized_tree & bTree,
                                  std::shared_ptr<graphs::WeightedTree> tree,
                                  std::shared_ptr<graphs::weighted_graph> graph,
                                  std::shared_ptr<gmw_structure> gmw) {
-    auto is_downinterested = [&](graphs::WeightedEdge e1, graphs::WeightedEdge e2)->bool {
+    auto is_downinterested = [&](graphs::w_edge e1, graphs::w_edge e2)->bool {
         return gmw->is_downinterested(e1, e2);
     };
     for (auto & v : tree->vertices) {
@@ -148,14 +148,14 @@ TEST(Graphs_BinarizedTree, CrossinterestedSmallTest_1) {
     graphs::binarized_tree bTree(tree, gmw);
     bTree.initialize();
 
-    std::vector<graphs::WeightedEdge> edges{
-        graphs::WeightedEdge(3,7),
-        graphs::WeightedEdge(2,3),
-        graphs::WeightedEdge(1,2),
-        graphs::WeightedEdge(0,1),
-        graphs::WeightedEdge(1,5),
-        graphs::WeightedEdge(5,6),
-        graphs::WeightedEdge(0,4),
+    std::vector<graphs::w_edge> edges{
+        graphs::w_edge(3,7),
+        graphs::w_edge(2,3),
+        graphs::w_edge(1,2),
+        graphs::w_edge(0,1),
+        graphs::w_edge(1,5),
+        graphs::w_edge(5,6),
+        graphs::w_edge(0,4),
     };
     std::vector<int> expCrossinterested{6, 6, 6, 4, 2, 3, 0};
     std::vector<int> corossinterested;
@@ -188,7 +188,7 @@ TEST(Graphs_BinarizedTree, CrossinterestedSmallTest_3) {
     graphs::binarized_tree bTree(tree, gmw);
     bTree.initialize();
 
-    EXPECT_EQ(bTree.find_bottom_crossinterested(graphs::WeightedEdge(5, 6)), 5);
+    EXPECT_EQ(bTree.find_bottom_crossinterested(graphs::w_edge(5, 6)), 5);
 }
 
 void test_b_tree_random_graph(int n, int maxWeight, std::shared_ptr<std::mt19937> seed) {
@@ -241,23 +241,19 @@ TEST(Graphs_BinarizedTree, DowninterestedSmallTest_1) {
     graphs::binarized_tree bTree(tree, gmw);
     bTree.initialize();
 
-    std::vector<graphs::WeightedEdge> edges{
-        graphs::WeightedEdge(3,7),
-        graphs::WeightedEdge(2,3),
-        graphs::WeightedEdge(1,2),
-        graphs::WeightedEdge(0,1),
-        graphs::WeightedEdge(1,5),
-        graphs::WeightedEdge(5,6),
-        graphs::WeightedEdge(0,4),
+    std::vector<graphs::w_edge> edges{
+        graphs::w_edge(3,7),
+        graphs::w_edge(2,3),
+        graphs::w_edge(1,2),
+        graphs::w_edge(0,1),
+        graphs::w_edge(1,5),
+        graphs::w_edge(5,6),
+        graphs::w_edge(0,4),
     };
     std::vector<int> expDowninterested{7, 3, 2, 5, 6, 6, 4};
     std::vector<int> downinterested;
     for (auto & ed : edges)
         downinterested.push_back(bTree.find_bottom_downinterested(ed));
     EXPECT_EQ(downinterested, expDowninterested);
-
-    auto is_downinterested = [&](graphs::WeightedEdge e1, graphs::WeightedEdge e2)->bool {
-        return gmw->is_downinterested(e1, e2);
-    };
     test_downinterested_points(bTree, tree, graph, gmw);
 }

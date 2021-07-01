@@ -9,10 +9,10 @@ namespace graphs {
 class weighted_graph {
   public:
     const size_t size;
-    std::vector<Vertice> vertices;
+    std::vector<vertice> vertices;
     weighted_graph(size_t size);
-    void add_edge(const WeightedEdge edge);
-    Vertice & operator[] (size_t i);
+    void add_edge(const w_edge edge);
+    vertice & operator[] (size_t i);
     friend std::ostream & operator<< (std::ostream & o, const weighted_graph & graph);
 };
 

@@ -54,7 +54,7 @@ void binarized_tree::build_binarized(binarized_node *nd, int orgIdx) {
     }
 }
 
-void binarized_tree::add_left_edge(binarized_node *nd, WeightedEdge & edge) {
+void binarized_tree::add_left_edge(binarized_node *nd, w_edge & edge) {
     vertices[unusedItr] = binarized_node{
         .parent=nd, .left=nullptr, .right=nullptr,
         .orgIdx=edge.destIdx, 
@@ -63,7 +63,7 @@ void binarized_tree::add_left_edge(binarized_node *nd, WeightedEdge & edge) {
     nd->left = &vertices[unusedItr++];
 }
 
-void binarized_tree::add_right_edge(binarized_node *nd, WeightedEdge & edge) {
+void binarized_tree::add_right_edge(binarized_node *nd, w_edge & edge) {
     vertices[unusedItr] = binarized_node{
         .parent=nd, .left=nullptr, .right=nullptr,
         .orgIdx=edge.srcIdx,
@@ -162,12 +162,12 @@ int binarized_tree::find_bottom_interested(centroid* c, binarized_node* nd,std::
         : cNd->orgIdx;
 }
 
-int binarized_tree::find_bottom_crossinterested(WeightedEdge ed) {
+int binarized_tree::find_bottom_crossinterested(w_edge ed) {
     int idx = gmw->get_lower_endpoint(ed);
     return find_bottom_interested(&centroids[0], mapOrg[idx], &binarized_tree::is_crossinterested);
 }
 
-int binarized_tree::find_bottom_downinterested(WeightedEdge ed) {
+int binarized_tree::find_bottom_downinterested(w_edge ed) {
     int idx = gmw->get_lower_endpoint(ed);
     return find_bottom_interested(&centroids[0], mapOrg[idx], &binarized_tree::is_downinterested);
 }

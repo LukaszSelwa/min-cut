@@ -5,29 +5,29 @@
 
 namespace graphs {
 
-class WeightedEdge {
+class w_edge {
   public:
     int srcIdx;
     int destIdx;
     int weight;
 
-    WeightedEdge(int srcIdx, int destIdx, int weight): srcIdx(srcIdx), destIdx(destIdx), weight(weight) { }
-    WeightedEdge(int srcIdx, int destIdx): srcIdx(srcIdx), destIdx(destIdx), weight(1) { }
-    WeightedEdge(): WeightedEdge(0, 0, 0) { }
-    bool IsEqual(const WeightedEdge & e);
-    friend std::ostream & operator<< (std::ostream &os, const WeightedEdge & e);
+    w_edge(int srcIdx, int destIdx, int weight): srcIdx(srcIdx), destIdx(destIdx), weight(weight) { }
+    w_edge(int srcIdx, int destIdx): srcIdx(srcIdx), destIdx(destIdx), weight(1) { }
+    w_edge(): w_edge(0, 0, 0) { }
+    bool is_equal(const w_edge & e);
+    friend std::ostream & operator<< (std::ostream &os, const w_edge & e);
 };
 
-class Vertice {
+class vertice {
     int myIdx;
 
   public:
-    std::vector<WeightedEdge> neighbors;
+    std::vector<w_edge> neighbors;
     
-    Vertice(): myIdx(0), neighbors(std::vector<WeightedEdge>(0)) { }
-    int GetIdx() const;
-    void SetMyIdx(int idx);
-    void AddNeighbour(int idx, int weight);
+    vertice(): myIdx(0), neighbors(std::vector<w_edge>(0)) { }
+    int get_idx() const;
+    void set_idx(int idx);
+    void add_neighbour(int idx, int weight);
 };
 
 }
