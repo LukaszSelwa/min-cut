@@ -35,7 +35,7 @@ void WeightedTree::RunPostOrder(int idx, std::function<void(TreeVertice&)> & fun
 std::ostream & operator<< (std::ostream & o, const WeightedTree & tree) {
     o << "tree[size: "<< tree.size << "]{\n";
     for (auto & v : tree.vertices) {
-        o << v.idx << ": ";
+        o << "\t" << v.idx << ": ";
         for (auto & e : v.children)
             o << e << ", ";
         o << "\n";

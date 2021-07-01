@@ -19,7 +19,7 @@ Vertice & weighted_graph::operator[] (size_t idx) {
 std::ostream & operator<< (std::ostream & o, const weighted_graph & graph) {
     o << "graph[size: " << graph.size << "]{\n";
     for (auto & v : graph.vertices) {
-        o << v.GetIdx() << ": ";
+        o << "\t" << v.GetIdx() << ": ";
         for (auto & e : v.neighbors)
             o << e << ", ";
         o << "\n";

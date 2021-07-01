@@ -1,6 +1,10 @@
 #include "gmw_structure.hpp"
 #include <algorithm>
 
+bool postord_range::contains(int x) {
+    return begin <= x && x <= end;
+}
+
 int calc_cost_bottomup(std::shared_ptr<graphs::WeightedTree> &tree,
                      std::vector<int> &delta,
                      std::vector<int> &cost,
@@ -81,26 +85,54 @@ int gmw_structure::get_cut_val(graphs::WeightedEdge e1, graphs::WeightedEdge e2)
 
 bool gmw_structure::is_crossinterested(graphs::WeightedEdge e1, graphs::WeightedEdge e2) {
     int u = get_lower_endpoint(e1), v = get_lower_endpoint(e2);
-    if (is_descendant(u, v) || is_descendant(v, u))
+    if (is_descendant(u, v))
         return false;
-    int w = get_independent_cost(u, v);
+    int w = 0;
+    if (is_descendant(v, u))
+        w = rs->GetSumInRectangle(
+            postorder[u].begin, postorder[u].end,
+            postorder[v].begin, postorder[u].begin-1
+        ) + rs->GetSumInRectangle(
+            postorder[u].begin, postorder[u].end,
+            postorder[u].end+1, postorder[v].end
+        );
+    else
+        w = get_independent_cost(u, v);
     return subtreeCost[u] < 2*w;
 }
 
 bool gmw_structure::is_crossinterested(int idx, postord_range pr) {
-    int w = rs->GetSumInRectangle(
-        postorder[idx].begin, postorder[idx].end,
-        pr.begin, pr.end
-    );
+    int w = 0;
+    if (!pr.contains(postorder[idx].end))
+        w = rs->GetSumInRectangle(
+            postorder[idx].begin, postorder[idx].end,
+            pr.begin, pr.end
+        );
+    else 
+        w = rs->GetSumInRectangle(
+            postorder[idx].begin, postorder[idx].end,
+            pr.begin, postorder[idx].begin-1
+        ) + rs->GetSumInRectangle(
+            postorder[idx].begin, postorder[idx].end,
+            postorder[idx].end+1, pr.end
+        );
     return subtreeCost[idx] < 2*w;
 }
 
 bool gmw_structure::is_downinterested(graphs::WeightedEdge e1, graphs::WeightedEdge e2) {
     int u = get_lower_endpoint(e1), v = get_lower_endpoint(e2);
-    if (!is_descendant(u,v))
-        return false;
-    int w = get_descendant_cost(v, u);
-    return subtreeCost[u] < 2*w;
+    return is_descendant(v, u) || (is_descendant(u, v) && subtreeCost[u] < 2*get_descendant_cost(u, v));
+}
+
+bool gmw_structure::is_downinterested(int idx, postord_range pr) {
+    int w = rs->GetSumInRectangle(
+            1, postorder[idx].begin-1,
+            pr.begin, pr.end
+        ) + rs->GetSumInRectangle(
+            postorder[idx].end+1, n,
+            pr.begin, pr.end
+        );
+    return subtreeCost[idx] < 2*w;
 }
 
 int calc_cost_bottomup(std::shared_ptr<graphs::WeightedTree> &tree,

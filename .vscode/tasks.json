@@ -2,7 +2,7 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Run tests",
+            "label": "Run all tests",
             "type": "shell",
             "command": "make",
             "args": [
@@ -11,8 +11,22 @@
             "group": "test",
             "presentation": {
                 "reveal": "always",
-                "panel": "new"
+                "panel": "shared"
             }
+        },
+        {
+            "label": "Run single test",
+            "type": "shell",
+            "command": "${workspaceFolder}/tests/test_main.exe",
+            "args": [ "--gtest_filter=${input:testCase}" ],
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "dependsOn": [
+                "Build tests"
+            ]
         },
         {
             "label": "Build tests",
@@ -21,7 +35,26 @@
             "args": [
                 "build_tests"
             ],
-            "group": "test"
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+        }
+    ],
+    "inputs": [
+        {
+          "type": "pickString",
+          "id": "testCase",
+          "description": "What type of component do you want to create?",
+          "options": [
+            "Graphs_BinarizedTree.CrossinterestedSmallTest_1",
+            "Graphs_BinarizedTree.CrossinterestedSmallTest_2",
+            "Graphs_BinarizedTree.CrossinterestedSmallTest_3",
+            "Graphs_BinarizedTree.RandomSmallTest",
+            "Graphs_BinarizedTree.DowninterestedSmallTest_1"
+          ],
+          "default": "component"
         }
     ]
 }

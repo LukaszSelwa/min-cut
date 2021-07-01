@@ -12,6 +12,7 @@ struct postord_range{
     friend bool operator== (const postord_range & pr1, const postord_range & pr2) {
         return pr1.begin == pr2.begin && pr1.end == pr1.end;
     }
+    bool contains(int x);
 };
 
 class gmw_structure {
@@ -27,6 +28,7 @@ class gmw_structure {
     bool is_crossinterested(graphs::WeightedEdge e1, graphs::WeightedEdge e2);
     bool is_crossinterested(int idx, postord_range pr);
     bool is_downinterested(graphs::WeightedEdge e1, graphs::WeightedEdge e2);
+    bool is_downinterested(int idx, postord_range pr);
     int get_cut_val(graphs::WeightedEdge e1, graphs::WeightedEdge e2);
     int get_lower_endpoint(graphs::WeightedEdge e);
     void initialize(std::shared_ptr<graphs::weighted_graph> graph, std::shared_ptr<graphs::WeightedTree> tree);

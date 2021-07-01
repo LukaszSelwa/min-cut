@@ -61,6 +61,28 @@ graph_example get_example(int nr) {
         e.spanningTree->AddChildEdge(9, 7, 6);
         break;
     
+    case 3: 
+        e.graph = std::shared_ptr<weighted_graph>(new weighted_graph(7));
+        e.graph->add_edge(graphs::WeightedEdge(0, 4, 9));
+        e.graph->add_edge(graphs::WeightedEdge(0, 1, 10));
+        e.graph->add_edge(graphs::WeightedEdge(1, 6, 4));
+        e.graph->add_edge(graphs::WeightedEdge(1, 2, 5));
+        e.graph->add_edge(graphs::WeightedEdge(2, 5, 9));
+        e.graph->add_edge(graphs::WeightedEdge(2, 6, 9));
+        e.graph->add_edge(graphs::WeightedEdge(3, 4, 1));
+        e.graph->add_edge(graphs::WeightedEdge(3, 6, 3));
+        e.graph->add_edge(graphs::WeightedEdge(4, 5, 10));
+        e.graph->add_edge(graphs::WeightedEdge(4, 6, 10));
+        e.graph->add_edge(graphs::WeightedEdge(5, 6, 2));
+
+        e.spanningTree = std::shared_ptr<WeightedTree>(new WeightedTree(10));
+        e.spanningTree->AddChildEdge(0, 4, 9);
+        e.spanningTree->AddChildEdge(4, 5, 10);
+        e.spanningTree->AddChildEdge(4, 3, 1);
+        e.spanningTree->AddChildEdge(5, 2, 9);
+        e.spanningTree->AddChildEdge(5, 6, 2);
+        e.spanningTree->AddChildEdge(2, 1, 5);
+        break;
     default:
         throw "Unsupported graph example number";
     }

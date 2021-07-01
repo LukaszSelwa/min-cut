@@ -3,12 +3,12 @@
 
 namespace graphs {
 
-bool binarized_node::is_descendant(binarized_node* nd) {
-    return preorder <= nd->preorder && postorder >= nd->postorder;
+bool binarized_node::is_descendant_of(binarized_node* nd) {
+    return nd->preorder <= preorder && nd->postorder >= postorder;
 }
 
 bool binarized_node::is_independent(binarized_node* nd) {
-    return !is_descendant(nd) && !nd->is_descendant(this);
+    return !is_descendant_of(nd) && !nd->is_descendant_of(this);
 }
 
 void binarized_tree::initialize() {
@@ -137,32 +137,39 @@ centroid* binarized_tree::calc_centroid_decomposition(binarized_node *nd) {
 }
 
 bool binarized_tree::is_crossinterested(binarized_node* nd1, binarized_node* nd2) {
-    return !nd2->is_descendant(nd1) && gmw->is_crossinterested(nd1->orgIdx, nd2->orgRange);
+    return !nd2->is_descendant_of(nd1) && gmw->is_crossinterested(nd1->orgIdx, nd2->orgRange);
+}
+
+bool binarized_tree:: is_downinterested(binarized_node* nd1, binarized_node* nd2) {
+    return nd1->is_descendant_of(nd2) 
+    || (nd2->is_descendant_of(nd1) && gmw->is_downinterested(nd1->orgIdx, nd2->orgRange) );
+}
+
+int binarized_tree::find_bottom_interested(centroid* c, binarized_node* nd,std::function<bool(binarized_tree&,binarized_node*,binarized_node*)> is_interested){
+    binarized_node* cNd = c->bNode;
+    if (cNd->left != nullptr && is_interested(*this, nd, cNd->left)) {
+        return c->left != nullptr 
+            ? find_bottom_interested(c->left, nd, is_interested)
+            : cNd->left->orgIdx;
+    }
+    if (cNd->right != nullptr && is_interested(*this, nd, cNd->right)) {
+        return c->right != nullptr 
+            ? find_bottom_interested(c->right, nd, is_interested)
+            : cNd->right->orgIdx;
+    }
+    return c->top != nullptr
+        ? find_bottom_interested(c->top, nd, is_interested)
+        : cNd->orgIdx;
 }
 
 int binarized_tree::find_bottom_crossinterested(WeightedEdge ed) {
     int idx = gmw->get_lower_endpoint(ed);
-    centroid *c = &centroids[0];
-    binarized_node *nd = mapOrg[idx];
-    while (true) {
-        if (c->left != nullptr && is_crossinterested(nd, c->bNode->left)) {
-            c = c->left;
-            continue;
-        }
-        if (c->right != nullptr && is_crossinterested(nd, c->bNode->right)) {
-            c = c->right;
-            continue;
-        }
-        if (c->top != nullptr) {
-            c = c->top;
-            continue;
-        }
-        break;
-    }
-    binarized_node* interestedNd = c->bNode;
-    if (interestedNd->left != nullptr && is_crossinterested(nd, interestedNd->left))
-        interestedNd = interestedNd->left;
-    return interestedNd->orgIdx;
+    return find_bottom_interested(&centroids[0], mapOrg[idx], &binarized_tree::is_crossinterested);
+}
+
+int binarized_tree::find_bottom_downinterested(WeightedEdge ed) {
+    int idx = gmw->get_lower_endpoint(ed);
+    return find_bottom_interested(&centroids[0], mapOrg[idx], &binarized_tree::is_downinterested);
 }
 
 }
