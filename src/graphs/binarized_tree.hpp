@@ -8,20 +8,20 @@
 namespace graphs {
 
 struct binarized_node {
-    binarized_node *parent, *left, *right;
-    int orgIdx;
-    int weight;
-    bool marked;
-    postord_range orgRange;
-    int postorder, preorder;
+    binarized_node *parent=nullptr, *left=nullptr, *right=nullptr;
+    int orgIdx=0;
+    int weight=0;
+    bool marked=false;
+    postord_range orgRange={0,0};
+    int postorder=0, preorder=0;
 
     bool is_descendant_of(binarized_node* nd);
     bool is_independent(binarized_node* nd);
 };
 
 struct centroid {
-    binarized_node *bNode;
-    centroid *left, *right, *top;
+    binarized_node *bNode=nullptr;
+    centroid *left=nullptr, *right=nullptr, *top=nullptr;
 };
 
 class binarized_tree {

@@ -14,8 +14,9 @@ class w_edge {
     w_edge(int srcIdx, int destIdx, int weight): srcIdx(srcIdx), destIdx(destIdx), weight(weight) { }
     w_edge(int srcIdx, int destIdx): srcIdx(srcIdx), destIdx(destIdx), weight(1) { }
     w_edge(): w_edge(0, 0, 0) { }
-    bool is_equal(const w_edge & e);
+    bool is_equal(const w_edge & e) const;
     friend std::ostream & operator<< (std::ostream &os, const w_edge & e);
+    friend bool operator== (const w_edge & e1, const w_edge & e2);
 };
 
 class vertice {

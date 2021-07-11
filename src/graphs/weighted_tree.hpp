@@ -10,6 +10,8 @@ namespace graphs {
 class TreeVertice {
   public:
     int idx;
+    int bottomCrossinterested;
+    int bottomDowninterested;
     int hlPathId;
     w_edge parentEdge;
     std::vector<w_edge> children;

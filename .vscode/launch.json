@@ -5,11 +5,24 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "clang++ - Build and debug active file",
+            "name": "debug single test",
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/tests/test_main.exe",
-            "args": ["--gtest_filter=Graphs_HLDecomposition.Decompose_SmallTest_1"],
+            "args": ["--gtest_filter=Graphs_HLDecomposition.Initialize_SmallTest_1"],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "lldb",
+            "preLaunchTask": "Build tests"
+        },
+        {
+            "name": "debug all test",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/tests/test_main.exe",
+            "args": [""],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],

@@ -19,6 +19,10 @@ bool gmw_structure::is_descendant(int u, int v) {
     return postorder[u].begin <= postorder[v].end && postorder[v].end <= postorder[u].end;
 }
 
+bool gmw_structure::are_independent(int u, int v) {
+    return !is_descendant(u, v) && !is_descendant(v, u);
+}
+
 int gmw_structure::get_independent_cost(int u, int v) {
     return rs->GetSumInRectangle(
         postorder[u].begin, postorder[u].end,

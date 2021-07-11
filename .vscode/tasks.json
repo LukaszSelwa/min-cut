@@ -52,7 +52,8 @@
             "Graphs_BinarizedTree.CrossinterestedSmallTest_2",
             "Graphs_BinarizedTree.CrossinterestedSmallTest_3",
             "Graphs_BinarizedTree.RandomSmallTest",
-            "Graphs_BinarizedTree.DowninterestedSmallTest_1"
+            "Graphs_BinarizedTree.DowninterestedSmallTest_1",
+            "Graphs_HLDecomposition.Initialize_SmallTest_1"
           ],
           "default": "component"
         }
