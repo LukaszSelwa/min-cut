@@ -10,10 +10,10 @@
 
 class gmw_verifier {
     std::shared_ptr<graphs::weighted_graph> graph;
-    std::shared_ptr<graphs::WeightedTree> tree;
+    std::shared_ptr<graphs::weighted_tree> tree;
 
   public:
-    gmw_verifier(std::shared_ptr<graphs::weighted_graph> graph, std::shared_ptr<graphs::WeightedTree> tree): graph(graph), tree(tree) { }
+    gmw_verifier(std::shared_ptr<graphs::weighted_graph> graph, std::shared_ptr<graphs::weighted_tree> tree): graph(graph), tree(tree) { }
     int get_cut_val(graphs::w_edge e1, graphs::w_edge e2) {
         std::vector<bool> cut(graph->size, false);
 
@@ -34,7 +34,7 @@ class gmw_verifier {
     }
 };
 
-void verifyCutVals(gmw_structure & gmwStr, std::shared_ptr<graphs::weighted_graph> graph, std::shared_ptr<graphs::WeightedTree> tree) {
+void verifyCutVals(gmw_structure & gmwStr, std::shared_ptr<graphs::weighted_graph> graph, std::shared_ptr<graphs::weighted_tree> tree) {
     gmw_verifier gmwVer(graph, tree);
     std::vector<graphs::w_edge> edges(0);
     for (auto & v : tree->vertices) {
@@ -82,7 +82,7 @@ void testRandomGraph(int n, int maxWeight, std::shared_ptr<std::mt19937> seed) {
     std::uniform_int_distribution<> dist(n-1, n * (n-1) / 2);
     int m = dist(*seed);
     auto graph = graphs::generate_random_graph(n, m, maxWeight, seed);
-    std::shared_ptr<graphs::WeightedTree> tree(new graphs::WeightedTree(extractSingleRandomSpanningTree(*graph, seed)));
+    std::shared_ptr<graphs::weighted_tree> tree(new graphs::weighted_tree(extractSingleRandomSpanningTree(*graph, seed)));
 
     gmw_structure gmw(std::make_unique<Interval2DTree>(n+1, n+1));
     gmw.initialize(graph, tree);

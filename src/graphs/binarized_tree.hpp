@@ -25,7 +25,7 @@ struct centroid {
 };
 
 class binarized_tree {
-    std::shared_ptr<WeightedTree> orgTree;
+    std::shared_ptr<weighted_tree> orgTree;
     std::shared_ptr<gmw_structure> gmw;
     std::vector<binarized_node*> mapOrg;
     int unusedItr;
@@ -46,7 +46,7 @@ class binarized_tree {
     std::vector<binarized_node> vertices;
     std::vector<centroid> centroids;
     
-    binarized_tree(std::shared_ptr<WeightedTree> orgTree, std::shared_ptr<gmw_structure> gmw): orgTree(orgTree), gmw(gmw) { }
+    binarized_tree(std::shared_ptr<weighted_tree> orgTree, std::shared_ptr<gmw_structure> gmw): orgTree(orgTree), gmw(gmw) { }
     
     int find_bottom_crossinterested(w_edge ed);
     int find_bottom_downinterested(w_edge ed);

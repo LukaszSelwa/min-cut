@@ -3,9 +3,9 @@
 #include "../../../src/graphs/lca_computer.hpp"
 
 TEST(Graphs_LCAComputer, SmallTreeTest) {
-    std::shared_ptr<graphs::WeightedTree> tree = std::make_shared<graphs::WeightedTree>(3);
-    tree->AddChildEdge(0, 1, 1);
-    tree->AddChildEdge(0, 2, 1);
+    std::shared_ptr<graphs::weighted_tree> tree = std::make_shared<graphs::weighted_tree>(3);
+    tree->add_child_edge(0, 1, 1);
+    tree->add_child_edge(0, 2, 1);
 
     graphs::lca_computer computer(tree);
     computer.initialize();
@@ -22,14 +22,14 @@ TEST(Graphs_LCAComputer, SmallTreeTest) {
 }
 
 TEST(Graphs_LCAComputer, Medium_Test) {
-    std::shared_ptr<graphs::WeightedTree> tree(new graphs::WeightedTree(8));
-    tree->AddChildEdge(0, 1, 2);
-    tree->AddChildEdge(0, 4, 3);
-    tree->AddChildEdge(1, 2, 3);
-    tree->AddChildEdge(1, 5, 2);
-    tree->AddChildEdge(2, 3, 4);
-    tree->AddChildEdge(3, 7, 2);
-    tree->AddChildEdge(5, 6, 1);
+    std::shared_ptr<graphs::weighted_tree> tree(new graphs::weighted_tree(8));
+    tree->add_child_edge(0, 1, 2);
+    tree->add_child_edge(0, 4, 3);
+    tree->add_child_edge(1, 2, 3);
+    tree->add_child_edge(1, 5, 2);
+    tree->add_child_edge(2, 3, 4);
+    tree->add_child_edge(3, 7, 2);
+    tree->add_child_edge(5, 6, 1);
 
     graphs::lca_computer computer(tree);
     computer.initialize();

@@ -12,14 +12,14 @@ void interested_path_pair::add_interested_edge(int pathId, w_edge & edge) {
         edgesQ.push_back(edge);
 }
 
-hl_decomposition::hl_decomposition(std::shared_ptr<WeightedTree> tree): tree(tree) { }
+hl_decomposition::hl_decomposition(std::shared_ptr<weighted_tree> tree): tree(tree) { }
 
 struct hl_recurrence {
     int weight;
     int hlPathId;
 };
 
-hl_recurrence hl_decompose(int idx, std::vector<TreeVertice> & vertices, int & unusedId) {
+hl_recurrence hl_decompose(int idx, std::vector<tree_vertice> & vertices, int & unusedId) {
     int weight = 1;
     hl_recurrence heaviest{-1,-1};
     hl_recurrence child;

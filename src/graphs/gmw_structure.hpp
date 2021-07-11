@@ -32,7 +32,7 @@ class gmw_structure {
     bool is_downinterested(int idx, postord_range pr);
     int get_cut_val(graphs::w_edge e1, graphs::w_edge e2);
     int get_lower_endpoint(graphs::w_edge e);
-    void initialize(std::shared_ptr<graphs::weighted_graph> graph, std::shared_ptr<graphs::WeightedTree> tree);
+    void initialize(std::shared_ptr<graphs::weighted_graph> graph, std::shared_ptr<graphs::weighted_tree> tree);
 
     std::vector<int> subtreeCost;
     std::vector<postord_range> postorder;

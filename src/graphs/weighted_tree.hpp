@@ -7,7 +7,7 @@
 
 namespace graphs {
 
-class TreeVertice {
+class tree_vertice {
   public:
     int idx;
     int bottomCrossinterested;
@@ -16,25 +16,25 @@ class TreeVertice {
     w_edge parentEdge;
     std::vector<w_edge> children;
 
-    TreeVertice(): idx(0), parentEdge(0, -1, 0), children(0) { }
+    tree_vertice(): idx(0), parentEdge(0, -1, 0), children(0) { }
 };
 
-class WeightedTree {
+class weighted_tree {
   public:
     size_t size;
     int rootIdx;
-    std::vector<TreeVertice> vertices;
+    std::vector<tree_vertice> vertices;
     
-    WeightedTree(size_t size);
-    WeightedTree(): WeightedTree(0) { }
-    void AddChildEdge(int parent, int child, int weight);
-    void RunPreOrder(std::function<void(TreeVertice&)> func);
-    void RunPostOrder(std::function<void(TreeVertice&)> func);
-    friend std::ostream & operator<< (std::ostream & o, const WeightedTree & tree);
+    weighted_tree(size_t size);
+    weighted_tree(): weighted_tree(0) { }
+    void add_child_edge(int parent, int child, int weight);
+    void run_preorder(std::function<void(tree_vertice&)> func);
+    void run_postorder(std::function<void(tree_vertice&)> func);
+    friend std::ostream & operator<< (std::ostream & o, const weighted_tree & tree);
 
   private:
-    void RunPreOrder(int idx, std::function<void(TreeVertice&)> & func);
-    void RunPostOrder(int idx, std::function<void(TreeVertice&)> & func);
+    void run_preorder(int idx, std::function<void(tree_vertice&)> & func);
+    void run_postorder(int idx, std::function<void(tree_vertice&)> & func);
 };
 
 }

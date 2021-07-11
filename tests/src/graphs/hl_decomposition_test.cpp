@@ -9,7 +9,7 @@
 #include "../../../src/range_search/interval2D_tree.hpp"
 #include "../../../src/spanning_trees_extractors/random_spanning_trees_extractor.hpp"
 
-void test_is_every_interesting_pair(graphs::weighted_graph & graph, graphs::WeightedTree & tree, gmw_structure & gmw, graphs::hl_decomposition & hld) {
+void test_is_every_interesting_pair(graphs::weighted_graph & graph, graphs::weighted_tree & tree, gmw_structure & gmw, graphs::hl_decomposition & hld) {
     size_t n = tree.size;
     std::vector<std::vector<bool>> found_interested(n, std::vector<bool> (n, false));
     for (auto & pair : hld.interesting_pairs) {
@@ -39,7 +39,7 @@ void test_is_every_interesting_pair(graphs::weighted_graph & graph, graphs::Weig
     }
 }
 
-void test_number_of_interesting_pairs(graphs::weighted_graph & graph, graphs::WeightedTree & tree, graphs::hl_decomposition & hld) {
+void test_number_of_interesting_pairs(graphs::weighted_graph & graph, graphs::weighted_tree & tree, graphs::hl_decomposition & hld) {
     size_t total_pairs = 0;
     for (auto & pair : hld.interesting_pairs) {
         total_pairs += pair.edgesP.size();
@@ -52,7 +52,7 @@ void test_number_of_interesting_pairs(graphs::weighted_graph & graph, graphs::We
         << "and spanning tree: \n" << tree;
 }
 
-void calc_bottom_interested(std::shared_ptr<graphs::WeightedTree> tree, std::shared_ptr<gmw_structure> gmw) {
+void calc_bottom_interested(std::shared_ptr<graphs::weighted_tree> tree, std::shared_ptr<gmw_structure> gmw) {
     graphs::binarized_tree bTree(tree, gmw);
     bTree.initialize();
     for (auto & v : tree->vertices) {
@@ -127,7 +127,7 @@ void hld_test_random_graph(int n, int maxWeight, std::shared_ptr<std::mt19937> s
     std::uniform_int_distribution<> dist(n-1, n * (n-1) / 2);
     int m = dist(*seed);
     auto graph = graphs::generate_random_graph(n, m, maxWeight, seed);
-    std::shared_ptr<graphs::WeightedTree> tree(new graphs::WeightedTree(extractSingleRandomSpanningTree(*graph, seed)));
+    std::shared_ptr<graphs::weighted_tree> tree(new graphs::weighted_tree(extractSingleRandomSpanningTree(*graph, seed)));
 
     std::shared_ptr<gmw_structure> gmw(new gmw_structure(std::make_unique<Interval2DTree>(n+1, n+1)));
     gmw->initialize(graph, tree);

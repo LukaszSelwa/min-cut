@@ -2,7 +2,7 @@
 
 namespace graphs {
 
-lca_computer::lca_computer(std::shared_ptr<graphs::WeightedTree> tree): tree(tree) { }
+lca_computer::lca_computer(std::shared_ptr<graphs::weighted_tree> tree): tree(tree) { }
 
 void lca_computer::initialize() {
     reIndex = reIndexInv = firstVisit = std::vector<int> (tree->size, -1);

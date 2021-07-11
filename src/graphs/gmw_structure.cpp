@@ -5,7 +5,7 @@ bool postord_range::contains(int x) {
     return begin <= x && x <= end;
 }
 
-int calc_cost_bottomup(std::shared_ptr<graphs::WeightedTree> &tree,
+int calc_cost_bottomup(std::shared_ptr<graphs::weighted_tree> &tree,
                      std::vector<int> &delta,
                      std::vector<int> &cost,
                      int idx,
@@ -42,7 +42,7 @@ int gmw_structure::get_descendant_cost(int u, int v) {
 
 gmw_structure::gmw_structure(std::unique_ptr<RangeSearchStructure> rs): rs(std::move(rs)) { }
 
-void gmw_structure::initialize(std::shared_ptr<graphs::weighted_graph> graph, std::shared_ptr<graphs::WeightedTree> tree) {
+void gmw_structure::initialize(std::shared_ptr<graphs::weighted_graph> graph, std::shared_ptr<graphs::weighted_tree> tree) {
     graphs::lca_computer lca(tree);
     lca.initialize();
     n = tree->size;
@@ -60,7 +60,7 @@ void gmw_structure::initialize(std::shared_ptr<graphs::weighted_graph> graph, st
     calc_cost_bottomup(tree, delta, subtreeCost, tree->rootIdx, -1);
     int nextPostorder = 1;
 
-    tree->RunPostOrder([&](graphs::TreeVertice& v) {
+    tree->run_postorder([&](graphs::tree_vertice& v) {
         postorder[v.idx].begin = postorder[v.idx].end = nextPostorder++;
         for (auto & ed : v.children) {
             postorder[v.idx].begin = std::min(postorder[ed.destIdx].begin, postorder[v.idx].begin);
@@ -139,7 +139,7 @@ bool gmw_structure::is_downinterested(int idx, postord_range pr) {
     return subtreeCost[idx] < 2*w;
 }
 
-int calc_cost_bottomup(std::shared_ptr<graphs::WeightedTree> &tree,
+int calc_cost_bottomup(std::shared_ptr<graphs::weighted_tree> &tree,
                      std::vector<int> &delta,
                      std::vector<int> &cost,
                      int idx,

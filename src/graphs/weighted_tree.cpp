@@ -2,37 +2,37 @@
 
 namespace graphs {
 
-WeightedTree::WeightedTree(size_t size): size(size), rootIdx(0), vertices(std::vector<TreeVertice>(size)) {
+weighted_tree::weighted_tree(size_t size): size(size), rootIdx(0), vertices(std::vector<tree_vertice>(size)) {
     for (int i = 0; i < size; ++i)
         vertices[i].idx = i;
 }
 
-void WeightedTree::AddChildEdge(int parent, int child, int weight) {
+void weighted_tree::add_child_edge(int parent, int child, int weight) {
     vertices[parent].children.emplace_back(parent, child, weight);
     vertices[child].parentEdge = w_edge(child, parent, weight);
 }
 
-void WeightedTree::RunPreOrder(std::function<void(TreeVertice&)> func) {
-    RunPreOrder(rootIdx, func);
+void weighted_tree::run_preorder(std::function<void(tree_vertice&)> func) {
+    run_preorder(rootIdx, func);
 }
 
-void WeightedTree::RunPreOrder(int idx, std::function<void(TreeVertice&)> & func) {
+void weighted_tree::run_preorder(int idx, std::function<void(tree_vertice&)> & func) {
     func(vertices[idx]);
     for (auto & edge : vertices[idx].children)
-        RunPreOrder(edge.destIdx, func);
+        run_preorder(edge.destIdx, func);
 }
 
-void WeightedTree::RunPostOrder(std::function<void(TreeVertice&)> func) {
-    RunPostOrder(rootIdx, func);
+void weighted_tree::run_postorder(std::function<void(tree_vertice&)> func) {
+    run_postorder(rootIdx, func);
 }
 
-void WeightedTree::RunPostOrder(int idx, std::function<void(TreeVertice&)> & func) {
+void weighted_tree::run_postorder(int idx, std::function<void(tree_vertice&)> & func) {
     for (auto & edge : vertices[idx].children)
-        RunPostOrder(edge.destIdx, func);
+        run_postorder(edge.destIdx, func);
     func(vertices[idx]);
 }
 
-std::ostream & operator<< (std::ostream & o, const WeightedTree & tree) {
+std::ostream & operator<< (std::ostream & o, const weighted_tree & tree) {
     o << "tree[size: "<< tree.size << "]{\n";
     for (auto & v : tree.vertices) {
         o << "\t" << v.idx << ": ";

@@ -28,13 +28,13 @@ struct interested_path_pair {
 
 class hl_decomposition {
   private:
-    std::shared_ptr<WeightedTree> tree;
+    std::shared_ptr<weighted_tree> tree;
     void find_interested_paths(int pathId, int idx);
     void find_interested_path_edges(int pathId, w_edge edge, int idx);
   public:
     std::vector<hl_path> paths;
     std::vector<interested_path_pair> interesting_pairs;
-    hl_decomposition(std::shared_ptr<WeightedTree> tree);
+    hl_decomposition(std::shared_ptr<weighted_tree> tree);
     void decompose();
     void find_interested_pairs_of_paths();
     void find_interested_path_edges();

@@ -9,7 +9,7 @@ using namespace graphs;
 
 struct graph_example {
     std::shared_ptr<weighted_graph> graph;
-    std::shared_ptr<WeightedTree> spanningTree; 
+    std::shared_ptr<weighted_tree> spanningTree; 
 };
 
 graph_example get_example(int nr);
