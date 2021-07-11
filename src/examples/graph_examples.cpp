@@ -75,7 +75,7 @@ graph_example get_example(int nr) {
         e.graph->add_edge(graphs::w_edge(4, 6, 10));
         e.graph->add_edge(graphs::w_edge(5, 6, 2));
 
-        e.spanningTree = std::shared_ptr<WeightedTree>(new WeightedTree(10));
+        e.spanningTree = std::shared_ptr<WeightedTree>(new WeightedTree(7));
         e.spanningTree->AddChildEdge(0, 4, 9);
         e.spanningTree->AddChildEdge(4, 5, 10);
         e.spanningTree->AddChildEdge(4, 3, 1);
