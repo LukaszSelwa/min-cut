@@ -1,6 +1,22 @@
 #include <gtest/gtest.h>
 #include <functional>
+#include <random>
+#include <sstream>
 #include "../../../src/monge_matrix_min/smawk.hpp"
+
+TEST(MongeMatrixMin_SMAWK, EdgeCase) {
+    int mongeArr[1][1] = {
+        {10},
+    };
+    std::vector<size_t> expRowsArgmin{0};
+    std::vector<size_t> rowsArgmin(1);
+    std::function<int(size_t, size_t)>lookup = [&](size_t row, size_t col) {
+        return mongeArr[row][col];
+    };
+    smawk(1, 1, lookup, rowsArgmin);
+    EXPECT_EQ(rowsArgmin, expRowsArgmin);
+    EXPECT_EQ(smawk_min(1, 1, lookup), 10);
+}
 
 TEST(MongeMatrixMin_SMAWK, SmallExampleTest_1) {
     int mongeArr[7][5] = {
@@ -64,4 +80,121 @@ TEST(MongeMatrixMin_SMAWK, mediumExampleTest) {
     smawk(9, 18, lookup, rowsArgmin);
     EXPECT_EQ(rowsArgmin, expRowsArgmin);
     EXPECT_EQ(smawk_min(9, 18, lookup), 10);
+}
+
+void smawk_brutal(size_t numRows, size_t numCols, std::function<int(size_t, size_t)> lookup, std::vector<size_t> & rowsArgmin) {
+    for (size_t row = 0; row < numRows; ++row) {
+        rowsArgmin[row] = 0;
+        int min = lookup(row, 0);
+        for (size_t col = 1; col < numCols; ++col) {
+            int val = lookup(row, col);
+            if (val < min) {
+                min = val;
+                rowsArgmin[row] = col;
+            }
+        }
+    }
+}
+
+int smawk_min_brutal(const size_t numRows, const size_t numCols, std::function<int(size_t, size_t)> lookup) {
+    int min = lookup(0, 0);
+    for (size_t row = 0; row < numRows; ++row) {
+        for (size_t col = 0; col < numCols; ++col)
+            min = std::min(min, lookup(row, col));
+    }
+    return min;
+}
+
+std::vector<std::vector<int> > generate_random_monge_matrix(const size_t numRows,
+                                                            const size_t numCols,
+                                                            const int initBound,
+                                                            const int maxInc,
+                                                            std::mt19937 seed) {
+    std::vector<std::vector<int> > mtx(numRows, std::vector<int>(numCols, 0));
+    std::uniform_int_distribution<int> distInit(0, initBound);
+    std::uniform_int_distribution<int> distInc(0, maxInc);
+    std::uniform_int_distribution<int> distDelta(-initBound, initBound);
+    for (size_t row = 0; row < numRows; ++row)
+        mtx[row][0] = distInit(seed);
+
+    for (size_t col = 1; col < numCols; ++col) {
+        int delta = distDelta(seed);
+        for (size_t row = 0; row < numRows; ++row) {
+            delta += distInc(seed);
+            mtx[row][col] = mtx[row][col-1] - delta;
+        }
+    }
+
+    return mtx;
+}
+
+std::string get_matrix_info(std::vector<std::vector<int> > mtx) {
+    std::stringstream ss;
+    ss << "{";
+    for (auto & row : mtx) {
+        ss << "\n\t{";
+        for (auto v : row)
+            ss << ' ' << v << ',';
+        ss << "}";
+    }
+    ss << "\n}";
+    return ss.str();
+}
+
+void test_random_monge_matrix(const size_t maxSize,
+                              const int initBound,
+                              const int maxInc,
+                              std::mt19937 seed) {
+    std::uniform_int_distribution<int> distSize(1, maxSize);
+    size_t numRows = distSize(seed);
+    size_t numCols = distSize(seed);
+    
+    auto mtx = generate_random_monge_matrix(numRows, numCols, initBound, maxInc, seed);
+    std::function<int(size_t, size_t)>lookup = [&](size_t row, size_t col) {
+        return mtx[row][col];
+    };
+    ASSERT_EQ(smawk_min(numRows, numCols, lookup), smawk_min_brutal(numRows, numCols, lookup))
+        << "Should find minimum for monge matrix: " << get_matrix_info(mtx);
+
+    std::vector<size_t> rowsArgmin(numRows), expRowsArgmin(numRows);
+    smawk(numRows, numCols, lookup, rowsArgmin);
+    smawk_brutal(numRows, numCols, lookup, expRowsArgmin);
+    ASSERT_EQ(rowsArgmin, expRowsArgmin)
+        << "Should find rows minimum for monge matrix: " << get_matrix_info(mtx);
+}
+
+TEST(MongeMatrixMin_SMAWK, RandomSmallTest) {
+    int testCases = 10000;
+    int maxSize = 30;
+    int initBound = 30;
+    int maxInc = 4;
+
+    std::random_device rd;
+    std::mt19937 seed(rd());
+    while (testCases--)
+        test_random_monge_matrix(maxSize, initBound, maxInc, seed);
+}
+
+TEST(MongeMatrixMin_SMAWK, RandomMediumTest) {
+    int testCases = 200;
+    int maxSize = 500;
+    int initBound = 50;
+    int maxInc = 3;
+
+    std::random_device rd;
+    std::mt19937 seed(rd());
+    while (testCases--)
+        test_random_monge_matrix(maxSize, initBound, maxInc, seed);
+}
+
+TEST(MongeMatrixMin_SMAWK, RandomLargeTest) {
+    int testCases = 20;
+    int maxSize = 2000;
+    int initBound = 50;
+    int maxInc = 2;
+
+    std::random_device rd;
+    std::mt19937 seed(rd());
+    while (testCases--)
+        test_random_monge_matrix(maxSize, initBound, maxInc, seed);
 }

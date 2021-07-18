@@ -66,7 +66,7 @@ void recursive_smawk(std::vector<size_t> &rows, std::vector<size_t> &cols, std::
         min = lookup(row, argmin);
         for (size_t i = start; i <= stop; ++i) {
             int val = lookup(row, newCols[i]);
-            if (val <= min) {
+            if (val < min) {
                 min = val;
                 argmin = newCols[i];
             }
