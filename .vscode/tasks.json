@@ -55,7 +55,8 @@
             "Graphs_BinarizedTree.DowninterestedSmallTest_1",
             "Graphs_HLDecomposition.Initialize_SmallTest_1",
             "\"Graphs_HLDecomposition.*\"",
-            "\"MongeMatrixMin_SMAWK.*\""
+            "\"MongeMatrixMin_SMAWK.*\"",
+            "\"MongeMatrixMin_PartialMonge.*\""
           ],
           "default": "component"
         }
