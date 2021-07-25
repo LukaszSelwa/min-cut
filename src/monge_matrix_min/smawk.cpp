@@ -6,6 +6,14 @@
 #include <stack>
 #include <vector>
 
+bool operator==(const min_coords& a, const min_coords& b) {
+    return a.row == b.row && a.col == b.col && a.val == b.val;
+}
+
+std::ostream& operator<<(std::ostream& out, const min_coords& m) {
+    return out << "{ .row=" << m.row << ", .col=" << m.col << ", .val=" << m.val << "}";
+}
+
 /* ---------------------------------------------------------------*
  *  Implementation based on articles:                             *
  *   1) http://web.cs.unlv.edu/larmore/Courses/CSC477/monge.pdf   *
@@ -27,15 +35,16 @@ void smawk(const size_t numRows, const size_t numCols, std::function<int(size_t,
     recursive_smawk(rows, cols, lookup, rowsArgmin);
 }
 
-int smawk_min(const size_t numRows, const size_t numCols,
-              std::function<int(size_t, size_t)> lookup) {
+min_coords smawk_min(const size_t numRows, const size_t numCols,
+                     std::function<int(size_t, size_t)> lookup) {
     std::vector<size_t> rowsArgmin(numRows);
     smawk(numRows, numCols, lookup, rowsArgmin);
 
-    int result = std::numeric_limits<int>::max();
+    min_coords result = {.row = 0, .col = 0, .val = std::numeric_limits<int>::max()};
     for (size_t row = 0; row < numRows; ++row) {
         size_t argmin = rowsArgmin[row];
-        result = std::min(result, lookup(row, argmin));
+        int val = lookup(row, argmin);
+        if (val < result.val) result = {.row = row, .col = argmin, .val = val};
     }
     return result;
 }

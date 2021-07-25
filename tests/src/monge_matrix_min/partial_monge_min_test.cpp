@@ -14,13 +14,14 @@ TEST(MongeMatrixMin_PartialMonge, EdgeCase) {
     std::function<int(size_t, size_t)> lookup = [&](size_t row, size_t col) {
         return mongeArr[row][col];
     };
-    EXPECT_EQ(partial_monge_min(1, lookup), 10);
+    min_coords expMin{.row = 0, .col = 0, .val = 10};
+    EXPECT_EQ(partial_monge_min(1, lookup), expMin);
 }
 
 TEST(MongeMatrixMin_PartialMonge, SmallExampleTest_1) {
     int mongeArr[5][5] = {
         {10, -1, -1, -1, -1}, {17, 22, -1, -1, -1}, {24, 28, 22, -1, -1},
-        {11, 13, 6, 17, 7},   {45, 44, 32, 37, 23},
+        {11, 13, 6, 17, -1},  {45, 44, 32, 37, 23},
     };
     std::function<int(size_t, size_t)> lookup = [&](size_t row, size_t col) {
         if (row < col) {
@@ -31,7 +32,9 @@ TEST(MongeMatrixMin_PartialMonge, SmallExampleTest_1) {
         }
         return mongeArr[row][col];
     };
-    EXPECT_EQ(partial_monge_min(5, lookup), 6);
+    min_coords expMin{.row = 3, .col = 2, .val = 6};
+    min_coords min = partial_monge_min(5, lookup);
+    EXPECT_EQ(min, expMin) << "expected " << expMin << " but got " << min;
 }
 
 TEST(MongeMatrixMin_PartialMonge, mediumExampleTest) {
@@ -51,13 +54,17 @@ TEST(MongeMatrixMin_PartialMonge, mediumExampleTest) {
         }
         return mongeArr[row][col];
     };
-    EXPECT_EQ(partial_monge_min(9, lookup), 25);
+    min_coords expMin{.row = 0, .col = 0, .val = 25};
+    EXPECT_EQ(partial_monge_min(9, lookup), expMin);
 }
 
-int partial_monge_min_brutal(const size_t size, std::function<int(size_t, size_t)> lookup) {
-    int min = lookup(0, 0);
+min_coords partial_monge_min_brutal(const size_t size, std::function<int(size_t, size_t)> lookup) {
+    min_coords min{.row = 0, .col = 0, .val = lookup(0, 0)};
     for (size_t row = 0; row < size; ++row) {
-        for (size_t col = 0; col <= row; ++col) min = std::min(min, lookup(row, col));
+        for (size_t col = 0; col <= row; ++col) {
+            int val = lookup(row, col);
+            if (val < min.val) min = {.row = row, .col = col, .val = val};
+        }
     }
     return min;
 }

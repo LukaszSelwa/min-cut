@@ -17,7 +17,8 @@ TEST(MongeMatrixMin_SMAWK, EdgeCase) {
     };
     smawk(1, 1, lookup, rowsArgmin);
     EXPECT_EQ(rowsArgmin, expRowsArgmin);
-    EXPECT_EQ(smawk_min(1, 1, lookup), 10);
+    min_coords expMin{.row = 0, .col = 0, .val = 10};
+    EXPECT_EQ(smawk_min(1, 1, lookup), expMin);
 }
 
 TEST(MongeMatrixMin_SMAWK, SmallExampleTest_1) {
@@ -31,7 +32,8 @@ TEST(MongeMatrixMin_SMAWK, SmallExampleTest_1) {
     };
     smawk(7, 5, lookup, rowsArgmin);
     EXPECT_EQ(rowsArgmin, expRowsArgmin);
-    EXPECT_EQ(smawk_min(7, 5, lookup), 6);
+    min_coords expMin{.row = 3, .col = 2, .val = 6};
+    EXPECT_EQ(smawk_min(7, 5, lookup), expMin);
 }
 
 TEST(MongeMatrixMin_SMAWK, SmallExampleTest_2) {
@@ -47,7 +49,8 @@ TEST(MongeMatrixMin_SMAWK, SmallExampleTest_2) {
     };
     smawk(9, 5, lookup, rowsArgmin);
     EXPECT_EQ(rowsArgmin, expRowsArgmin);
-    EXPECT_EQ(smawk_min(9, 5, lookup), 10);
+    min_coords expMin{.row = 0, .col = 3, .val = 10};
+    EXPECT_EQ(smawk_min(9, 5, lookup), expMin);
 }
 
 TEST(MongeMatrixMin_SMAWK, mediumExampleTest) {
@@ -69,7 +72,8 @@ TEST(MongeMatrixMin_SMAWK, mediumExampleTest) {
     };
     smawk(9, 18, lookup, rowsArgmin);
     EXPECT_EQ(rowsArgmin, expRowsArgmin);
-    EXPECT_EQ(smawk_min(9, 18, lookup), 10);
+    min_coords expMin{.row = 0, .col = 3, .val = 10};
+    EXPECT_EQ(smawk_min(9, 18, lookup), expMin);
 }
 
 void smawk_brutal(size_t numRows, size_t numCols, std::function<int(size_t, size_t)> lookup,
@@ -87,11 +91,14 @@ void smawk_brutal(size_t numRows, size_t numCols, std::function<int(size_t, size
     }
 }
 
-int smawk_min_brutal(const size_t numRows, const size_t numCols,
-                     std::function<int(size_t, size_t)> lookup) {
-    int min = lookup(0, 0);
+min_coords smawk_min_brutal(const size_t numRows, const size_t numCols,
+                            std::function<int(size_t, size_t)> lookup) {
+    min_coords min{.row = 0, .col = 0, .val = lookup(0, 0)};
     for (size_t row = 0; row < numRows; ++row) {
-        for (size_t col = 0; col < numCols; ++col) min = std::min(min, lookup(row, col));
+        for (size_t col = 0; col < numCols; ++col) {
+            int val = lookup(row, col);
+            if (val < min.val) min = {.row = row, .col = col, .val = val};
+        }
     }
     return min;
 }

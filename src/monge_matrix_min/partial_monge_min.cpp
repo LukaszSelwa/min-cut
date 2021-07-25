@@ -2,37 +2,43 @@
 
 #include <algorithm>
 
-#include "smawk.hpp"
+min_coords recursive_partial_monge_min(const size_t rowBegin, const size_t colBegin,
+                                       const size_t size,
+                                       std::function<int(size_t, size_t)> lookup);
 
-int recursive_partial_monge_min(const size_t rowBegin, const size_t colBegin, const size_t size,
-                                std::function<int(size_t, size_t)> lookup);
+min_coords monge_sub_sqr_min(const size_t rowBegin, const size_t colBegin, const size_t size,
+                             std::function<int(size_t, size_t)> lookup);
 
-int monge_sub_sqr_min(const size_t rowBegin, const size_t colBegin, const size_t size,
-                      std::function<int(size_t, size_t)> lookup);
-
-int partial_monge_min(const size_t size, std::function<int(size_t, size_t)> lookup) {
+min_coords partial_monge_min(const size_t size, std::function<int(size_t, size_t)> lookup) {
     return recursive_partial_monge_min(0, 0, size, lookup);
 }
 
-int recursive_partial_monge_min(const size_t rowBegin, const size_t colBegin, const size_t size,
-                                std::function<int(size_t, size_t)> lookup) {
+min_coords recursive_partial_monge_min(const size_t rowBegin, const size_t colBegin,
+                                       const size_t size,
+                                       std::function<int(size_t, size_t)> lookup) {
     size_t prefSize = size / 2;
     size_t sqrtSize = size - prefSize;
 
-    int result = monge_sub_sqr_min(rowBegin + prefSize, colBegin, sqrtSize, lookup);
+    min_coords result = monge_sub_sqr_min(rowBegin + prefSize, colBegin, sqrtSize, lookup);
+    result.row += prefSize;
 
     if (prefSize > 0) {
-        result =
-            std::min(result, recursive_partial_monge_min(rowBegin, colBegin, prefSize, lookup));
-        result = std::min(result, recursive_partial_monge_min(
-                                      rowBegin + sqrtSize, colBegin + sqrtSize, prefSize, lookup));
+        min_coords result_rec;
+        result_rec = recursive_partial_monge_min(rowBegin, colBegin, prefSize, lookup);
+        if (result_rec.val <= result.val) result = result_rec;
+
+        result_rec =
+            recursive_partial_monge_min(rowBegin + sqrtSize, colBegin + sqrtSize, prefSize, lookup);
+        result_rec.row += sqrtSize;
+        result_rec.col += sqrtSize;
+        if (result_rec.val < result.val) result = result_rec;
     }
 
     return result;
 }
 
-int monge_sub_sqr_min(const size_t rowBegin, const size_t colBegin, const size_t size,
-                      std::function<int(size_t, size_t)> lookup) {
+min_coords monge_sub_sqr_min(const size_t rowBegin, const size_t colBegin, const size_t size,
+                             std::function<int(size_t, size_t)> lookup) {
     return smawk_min(size, size,
                      [&](size_t i, size_t j) -> int { return lookup(rowBegin + i, colBegin + j); });
 }

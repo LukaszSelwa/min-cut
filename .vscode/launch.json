@@ -9,7 +9,9 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/tests/test_main.exe",
-            "args": ["--gtest_filter=MongeMatrixMin_SMAWK.mediumExampleTest"],
+            "args": [
+                "--gtest_filter=MongeMatrixMin_PartialMonge.SmallExampleTest_1"
+            ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
@@ -22,7 +24,9 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/tests/test_main.exe",
-            "args": [""],
+            "args": [
+                ""
+            ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
