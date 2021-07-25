@@ -1,15 +1,14 @@
 #include "interval_tree.hpp"
+
 #include "helper_functions.hpp"
 
-IntervalTree::IntervalTree(size_t size): size(size) {
+IntervalTree::IntervalTree(size_t size) : size(size) {
     size_t log = ceilingLog(size);
     nrLeaves = 1 << log;
     baseIntervals = std::vector<int>(2 * nrLeaves + 1, 0);
 }
 
-void IntervalTree::AddPoint(int idx, int val) {
-    SetPoint(idx, val + PointVal(idx));
-}
+void IntervalTree::AddPoint(int idx, int val) { SetPoint(idx, val + PointVal(idx)); }
 
 void IntervalTree::SetPoint(int idx, int val) {
     int tIdx = getTreeIndex(idx);
@@ -38,18 +37,13 @@ int IntervalTree::SumInRange(int begin, int end) {
     return sum;
 }
 
-int IntervalTree::PointVal(int idx) {
-    return baseIntervals[getTreeIndex(idx)];
+int IntervalTree::PointVal(int idx) { return baseIntervals[getTreeIndex(idx)]; }
+
+void IntervalTree::updateBaseInterval(int tIdx) {
+    baseIntervals[tIdx] =
+        baseIntervals[leftChildInterval(tIdx)] + baseIntervals[rightChildInterval(tIdx)];
 }
 
-void IntervalTree::updateBaseInterval (int tIdx) {
-    baseIntervals[tIdx] = baseIntervals[leftChildInterval(tIdx)] + baseIntervals[rightChildInterval(tIdx)];
-}
+int IntervalTree::getTreeIndex(int idx) { return idx + nrLeaves; }
 
-int IntervalTree::getTreeIndex (int idx) {
-    return idx + nrLeaves;
-}
-
-size_t IntervalTree::GetSize () const {
-    return size;
-}
+size_t IntervalTree::GetSize() const { return size; }

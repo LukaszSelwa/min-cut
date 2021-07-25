@@ -1,12 +1,11 @@
 #include "random_queue_class.hpp"
 
 template <typename T>
-RandomQueue<T>::RandomQueue(std::shared_ptr<std::mt19937> seed): seed(seed), arr(std::vector<T>(0)) {
-
-}
+RandomQueue<T>::RandomQueue(std::shared_ptr<std::mt19937> seed)
+    : seed(seed), arr(std::vector<T>(0)) {}
 
 template <typename T>
-void RandomQueue<T>::push(T val) { 
+void RandomQueue<T>::push(T val) {
     arr.push_back(val);
 }
 

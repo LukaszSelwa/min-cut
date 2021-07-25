@@ -1,51 +1,58 @@
-#include <gtest/gtest.h>
-#include "../../../src/examples/graph_examples.hpp"
 #include "../../../src/graphs/gmw_structure.hpp"
-#include "../../../src/graphs/random_graph_generation.hpp"
-#include "../../../src/range_search/interval2D_tree.hpp"
-#include "../../../src/spanning_trees_extractors/random_spanning_trees_extractor.hpp"
+
+#include <gtest/gtest.h>
+
 #include <algorithm>
 #include <memory>
 #include <random>
+
+#include "../../../src/examples/graph_examples.hpp"
+#include "../../../src/graphs/random_graph_generation.hpp"
+#include "../../../src/range_search/interval2D_tree.hpp"
+#include "../../../src/spanning_trees_extractors/random_spanning_trees_extractor.hpp"
 
 class gmw_verifier {
     std::shared_ptr<graphs::weighted_graph> graph;
     std::shared_ptr<graphs::weighted_tree> tree;
 
-  public:
-    gmw_verifier(std::shared_ptr<graphs::weighted_graph> graph, std::shared_ptr<graphs::weighted_tree> tree): graph(graph), tree(tree) { }
+   public:
+    gmw_verifier(std::shared_ptr<graphs::weighted_graph> graph,
+                 std::shared_ptr<graphs::weighted_tree> tree)
+        : graph(graph), tree(tree) {}
     int get_cut_val(graphs::w_edge e1, graphs::w_edge e2) {
         std::vector<bool> cut(graph->size, false);
 
-        std::function<void(int,bool)> calcCut = [&](int idx, bool isCut){
+        std::function<void(int, bool)> calcCut = [&](int idx, bool isCut) {
             cut[idx] = isCut;
-            for (auto & e : tree->vertices[idx].children) {
+            for (auto& e : tree->vertices[idx].children) {
                 calcCut(e.destIdx, (e.is_equal(e1) || e.is_equal(e2)) != isCut);
             }
         };
         calcCut(tree->rootIdx, true);
 
         int cutVal = 0;
-        for (auto & v : graph->vertices) {
-            for (auto & e : v.neighbors)
-                cutVal += cut[e.srcIdx] != cut[e.destIdx] ? e.weight : 0;
+        for (auto& v : graph->vertices) {
+            for (auto& e : v.neighbors) cutVal += cut[e.srcIdx] != cut[e.destIdx] ? e.weight : 0;
         }
         return cutVal / 2;
     }
 };
 
-void verifyCutVals(gmw_structure & gmwStr, std::shared_ptr<graphs::weighted_graph> graph, std::shared_ptr<graphs::weighted_tree> tree) {
+void verifyCutVals(gmw_structure& gmwStr, std::shared_ptr<graphs::weighted_graph> graph,
+                   std::shared_ptr<graphs::weighted_tree> tree) {
     gmw_verifier gmwVer(graph, tree);
     std::vector<graphs::w_edge> edges(0);
-    for (auto & v : tree->vertices) {
-        for (auto & e : v.children)
-            edges.push_back(e);
+    for (auto& v : tree->vertices) {
+        for (auto& e : v.children) edges.push_back(e);
     }
 
     for (size_t i = 0; i < edges.size(); ++i) {
         for (int j = 0; j < i; ++j)
-            ASSERT_EQ(gmwStr.get_cut_val(edges[i], edges[j]), gmwVer.get_cut_val(edges[i], edges[j])) 
-                << "should calc cut value for edges: " << edges[i] << ", " << edges[j] << "\n" << *graph << "\n" << *tree;
+            ASSERT_EQ(gmwStr.get_cut_val(edges[i], edges[j]),
+                      gmwVer.get_cut_val(edges[i], edges[j]))
+                << "should calc cut value for edges: " << edges[i] << ", " << edges[j] << "\n"
+                << *graph << "\n"
+                << *tree;
     }
 }
 
@@ -58,7 +65,8 @@ TEST(Graphs_GMWStructure, GMWExampleTest_1) {
     gmw.initialize(graph, tree);
 
     std::vector<int> expCost{0, 5, 10, 9, 6, 12, 8, 5};
-    std::vector<postord_range> expPost{{1,8}, {1,6}, {1,3}, {1,2}, {7,7}, {4,5}, {4,4}, {1,1}};
+    std::vector<postord_range> expPost{{1, 8}, {1, 6}, {1, 3}, {1, 2},
+                                       {7, 7}, {4, 5}, {4, 4}, {1, 1}};
     EXPECT_EQ(gmw.subtreeCost, expCost);
     EXPECT_EQ(gmw.postorder, expPost);
 
@@ -77,14 +85,14 @@ TEST(Graphs_GMWStructure, GMWExampleTest_2) {
     EXPECT_EQ(gmw.get_cut_val(graphs::w_edge(0, 8), graphs::w_edge(0, 9)), 16);
 }
 
-
 void testRandomGraph(int n, int maxWeight, std::shared_ptr<std::mt19937> seed) {
-    std::uniform_int_distribution<> dist(n-1, n * (n-1) / 2);
+    std::uniform_int_distribution<> dist(n - 1, n * (n - 1) / 2);
     int m = dist(*seed);
     auto graph = graphs::generate_random_graph(n, m, maxWeight, seed);
-    std::shared_ptr<graphs::weighted_tree> tree(new graphs::weighted_tree(extractSingleRandomSpanningTree(*graph, seed)));
+    std::shared_ptr<graphs::weighted_tree> tree(
+        new graphs::weighted_tree(extractSingleRandomSpanningTree(*graph, seed)));
 
-    gmw_structure gmw(std::make_unique<Interval2DTree>(n+1, n+1));
+    gmw_structure gmw(std::make_unique<Interval2DTree>(n + 1, n + 1));
     gmw.initialize(graph, tree);
     verifyCutVals(gmw, graph, tree);
 }
@@ -97,8 +105,7 @@ TEST(Graphs_GMWStructure, GMWRandomTest) {
     std::random_device rd;
     std::shared_ptr<std::mt19937> seed(new std::mt19937(rd()));
     std::uniform_int_distribution<> distN(1, maxN);
-    while (testCases--)
-        testRandomGraph(distN(*seed), maxWeight, seed);
+    while (testCases--) testRandomGraph(distN(*seed), maxWeight, seed);
 }
 
 TEST(Graphs_GMWStructure, GMWRandomLargeTest) {
@@ -109,6 +116,5 @@ TEST(Graphs_GMWStructure, GMWRandomLargeTest) {
     std::random_device rd;
     std::shared_ptr<std::mt19937> seed(new std::mt19937());
     std::uniform_int_distribution<> distN(1, maxN);
-    while (testCases--)
-        testRandomGraph(distN(*seed), maxWeight, seed);
+    while (testCases--) testRandomGraph(distN(*seed), maxWeight, seed);
 }

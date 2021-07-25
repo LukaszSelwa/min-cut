@@ -1,5 +1,6 @@
-#include <gtest/gtest.h>
 #include "../../../src/range_search/helper_functions.hpp"
+
+#include <gtest/gtest.h>
 
 size_t ceilingLog(size_t x);
 

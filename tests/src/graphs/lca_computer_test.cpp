@@ -1,6 +1,8 @@
-#include <gtest/gtest.h>
-#include <memory>
 #include "../../../src/graphs/lca_computer.hpp"
+
+#include <gtest/gtest.h>
+
+#include <memory>
 
 TEST(Graphs_LCAComputer, SmallTreeTest) {
     std::shared_ptr<graphs::weighted_tree> tree = std::make_shared<graphs::weighted_tree>(3);
@@ -10,8 +12,7 @@ TEST(Graphs_LCAComputer, SmallTreeTest) {
     graphs::lca_computer computer(tree);
     computer.initialize();
 
-    for (int i = 0; i < 3; ++i)
-        EXPECT_EQ(computer.calc_lca(i, i), i) << "lca in single element";
+    for (int i = 0; i < 3; ++i) EXPECT_EQ(computer.calc_lca(i, i), i) << "lca in single element";
 
     EXPECT_EQ(computer.calc_lca(1, 2), 0) << "lca in root";
     EXPECT_EQ(computer.calc_lca(2, 1), 0) << "lca in root";
@@ -34,6 +35,5 @@ TEST(Graphs_LCAComputer, Medium_Test) {
     graphs::lca_computer computer(tree);
     computer.initialize();
 
-    for (int i = 0; i < 8; ++i)
-        EXPECT_EQ(computer.calc_lca(i, i), i) << "lca in single element";
+    for (int i = 0; i < 8; ++i) EXPECT_EQ(computer.calc_lca(i, i), i) << "lca in single element";
 }

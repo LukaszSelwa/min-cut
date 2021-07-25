@@ -1,7 +1,8 @@
 #include "interval2D_tree.hpp"
+
 #include "helper_functions.hpp"
 
-Interval2DTree::Interval2DTree(size_t width, size_t height): width(width), height(height) {
+Interval2DTree::Interval2DTree(size_t width, size_t height) : width(width), height(height) {
     size_t hLog = ceilingLog(height);
     nrLeaves = 1 << hLog;
     trees = std::vector<IntervalTree>(2 * nrLeaves + 1, IntervalTree(width));
@@ -17,8 +18,7 @@ void Interval2DTree::AddPoint(int x, int y, int val) {
 }
 
 int Interval2DTree::GetSumInRectangle(int x0, int x1, int y0, int y1) {
-    if (x0 > x1 || y0 > y1)
-        return 0;
+    if (x0 > x1 || y0 > y1) return 0;
     int sum = 0;
     int tY0 = getTreeIndex(y0), tY1 = getTreeIndex(y1);
     while (tY0 <= tY1) {
@@ -39,13 +39,9 @@ int Interval2DTree::GetSumInRectangle(int x0, int x1, int y0, int y1) {
 size_t Interval2DTree::GetWidth() { return width; }
 size_t Interval2DTree::GetHeight() { return height; }
 
-int Interval2DTree::getTreeIndex (int idx) {
-    return idx + nrLeaves;
-}
+int Interval2DTree::getTreeIndex(int idx) { return idx + nrLeaves; }
 
-void Interval2DTree::updateBaseTree (int tY, int x) {
+void Interval2DTree::updateBaseTree(int tY, int x) {
     trees[tY].SetPoint(
-        x,
-        trees[leftChildInterval(tY)].PointVal(x) + trees[rightChildInterval(tY)].PointVal(x)
-    );
+        x, trees[leftChildInterval(tY)].PointVal(x) + trees[rightChildInterval(tY)].PointVal(x));
 }

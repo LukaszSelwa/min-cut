@@ -1,9 +1,10 @@
 #ifndef HL_DECOMPOSITION_H
 #define HL_DECOMPOSITION_H
-#include "weighted_tree.hpp"
-#include "binarized_tree.hpp"
 #include <memory>
 #include <unordered_map>
+
+#include "binarized_tree.hpp"
+#include "weighted_tree.hpp"
 
 namespace graphs {
 
@@ -11,27 +12,32 @@ struct hl_path {
     int id;
     /* If interestedPaths map contains key k and value v than:
      * - this path is cross or down interested in path with id k
-     * - if v != -1 than path k is also interested in this path 
+     * - if v != -1 than path k is also interested in this path
      *   and pair {id, k} has index v.
      */
     std::unordered_map<int, int> interestedPaths;
+    /* Edges belonging to this path, sorted root-ward
+     */
+    std::vector<w_edge> edges;
 };
 
 struct interested_path_pair {
     int idP, idQ;
-    std::vector<w_edge> edgesP; // Edges of path.idP which are interested in path idQ
-    std::vector<w_edge> edgesQ; // Edges of path.idQ which are interested in path idP
-    interested_path_pair() { }
+    std::vector<w_edge> edgesP;  // Edges of path.idP which are interested in path idQ
+    std::vector<w_edge> edgesQ;  // Edges of path.idQ which are interested in path idP
+    interested_path_pair() {}
     interested_path_pair(int idP, int idQ);
-    void add_interested_edge(int pathId, w_edge & edge);
+    void add_interested_edge(int pathId, w_edge& edge);
 };
 
 class hl_decomposition {
-  private:
+   private:
     std::shared_ptr<weighted_tree> tree;
+    void calc_hld_path_edges(int idx, int root, std::vector<tree_vertice>& vertices);
     void find_interested_paths(int pathId, int idx);
     void find_interested_path_edges(int pathId, w_edge edge, int idx);
-  public:
+
+   public:
     std::vector<hl_path> paths;
     std::vector<interested_path_pair> interesting_pairs;
     hl_decomposition(std::shared_ptr<weighted_tree> tree);
@@ -43,7 +49,6 @@ class hl_decomposition {
     void initialize(std::shared_ptr<gmw_structure> gmw);
 };
 
-}
-
+}  // namespace graphs
 
 #endif /* HL_DECOMPOSITION */

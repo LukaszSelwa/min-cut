@@ -10,22 +10,12 @@ size_t ceilingLog(size_t x) {
     return log;
 }
 
-int parentInterval(int tIdx) {
-    return tIdx / 2;
-}
+int parentInterval(int tIdx) { return tIdx / 2; }
 
-int leftChildInterval(int tIdx) {
-    return 2 * tIdx;
-}
+int leftChildInterval(int tIdx) { return 2 * tIdx; }
 
-int rightChildInterval(int tIdx) {
-    return 2 * tIdx + 1;
-}
+int rightChildInterval(int tIdx) { return 2 * tIdx + 1; }
 
-bool isLeftChild(int tIdx) {
-    return (tIdx & 1) == 0;
-}
+bool isLeftChild(int tIdx) { return (tIdx & 1) == 0; }
 
-bool isRightChild(int tIdx) {
-    return (tIdx & 1) == 1;
-}
+bool isRightChild(int tIdx) { return (tIdx & 1) == 1; }

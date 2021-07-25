@@ -7,17 +7,18 @@ class IntervalTree {
     int nrLeaves;
     std::vector<int> baseIntervals;
 
-  public:
+   public:
     IntervalTree(size_t size);
-    IntervalTree(): IntervalTree(0) { }
+    IntervalTree() : IntervalTree(0) {}
     void AddPoint(int idx, int val);
     void SetPoint(int idx, int val);
-    
+
     /* Inclusive range: [begin, end] */
     int SumInRange(int begin, int end);
     int PointVal(int idx);
     size_t GetSize() const;
-  private:
+
+   private:
     void updateBaseInterval(int tIdx);
     inline int getTreeIndex(int idx);
 };

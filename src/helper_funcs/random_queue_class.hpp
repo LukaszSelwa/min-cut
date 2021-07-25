@@ -5,11 +5,12 @@
 #include <random>
 #include <vector>
 
-template<typename T>
+template <typename T>
 class RandomQueue {
     std::shared_ptr<std::mt19937> seed;
     std::vector<T> arr;
-  public:
+
+   public:
     RandomQueue(std::shared_ptr<std::mt19937> seed);
     void push(T val);
     T pop();

@@ -1,5 +1,7 @@
-#include <gtest/gtest.h>
 #include "../../../src/helper_funcs/random_queue.hpp"
+
+#include <gtest/gtest.h>
+
 #include <algorithm>
 #include <memory>
 #include <random>
@@ -29,10 +31,8 @@ TEST(HelperFuncs_RandomQueue, MultipleElements_Test) {
 
     std::vector<std::string> in{"abc", "bca", "cab"};
     std::vector<std::string> out(0);
-    for (auto str : in)
-        rq.push(str);
-    while(!rq.empty())
-        out.push_back(rq.pop());
+    for (auto str : in) rq.push(str);
+    while (!rq.empty()) out.push_back(rq.pop());
     std::sort(out.begin(), out.end());
     EXPECT_EQ(in, out) << "out should be a permutation of in";
 }

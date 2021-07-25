@@ -1,5 +1,6 @@
-#include <gtest/gtest.h>
 #include "../../../src/range_search/range_min.hpp"
+
+#include <gtest/gtest.h>
 
 TEST(RangeSearch_RangeMin, SmallTest) {
     std::vector<int> arr{10, 7, 2, 4, 8, 5, 1, 6, 9, 3};
@@ -12,6 +13,6 @@ TEST(RangeSearch_RangeMin, SmallTest) {
 
     EXPECT_EQ(range.Min(0, 9), 1) << "Min in whole range";
     EXPECT_EQ(range.Min(7, 9), 3) << "Min in small range 1";
-    EXPECT_EQ(range.Min(0, 5), 2 )<< "Min in small range 2";
+    EXPECT_EQ(range.Min(0, 5), 2) << "Min in small range 2";
     EXPECT_EQ(range.Min(1, 4), 2) << "Min in small range 3";
-} 
+}

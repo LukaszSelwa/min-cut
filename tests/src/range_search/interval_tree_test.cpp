@@ -1,5 +1,6 @@
-#include <gtest/gtest.h>
 #include "../../../src/range_search/interval_tree.hpp"
+
+#include <gtest/gtest.h>
 
 TEST(RangeSearch_IntervalTree, Test0TreeSize) {
     IntervalTree tree;

@@ -1,5 +1,6 @@
-#include <gtest/gtest.h>
 #include "../../../src/graphs/weighted_tree.hpp"
+
+#include <gtest/gtest.h>
 
 TEST(Graphs_WeightedTree, PreOrderTest) {
     graphs::weighted_tree tree(3);
@@ -8,7 +9,7 @@ TEST(Graphs_WeightedTree, PreOrderTest) {
 
     std::vector<int> preorder(0);
     std::vector<int> parents(3);
-    std::function<void(graphs::tree_vertice&)> markNodes = [&](graphs::tree_vertice& v)->void{
+    std::function<void(graphs::tree_vertice&)> markNodes = [&](graphs::tree_vertice& v) -> void {
         preorder.push_back(v.idx);
         parents[v.idx] = v.parentEdge.destIdx;
     };
@@ -26,7 +27,7 @@ TEST(Graphs_WeightedTree, PostOrderTest) {
 
     std::vector<int> postorder(0);
     std::vector<int> parents(3);
-    std::function<void(graphs::tree_vertice&)> markNodes = [&](graphs::tree_vertice& v)->void{
+    std::function<void(graphs::tree_vertice&)> markNodes = [&](graphs::tree_vertice& v) -> void {
         postorder.push_back(v.idx);
         parents[v.idx] = v.parentEdge.destIdx;
     };

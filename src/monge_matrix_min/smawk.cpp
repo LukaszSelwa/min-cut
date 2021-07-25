@@ -1,4 +1,5 @@
 #include "smawk.hpp"
+
 #include <algorithm>
 #include <limits>
 #include <numeric>
@@ -11,12 +12,14 @@
  *   2) https://www.dannyadam.com/blog/2019/07/smawk-in-cpp/      *
  * ---------------------------------------------------------------*/
 
+void recursive_smawk(std::vector<size_t>& rows, std::vector<size_t>& cols,
+                     std::function<int(size_t, size_t)> lookup, std::vector<size_t>& rowsArgmin);
 
-void recursive_smawk(std::vector<size_t> &rows, std::vector<size_t> &cols, std::function<int(size_t, size_t)> lookup, std::vector<size_t> &rowsArgmin);
+inline void smawk_reduce(std::vector<size_t>& rows, std::vector<size_t>& cols,
+                         std::function<int(size_t, size_t)> lookup, std::vector<size_t>& newCols);
 
-inline void smawk_reduce(std::vector<size_t> &rows, std::vector<size_t> &cols, std::function<int(size_t, size_t)> lookup, std::vector<size_t> &newCols);
-
-void smawk(const size_t numRows, const size_t numCols, std::function<int(size_t, size_t)> lookup, std::vector<size_t> & rowsArgmin) {
+void smawk(const size_t numRows, const size_t numCols, std::function<int(size_t, size_t)> lookup,
+           std::vector<size_t>& rowsArgmin) {
     std::vector<size_t> rows(numRows);
     std::vector<size_t> cols(numCols);
     std::iota(rows.begin(), rows.end(), 0);
@@ -24,7 +27,8 @@ void smawk(const size_t numRows, const size_t numCols, std::function<int(size_t,
     recursive_smawk(rows, cols, lookup, rowsArgmin);
 }
 
-int smawk_min(const size_t numRows, const size_t numCols, std::function<int(size_t, size_t)> lookup) {
+int smawk_min(const size_t numRows, const size_t numCols,
+              std::function<int(size_t, size_t)> lookup) {
     std::vector<size_t> rowsArgmin(numRows);
     smawk(numRows, numCols, lookup, rowsArgmin);
 
@@ -36,9 +40,9 @@ int smawk_min(const size_t numRows, const size_t numCols, std::function<int(size
     return result;
 }
 
-void recursive_smawk(std::vector<size_t> &rows, std::vector<size_t> &cols, std::function<int(size_t, size_t)> lookup, std::vector<size_t> &rowsArgmin) {
-    if (rows.size() == 0)
-        return;
+void recursive_smawk(std::vector<size_t>& rows, std::vector<size_t>& cols,
+                     std::function<int(size_t, size_t)> lookup, std::vector<size_t>& rowsArgmin) {
+    if (rows.size() == 0) return;
     std::vector<size_t> newCols(0);
     smawk_reduce(rows, cols, lookup, newCols);
 
@@ -58,8 +62,7 @@ void recursive_smawk(std::vector<size_t> &rows, std::vector<size_t> &cols, std::
         stop = newCols.size() - 1;
         if (rIdx < rows.size() - 1) {
             nextArgmin = rowsArgmin[rows[rIdx + 1]];
-            while (cIdx + 1 < newCols.size() && newCols[cIdx] != nextArgmin)
-                ++cIdx;
+            while (cIdx + 1 < newCols.size() && newCols[cIdx] != nextArgmin) ++cIdx;
             stop = cIdx;
         }
         argmin = newCols[start];
@@ -76,15 +79,14 @@ void recursive_smawk(std::vector<size_t> &rows, std::vector<size_t> &cols, std::
     }
 }
 
-inline void smawk_reduce(std::vector<size_t> &rows, std::vector<size_t> &cols, std::function<int(size_t, size_t)> lookup, std::vector<size_t> &newCols) {
-    for (int col: cols) {
+inline void smawk_reduce(std::vector<size_t>& rows, std::vector<size_t>& cols,
+                         std::function<int(size_t, size_t)> lookup, std::vector<size_t>& newCols) {
+    for (int col : cols) {
         while (!newCols.empty()) {
-            size_t head = rows[newCols.size()-1];
-            if (lookup(head, col) >= lookup(head, newCols.back()))
-                break;
+            size_t head = rows[newCols.size() - 1];
+            if (lookup(head, col) >= lookup(head, newCols.back())) break;
             newCols.pop_back();
         }
-        if (newCols.size() < rows.size())
-            newCols.push_back(col);
+        if (newCols.size() < rows.size()) newCols.push_back(col);
     }
 }
