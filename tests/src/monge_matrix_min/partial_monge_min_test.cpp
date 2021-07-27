@@ -19,12 +19,17 @@ TEST(MongeMatrixMin_PartialMonge, EdgeCase) {
 }
 
 TEST(MongeMatrixMin_PartialMonge, SmallExampleTest_1) {
+    /* clang-format off */
     int mongeArr[5][5] = {
-        {10, -1, -1, -1, -1}, {17, 22, -1, -1, -1}, {24, 28, 22, -1, -1},
-        {11, 13, 6, 17, -1},  {45, 44, 32, 37, 23},
+        {10, 17, 13, 28, 23},
+        {17, 22, 16, 29, -1},
+        {24, 28, 22, -1, -1},
+        {11, 13, -1, -1, -1},
+        {45, -1, -1, -1, -1}
     };
+    /* clang-format on */
     std::function<int(size_t, size_t)> lookup = [&](size_t row, size_t col) {
-        if (row < col) {
+        if (row + col > 4) {
             std::stringstream ss;
             ss << "should only lookup in lower trinagle but looked-up (" << row << ", " << col
                << ")";
@@ -32,21 +37,27 @@ TEST(MongeMatrixMin_PartialMonge, SmallExampleTest_1) {
         }
         return mongeArr[row][col];
     };
-    min_coords expMin{.row = 3, .col = 2, .val = 6};
+    min_coords expMin{.row = 0, .col = 0, .val = 10};
     min_coords min = partial_monge_min(5, lookup);
     EXPECT_EQ(min, expMin) << "expected " << expMin << " but got " << min;
 }
 
 TEST(MongeMatrixMin_PartialMonge, mediumExampleTest) {
+    /* clang-format off */
     int mongeArr[9][9] = {
-        {25, -1, -1, -1, -1, -1, -1, -1, -1},    {42, 35, -1, -1, -1, -1, -1, -1, -1},
-        {57, 48, 35, -1, -1, -1, -1, -1, -1},    {78, 65, 51, 42, -1, -1, -1, -1, -1},
-        {90, 76, 58, 48, 49, -1, -1, -1, -1},    {103, 85, 67, 56, 55, 44, -1, -1, -1},
-        {123, 105, 86, 75, 73, 59, 57, -1, -1},  {142, 123, 100, 86, 82, 65, 61, 62, -1},
-        {151, 130, 104, 88, 80, 59, 52, 49, 37},
+        { 25,  21,  13,  10,  20,  13,  19,  35,  37},
+        { 42,  35,  26,  20,  29,  21,  25,  37,  -1},
+        { 57,  48,  35,  28,  33,  24,  28,  -1,  -1},
+        { 78,  65,  51,  42,  44,  35,  -1,  -1,  -1},
+        { 90,  76,  58,  48,  49,  -1,  -1,  -1,  -1},
+        {103,  85,  67,  56,  -1,  -1,  -1,  -1,  -1},
+        {123, 105,  86,  -1,  -1,  -1,  -1,  -1,  -1},
+        {142, 123,  -1,  -1,  -1,  -1,  -1,  -1,  -1},
+        {151,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1},
     };
+    /* clang-format on */
     std::function<int(size_t, size_t)> lookup = [&](size_t row, size_t col) {
-        if (row < col) {
+        if (row + col > 8) {
             std::stringstream ss;
             ss << "should only lookup in lower trinagle but looked-up (" << row << ", " << col
                << ")";
@@ -54,14 +65,14 @@ TEST(MongeMatrixMin_PartialMonge, mediumExampleTest) {
         }
         return mongeArr[row][col];
     };
-    min_coords expMin{.row = 0, .col = 0, .val = 25};
+    min_coords expMin{.row = 0, .col = 3, .val = 10};
     EXPECT_EQ(partial_monge_min(9, lookup), expMin);
 }
 
 min_coords partial_monge_min_brutal(const size_t size, std::function<int(size_t, size_t)> lookup) {
     min_coords min{.row = 0, .col = 0, .val = lookup(0, 0)};
     for (size_t row = 0; row < size; ++row) {
-        for (size_t col = 0; col <= row; ++col) {
+        for (size_t col = 0; col < size - row; ++col) {
             int val = lookup(row, col);
             if (val < min.val) min = {.row = row, .col = col, .val = val};
         }
@@ -75,7 +86,7 @@ std::vector<std::vector<int> > generate_random_partial_monge_matrix(const size_t
                                                                     std::mt19937 seed) {
     std::vector<std::vector<int> > mtx(size, std::vector<int>(0, 0));
     for (size_t i = 0; i < size; ++i) {
-        mtx[i] = std::vector<int>(i + 1, 0);
+        mtx[i] = std::vector<int>(size - i, 0);
     }
 
     std::uniform_int_distribution<int> distInit(0, initBound);
@@ -85,7 +96,7 @@ std::vector<std::vector<int> > generate_random_partial_monge_matrix(const size_t
 
     for (size_t col = 1; col < size; ++col) {
         int delta = distDelta(seed);
-        for (size_t row = col; row < size; ++row) {
+        for (size_t row = 0; row < size - col; ++row) {
             delta += distInc(seed);
             mtx[row][col] = mtx[row][col - 1] - delta;
         }
@@ -114,7 +125,7 @@ void test_random_partial_monge_matrix(const size_t maxSize, const int initBound,
     auto mtx = generate_random_partial_monge_matrix(size, initBound, maxInc, seed);
 
     std::function<int(size_t, size_t)> lookup = [&](size_t row, size_t col) -> int {
-        if (row < col) {
+        if (row + col >= size) {
             std::stringstream ss;
             ss << "should only lookup in lower trinagle but looked-up (" << row << ", " << col
                << ")";

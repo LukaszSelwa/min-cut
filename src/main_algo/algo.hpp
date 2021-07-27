@@ -21,7 +21,6 @@ class algo {
     std::shared_ptr<graphs::weighted_graph> graph;
     std::shared_ptr<graphs::weighted_tree> tree;
     std::shared_ptr<gmw_structure> gmw;
-    std::shared_ptr<graphs::binarized_tree> bTree;
     std::shared_ptr<graphs::hl_decomposition> hld;
 
    public:

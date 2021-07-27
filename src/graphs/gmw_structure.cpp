@@ -67,6 +67,7 @@ int gmw_structure::get_cut_val(graphs::w_edge e1, graphs::w_edge e2) {
     // According to Gawrychowski, Mozes, Weimann: A Note on a Recent Algorithm for Minimum Cut
     int u = get_lower_endpoint(e1), v = get_lower_endpoint(e2);
     int w = 0;
+    if (u == v) return subtreeCost[u];
     if (is_descendant(u, v))
         w = get_descendant_cost(u, v);
     else if (is_descendant(v, u))

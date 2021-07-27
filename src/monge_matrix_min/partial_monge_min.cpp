@@ -19,17 +19,15 @@ min_coords recursive_partial_monge_min(const size_t rowBegin, const size_t colBe
     size_t prefSize = size / 2;
     size_t sqrtSize = size - prefSize;
 
-    min_coords result = monge_sub_sqr_min(rowBegin + prefSize, colBegin, sqrtSize, lookup);
-    result.row += prefSize;
+    min_coords result = monge_sub_sqr_min(rowBegin, colBegin, sqrtSize, lookup);
 
     if (prefSize > 0) {
         min_coords result_rec;
-        result_rec = recursive_partial_monge_min(rowBegin, colBegin, prefSize, lookup);
+        result_rec = recursive_partial_monge_min(rowBegin + sqrtSize, colBegin, prefSize, lookup);
+        result_rec.row += sqrtSize;
         if (result_rec.val <= result.val) result = result_rec;
 
-        result_rec =
-            recursive_partial_monge_min(rowBegin + sqrtSize, colBegin + sqrtSize, prefSize, lookup);
-        result_rec.row += sqrtSize;
+        result_rec = recursive_partial_monge_min(rowBegin, colBegin + sqrtSize, prefSize, lookup);
         result_rec.col += sqrtSize;
         if (result_rec.val < result.val) result = result_rec;
     }
