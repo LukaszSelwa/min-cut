@@ -20,10 +20,10 @@ class algo {
    private:
     std::shared_ptr<graphs::weighted_graph> graph;
     std::shared_ptr<graphs::weighted_tree> tree;
-    std::shared_ptr<gmw_structure> gmw;
-    std::shared_ptr<graphs::hl_decomposition> hld;
 
    public:
+    std::shared_ptr<gmw_structure> gmw;
+    std::shared_ptr<graphs::hl_decomposition> hld;
     algo(std::shared_ptr<graphs::weighted_graph> graph,
          std::shared_ptr<graphs::weighted_tree> tree);
     void initialize_structures();
