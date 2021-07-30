@@ -59,7 +59,8 @@
                 "\"Graphs_HLDecomposition.*\"",
                 "\"MongeMatrixMin_SMAWK.*\"",
                 "\"MongeMatrixMin_PartialMonge.*\"",
-                "\"MainAlgo_2respectSinglePath.*\""
+                "\"MainAlgo_2respectSinglePath.*\"",
+                "\"MainAlgo_2respectPair.*\""
             ],
             "default": "component"
         }

@@ -28,7 +28,8 @@ class algo {
          std::shared_ptr<graphs::weighted_tree> tree);
     void initialize_structures();
     edge_pair find_1respect_cut();
-    edge_pair find_2respect_cut_in_single_hl_path(int pathIdx);
+    edge_pair find_2respect_cut_single(int pathIdx);
+    edge_pair find_2respect_cut_pair(graphs::interested_path_pair& paths);
 };
 
 #endif /* ALGO_H */

@@ -14,17 +14,17 @@ TEST(MainAlgo_2respectSinglePath, SmallExample_1) {
 
     algo al(example.graph, example.spanningTree);
     al.initialize_structures();
-    auto res = al.find_2respect_cut_in_single_hl_path(0);
+    auto res = al.find_2respect_cut_single(0);
     EXPECT_EQ(res.val, 8);
     EXPECT_EQ(res.e1, graphs::w_edge(7, 3));
     EXPECT_EQ(res.e2, graphs::w_edge(3, 2));
 
-    res = al.find_2respect_cut_in_single_hl_path(1);
+    res = al.find_2respect_cut_single(1);
     EXPECT_EQ(res.val, 6);
     EXPECT_EQ(res.e1, graphs::w_edge(6, 5));
     EXPECT_EQ(res.e2, graphs::w_edge(5, 1));
 
-    res = al.find_2respect_cut_in_single_hl_path(2);
+    res = al.find_2respect_cut_single(2);
     EXPECT_EQ(res.val, std::numeric_limits<int>::max());
     EXPECT_EQ(res.e1, NIL_EDGE);
     EXPECT_EQ(res.e2, NIL_EDGE);
@@ -35,12 +35,12 @@ TEST(MainAlgo_2respectSinglePath, SmallExample_2) {
 
     algo al(example.graph, example.spanningTree);
     al.initialize_structures();
-    auto res = al.find_2respect_cut_in_single_hl_path(0);
+    auto res = al.find_2respect_cut_single(0);
     EXPECT_EQ(res.val, 1);
     EXPECT_EQ(res.e1, graphs::w_edge(1, 4));
     EXPECT_EQ(res.e2, graphs::w_edge(4, 9));
 
-    res = al.find_2respect_cut_in_single_hl_path(5);
+    res = al.find_2respect_cut_single(5);
     EXPECT_EQ(res.val, 18);
     EXPECT_EQ(res.e1, graphs::w_edge(2, 6));
     EXPECT_EQ(res.e2, graphs::w_edge(6, 0));
@@ -65,7 +65,7 @@ void test_2respect_cut_in_single(std::shared_ptr<graphs::weighted_graph> graph,
     auto gmw = al.gmw;
     auto hld = al.hld;
     for (size_t i = 0; i < hld->paths.size(); ++i) {
-        auto res = al.find_2respect_cut_in_single_hl_path(i);
+        auto res = al.find_2respect_cut_single(i);
         auto exp = brut_find_2respect_cut_in_single_hl_path(hld->paths[i].edges, gmw);
         ASSERT_EQ(res.val, exp.val)
             << "should find minimum VALUE for graph: " << *graph << " and spanning tree" << *tree;

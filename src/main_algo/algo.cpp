@@ -31,7 +31,7 @@ edge_pair algo::find_1respect_cut() {
     return edge_pair{.e1 = graphs::w_edge(0, 0), .e2 = NIL_EDGE};
 }
 
-edge_pair algo::find_2respect_cut_in_single_hl_path(int pathIdx) {
+edge_pair algo::find_2respect_cut_single(int pathIdx) {
     auto& edges = hld->paths[pathIdx].edges;
     auto size = edges.size();
     if (size <= 1)
@@ -40,7 +40,20 @@ edge_pair algo::find_2respect_cut_in_single_hl_path(int pathIdx) {
     std::function<int(size_t, size_t)> lookup = [&](size_t i, size_t j) -> int {
         return gmw->get_cut_val(edges[i], edges[size - 1 - j]);
     };
-    min_coords cords = partial_monge_min(edges.size() - 1, lookup);
-    cords.col = size - 1 - cords.col;
-    return edge_pair{.e1 = edges[cords.row], .e2 = edges[cords.col], .val = cords.val};
+    min_coords coords = partial_monge_min(edges.size() - 1, lookup);
+    coords.col = size - 1 - coords.col;
+    return edge_pair{.e1 = edges[coords.row], .e2 = edges[coords.col], .val = coords.val};
+}
+
+edge_pair algo::find_2respect_cut_pair(graphs::interested_path_pair& paths) {
+    auto& edgesP = paths.edgesP;
+    auto& edgesQ = paths.edgesQ;
+    auto rows = edgesP.size();
+    auto cols = edgesQ.size();
+    std::function<int(size_t, size_t)> lookup = [&](size_t i, size_t j) -> int {
+        return gmw->get_cut_val(edgesP[i], edgesQ[cols - 1 - j]);
+    };
+    min_coords coords = smawk_min(rows, cols, lookup);
+    coords.col = cols - 1 - coords.col;
+    return edge_pair{.e1 = edgesP[coords.row], .e2 = edgesQ[coords.col], .val = coords.val};
 }
