@@ -12,6 +12,7 @@
 struct edge_pair {
     graphs::w_edge e1, e2;
     int val;
+    friend bool operator<(const edge_pair& p1, const edge_pair& p2);
 };
 
 const graphs::w_edge NIL_EDGE(-1, -1);
@@ -29,7 +30,10 @@ class algo {
     void initialize_structures();
     edge_pair find_1respect_cut();
     edge_pair find_2respect_cut_single(int pathIdx);
+    edge_pair find_2respect_cut_single();
     edge_pair find_2respect_cut_pair(graphs::interested_path_pair& paths);
+    edge_pair find_2respect_cut_pair();
+    edge_pair find_cut();
 };
 
 #endif /* ALGO_H */

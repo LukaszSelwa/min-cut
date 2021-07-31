@@ -60,7 +60,8 @@
                 "\"MongeMatrixMin_SMAWK.*\"",
                 "\"MongeMatrixMin_PartialMonge.*\"",
                 "\"MainAlgo_2respectSinglePath.*\"",
-                "\"MainAlgo_2respectPair.*\""
+                "\"MainAlgo_2respectPair.*\"",
+                "\"MainAlgo_FindCut.*\"",
             ],
             "default": "component"
         }

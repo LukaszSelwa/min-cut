@@ -1,6 +1,7 @@
 #include "gmw_structure.hpp"
 
 #include <algorithm>
+#include <limits>
 
 bool postord_range::contains(int x) { return begin <= x && x <= end; }
 
@@ -47,6 +48,7 @@ void gmw_structure::initialize(std::shared_ptr<graphs::weighted_graph> graph,
     subtreeCost = std::vector<int>(n, 0);
     postorder = std::vector<postord_range>(n);
     calc_cost_bottomup(tree, delta, subtreeCost, tree->rootIdx, -1);
+    subtreeCost[tree->rootIdx] = std::numeric_limits<int>::max();
     int nextPostorder = 1;
 
     tree->run_postorder([&](graphs::tree_vertice& v) {

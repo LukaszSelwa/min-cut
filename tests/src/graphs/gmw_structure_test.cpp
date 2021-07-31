@@ -3,6 +3,7 @@
 #include <gtest/gtest.h>
 
 #include <algorithm>
+#include <limits>
 #include <memory>
 #include <random>
 
@@ -64,7 +65,7 @@ TEST(Graphs_GMWStructure, GMWExampleTest_1) {
     gmw_structure gmw(std::make_unique<Interval2DTree>(9, 9));
     gmw.initialize(graph, tree);
 
-    std::vector<int> expCost{0, 5, 10, 9, 6, 12, 8, 5};
+    std::vector<int> expCost{std::numeric_limits<int>::max(), 5, 10, 9, 6, 12, 8, 5};
     std::vector<postord_range> expPost{{1, 8}, {1, 6}, {1, 3}, {1, 2},
                                        {7, 7}, {4, 5}, {4, 4}, {1, 1}};
     EXPECT_EQ(gmw.subtreeCost, expCost);

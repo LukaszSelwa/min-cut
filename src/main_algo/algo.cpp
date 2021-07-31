@@ -1,10 +1,13 @@
 #include "algo.hpp"
 
+#include <algorithm>
 #include <functional>
 #include <iostream>
 #include <limits>
 
 #include "../monge_matrix_min/partial_monge_min.hpp"
+
+bool operator<(const edge_pair& p1, const edge_pair& p2) { return p1.val < p2.val; }
 
 algo::algo(std::shared_ptr<graphs::weighted_graph> graph,
            std::shared_ptr<graphs::weighted_tree> tree)
@@ -27,8 +30,14 @@ void algo::initialize_structures() {
 }
 
 edge_pair algo::find_1respect_cut() {
-    // TODO
-    return edge_pair{.e1 = graphs::w_edge(0, 0), .e2 = NIL_EDGE};
+    auto& subtreeCost = gmw->subtreeCost;
+    auto minIdx = std::min_element(subtreeCost.begin(), subtreeCost.end()) - subtreeCost.begin();
+
+    return edge_pair{
+        .e1 = tree->vertices[minIdx].parentEdge,
+        .e2 = NIL_EDGE,
+        .val = subtreeCost[minIdx],
+    };
 }
 
 edge_pair algo::find_2respect_cut_single(int pathIdx) {
@@ -45,6 +54,13 @@ edge_pair algo::find_2respect_cut_single(int pathIdx) {
     return edge_pair{.e1 = edges[coords.row], .e2 = edges[coords.col], .val = coords.val};
 }
 
+edge_pair algo::find_2respect_cut_single() {
+    edge_pair result{.val = std::numeric_limits<int>::max()};
+    for (int pathIdx = 0; pathIdx < hld->paths.size(); ++pathIdx)
+        result = std::min(result, find_2respect_cut_single(pathIdx));
+    return result;
+}
+
 edge_pair algo::find_2respect_cut_pair(graphs::interested_path_pair& paths) {
     auto& edgesP = paths.edgesP;
     auto& edgesQ = paths.edgesQ;
@@ -56,4 +72,21 @@ edge_pair algo::find_2respect_cut_pair(graphs::interested_path_pair& paths) {
     min_coords coords = smawk_min(rows, cols, lookup);
     coords.col = cols - 1 - coords.col;
     return edge_pair{.e1 = edgesP[coords.row], .e2 = edgesQ[coords.col], .val = coords.val};
+}
+
+edge_pair algo::find_2respect_cut_pair() {
+    edge_pair result{.val = std::numeric_limits<int>::max()};
+    for (auto& paths : hld->interesting_pairs)
+        result = std::min(result, find_2respect_cut_pair(paths));
+    return result;
+}
+
+edge_pair algo::find_cut() {
+    std::vector<edge_pair> cuts{
+        find_1respect_cut(),
+        find_2respect_cut_single(),
+        find_2respect_cut_pair(),
+    };
+    auto min = std::min_element(cuts.begin(), cuts.end());
+    return *min;
 }
