@@ -35,7 +35,7 @@ edge_pair algo::find_1respect_cut() {
 
     return edge_pair{
         .e1 = tree->vertices[minIdx].parentEdge,
-        .e2 = NIL_EDGE,
+        .e2 = tree->vertices[minIdx].parentEdge,
         .val = subtreeCost[minIdx],
     };
 }
