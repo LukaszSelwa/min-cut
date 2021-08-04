@@ -62,6 +62,7 @@
                 "\"MainAlgo_2respectSinglePath.*\"",
                 "\"MainAlgo_2respectPair.*\"",
                 "\"MainAlgo_FindCut.*\"",
+                "\"RangeSearch_PointerIntervalTree.*\""
             ],
             "default": "component"
         }
