@@ -9,7 +9,7 @@
 #include "../../../src/examples/graph_examples.hpp"
 #include "../../../src/graphs/gmw_structure.hpp"
 #include "../../../src/graphs/random_graph_generation.hpp"
-#include "../../../src/range_search/interval2D_tree.hpp"
+#include "../../../src/range_search/segment_2d_point_tree.hpp"
 #include "../../../src/spanning_trees_extractors/random_spanning_trees_extractor.hpp"
 
 void test_visited_all_nodes(std::shared_ptr<graphs::weighted_tree> tree,
@@ -103,7 +103,8 @@ TEST(Graphs_BinarizedTree, InitializeSmallTest_1) {
     auto e = examples::get_example(1);
     auto graph = e.graph;
     auto tree = e.spanningTree;
-    std::shared_ptr<gmw_structure> gmw(new gmw_structure(std::make_unique<interval_2d_tree>(9, 9)));
+    std::shared_ptr<gmw_structure> gmw(
+        new gmw_structure(std::make_unique<segment_2d_point_tree>(9)));
     gmw->initialize(graph, tree);
 
     graphs::binarized_tree bTree(tree, gmw);
@@ -118,7 +119,7 @@ TEST(Graphs_BinarizedTree, InitializeSmallTest_2) {
     auto graph = e.graph;
     auto tree = e.spanningTree;
     std::shared_ptr<gmw_structure> gmw(
-        new gmw_structure(std::make_unique<interval_2d_tree>(10, 10)));
+        new gmw_structure(std::make_unique<segment_2d_point_tree>(10)));
     gmw->initialize(graph, tree);
 
     graphs::binarized_tree bTree(tree, gmw);
@@ -132,7 +133,8 @@ TEST(Graphs_BinarizedTree, CrossinterestedSmallTest_1) {
     auto e = examples::get_example(1);
     auto graph = e.graph;
     auto tree = e.spanningTree;
-    std::shared_ptr<gmw_structure> gmw(new gmw_structure(std::make_unique<interval_2d_tree>(9, 9)));
+    std::shared_ptr<gmw_structure> gmw(
+        new gmw_structure(std::make_unique<segment_2d_point_tree>(9)));
     gmw->initialize(graph, tree);
 
     graphs::binarized_tree bTree(tree, gmw);
@@ -153,7 +155,8 @@ TEST(Graphs_BinarizedTree, CrossinterestedSmallTest_2) {
     auto e = examples::get_example(2);
     auto graph = e.graph;
     auto tree = e.spanningTree;
-    std::shared_ptr<gmw_structure> gmw(new gmw_structure(std::make_unique<interval_2d_tree>(9, 9)));
+    std::shared_ptr<gmw_structure> gmw(
+        new gmw_structure(std::make_unique<segment_2d_point_tree>(9)));
     gmw->initialize(graph, tree);
 
     graphs::binarized_tree bTree(tree, gmw);
@@ -166,7 +169,8 @@ TEST(Graphs_BinarizedTree, CrossinterestedSmallTest_3) {
     auto e = examples::get_example(3);
     auto graph = e.graph;
     auto tree = e.spanningTree;
-    std::shared_ptr<gmw_structure> gmw(new gmw_structure(std::make_unique<interval_2d_tree>(9, 9)));
+    std::shared_ptr<gmw_structure> gmw(
+        new gmw_structure(std::make_unique<segment_2d_point_tree>(9)));
     gmw->initialize(graph, tree);
 
     graphs::binarized_tree bTree(tree, gmw);
@@ -183,7 +187,7 @@ void test_b_tree_random_graph(int n, int maxWeight, std::shared_ptr<std::mt19937
         new graphs::weighted_tree(extractSingleRandomSpanningTree(*graph, seed)));
 
     std::shared_ptr<gmw_structure> gmw(
-        new gmw_structure(std::make_unique<interval_2d_tree>(n + 1, n + 1)));
+        new gmw_structure(std::make_unique<segment_2d_point_tree>(n + 1)));
     gmw->initialize(graph, tree);
     graphs::binarized_tree bTree(tree, gmw);
     bTree.initialize();
@@ -219,7 +223,8 @@ TEST(Graphs_BinarizedTree, DowninterestedSmallTest_1) {
     auto e = examples::get_example(1);
     auto graph = e.graph;
     auto tree = e.spanningTree;
-    std::shared_ptr<gmw_structure> gmw(new gmw_structure(std::make_unique<interval_2d_tree>(9, 9)));
+    std::shared_ptr<gmw_structure> gmw(
+        new gmw_structure(std::make_unique<segment_2d_point_tree>(9)));
     gmw->initialize(graph, tree);
 
     graphs::binarized_tree bTree(tree, gmw);

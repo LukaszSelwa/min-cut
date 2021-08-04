@@ -7,7 +7,7 @@
 #include "../graphs/hl_decomposition.hpp"
 #include "../graphs/undirected_weighted_graph.hpp"
 #include "../graphs/weighted_tree.hpp"
-#include "../range_search/interval2D_tree.hpp"
+#include "../range_search/segment_2d_point_tree.hpp"
 
 struct edge_pair {
     graphs::w_edge e1, e2;

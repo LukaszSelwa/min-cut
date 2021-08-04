@@ -9,7 +9,7 @@
 
 #include "../../../src/examples/graph_examples.hpp"
 #include "../../../src/graphs/random_graph_generation.hpp"
-#include "../../../src/range_search/interval2D_tree.hpp"
+#include "../../../src/range_search/segment_2d_point_tree.hpp"
 #include "../../../src/spanning_trees_extractors/random_spanning_trees_extractor.hpp"
 
 void test_is_every_interesting_pair(graphs::weighted_graph& graph, graphs::weighted_tree& tree,
@@ -97,7 +97,8 @@ TEST(Graphs_HLDecomposition, SmallTest_1) {
     auto e = examples::get_example(1);
     auto graph = e.graph;
     auto tree = e.spanningTree;
-    std::shared_ptr<gmw_structure> gmw(new gmw_structure(std::make_unique<interval_2d_tree>(9, 9)));
+    std::shared_ptr<gmw_structure> gmw(
+        new gmw_structure(std::make_unique<segment_2d_point_tree>(9)));
     gmw->initialize(graph, tree);
     calc_bottom_interested(tree, gmw);
 
@@ -112,7 +113,7 @@ TEST(Graphs_HLDecomposition, SmallTest_2) {
     auto graph = e.graph;
     auto tree = e.spanningTree;
     std::shared_ptr<gmw_structure> gmw(
-        new gmw_structure(std::make_unique<interval_2d_tree>(11, 11)));
+        new gmw_structure(std::make_unique<segment_2d_point_tree>(11)));
     gmw->initialize(graph, tree);
     calc_bottom_interested(tree, gmw);
 
@@ -126,7 +127,8 @@ TEST(Graphs_HLDecomposition, SmallTest_3) {
     auto e = examples::get_example(3);
     auto graph = e.graph;
     auto tree = e.spanningTree;
-    std::shared_ptr<gmw_structure> gmw(new gmw_structure(std::make_unique<interval_2d_tree>(8, 8)));
+    std::shared_ptr<gmw_structure> gmw(
+        new gmw_structure(std::make_unique<segment_2d_point_tree>(8)));
     gmw->initialize(graph, tree);
     calc_bottom_interested(tree, gmw);
 
@@ -144,7 +146,7 @@ void hld_test_random_graph(int n, int maxWeight, std::shared_ptr<std::mt19937> s
         new graphs::weighted_tree(extractSingleRandomSpanningTree(*graph, seed)));
 
     std::shared_ptr<gmw_structure> gmw(
-        new gmw_structure(std::make_unique<interval_2d_tree>(n + 1, n + 1)));
+        new gmw_structure(std::make_unique<segment_2d_point_tree>(n + 1)));
     gmw->initialize(graph, tree);
     calc_bottom_interested(tree, gmw);
     graphs::hl_decomposition hld(tree);
