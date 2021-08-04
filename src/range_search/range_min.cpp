@@ -1,8 +1,8 @@
 #include "range_min.hpp"
 
-void RangeMin::Initialize(int* begin, int* end) {
+void range_min::initialize(int* begin, int* end) {
     size_t size = end - begin;
-    SetUpLookup(size);
+    set_up_lookup(size);
     pow2mins = std::vector<std::vector<int>>(size, std::vector<int>(florLog2lookup[size] + 1, 0));
     for (int i = 0; i < size; ++i) pow2mins[i][0] = *(begin + i);
 
@@ -15,13 +15,13 @@ void RangeMin::Initialize(int* begin, int* end) {
     }
 }
 
-int RangeMin::Min(int beginIdx, int endIdx) {
+int range_min::min(int beginIdx, int endIdx) {
     int log = florLog2lookup[endIdx - beginIdx + 1];
     int pow = 1 << log;
     return std::min(pow2mins[beginIdx][log], pow2mins[endIdx - pow + 1][log]);
 }
 
-void RangeMin::SetUpLookup(size_t size) {
+void range_min::set_up_lookup(size_t size) {
     florLog2lookup = std::vector<int>(size + 1, 0);
     int log2 = 0;
     int pow2 = 1;

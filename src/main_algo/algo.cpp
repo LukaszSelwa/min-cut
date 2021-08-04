@@ -15,7 +15,7 @@ algo::algo(std::shared_ptr<graphs::weighted_graph> graph,
 
 void algo::initialize_structures() {
     gmw = std::make_shared<gmw_structure>(
-        std::make_unique<Interval2DTree>(graph->size + 1, graph->size + 1));
+        std::make_unique<interval_2d_tree>(graph->size + 1, graph->size + 1));
     gmw->initialize(graph, tree);
     graphs::binarized_tree bTree(tree, gmw);
     bTree.initialize();

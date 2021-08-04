@@ -21,15 +21,14 @@ bool gmw_structure::are_independent(int u, int v) {
 }
 
 int gmw_structure::get_independent_cost(int u, int v) {
-    return rs->GetSumInRectangle(postorder[u].begin, postorder[u].end, postorder[v].begin,
-                                 postorder[v].end);
+    return rs->get_sum(postorder[u].begin, postorder[u].end, postorder[v].begin, postorder[v].end);
 }
 int gmw_structure::get_descendant_cost(int u, int v) {
-    return rs->GetSumInRectangle(postorder[v].begin, postorder[v].end, 1, postorder[u].begin - 1) +
-           rs->GetSumInRectangle(postorder[v].begin, postorder[v].end, postorder[u].end + 1, n);
+    return rs->get_sum(postorder[v].begin, postorder[v].end, 1, postorder[u].begin - 1) +
+           rs->get_sum(postorder[v].begin, postorder[v].end, postorder[u].end + 1, n);
 }
 
-gmw_structure::gmw_structure(std::unique_ptr<RangeSearchStructure> rs) : rs(std::move(rs)) {}
+gmw_structure::gmw_structure(std::unique_ptr<range_2d> rs) : rs(std::move(rs)) {}
 
 void gmw_structure::initialize(std::shared_ptr<graphs::weighted_graph> graph,
                                std::shared_ptr<graphs::weighted_tree> tree) {
@@ -60,7 +59,7 @@ void gmw_structure::initialize(std::shared_ptr<graphs::weighted_graph> graph,
 
     for (const auto& v : graph->vertices) {
         for (const auto& ed : v.neighbors) {
-            rs->AddPoint(postorder[ed.srcIdx].end, postorder[ed.destIdx].end, ed.weight);
+            rs->add_point(postorder[ed.srcIdx].end, postorder[ed.destIdx].end, ed.weight);
         }
     }
 }
@@ -84,10 +83,10 @@ bool gmw_structure::is_crossinterested(graphs::w_edge e1, graphs::w_edge e2) {
     if (is_descendant(u, v)) return false;
     int w = 0;
     if (is_descendant(v, u))
-        w = rs->GetSumInRectangle(postorder[u].begin, postorder[u].end, postorder[v].begin,
-                                  postorder[u].begin - 1) +
-            rs->GetSumInRectangle(postorder[u].begin, postorder[u].end, postorder[u].end + 1,
-                                  postorder[v].end);
+        w = rs->get_sum(postorder[u].begin, postorder[u].end, postorder[v].begin,
+                        postorder[u].begin - 1) +
+            rs->get_sum(postorder[u].begin, postorder[u].end, postorder[u].end + 1,
+                        postorder[v].end);
     else
         w = get_independent_cost(u, v);
     return subtreeCost[u] < 2 * w;
@@ -96,12 +95,11 @@ bool gmw_structure::is_crossinterested(graphs::w_edge e1, graphs::w_edge e2) {
 bool gmw_structure::is_crossinterested(int idx, postord_range pr) {
     int w = 0;
     if (!pr.contains(postorder[idx].end))
-        w = rs->GetSumInRectangle(postorder[idx].begin, postorder[idx].end, pr.begin, pr.end);
+        w = rs->get_sum(postorder[idx].begin, postorder[idx].end, pr.begin, pr.end);
     else
-        w = rs->GetSumInRectangle(postorder[idx].begin, postorder[idx].end, pr.begin,
-                                  postorder[idx].begin - 1) +
-            rs->GetSumInRectangle(postorder[idx].begin, postorder[idx].end, postorder[idx].end + 1,
-                                  pr.end);
+        w = rs->get_sum(postorder[idx].begin, postorder[idx].end, pr.begin,
+                        postorder[idx].begin - 1) +
+            rs->get_sum(postorder[idx].begin, postorder[idx].end, postorder[idx].end + 1, pr.end);
     return subtreeCost[idx] < 2 * w;
 }
 
@@ -112,8 +110,8 @@ bool gmw_structure::is_downinterested(graphs::w_edge e1, graphs::w_edge e2) {
 }
 
 bool gmw_structure::is_downinterested(int idx, postord_range pr) {
-    int w = rs->GetSumInRectangle(1, postorder[idx].begin - 1, pr.begin, pr.end) +
-            rs->GetSumInRectangle(postorder[idx].end + 1, n, pr.begin, pr.end);
+    int w = rs->get_sum(1, postorder[idx].begin - 1, pr.begin, pr.end) +
+            rs->get_sum(postorder[idx].end + 1, n, pr.begin, pr.end);
     return subtreeCost[idx] < 2 * w;
 }
 

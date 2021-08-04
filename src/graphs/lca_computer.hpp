@@ -10,7 +10,7 @@ namespace graphs {
 
 class lca_computer {
     std::shared_ptr<graphs::weighted_tree> tree;
-    RangeMin minInOrder;
+    range_min minInOrder;
     std::vector<int> reIndex;
     std::vector<int> reIndexInv;
     std::vector<int> firstVisit;

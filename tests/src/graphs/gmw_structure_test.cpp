@@ -62,7 +62,7 @@ TEST(Graphs_GMWStructure, GMWExampleTest_1) {
     auto graph = example.graph;
     auto tree = example.spanningTree;
 
-    gmw_structure gmw(std::make_unique<Interval2DTree>(9, 9));
+    gmw_structure gmw(std::make_unique<interval_2d_tree>(9, 9));
     gmw.initialize(graph, tree);
 
     std::vector<int> expCost{std::numeric_limits<int>::max(), 5, 10, 9, 6, 12, 8, 5};
@@ -81,7 +81,7 @@ TEST(Graphs_GMWStructure, GMWExampleTest_2) {
     auto graph = example.graph;
     auto tree = example.spanningTree;
 
-    gmw_structure gmw(std::make_unique<Interval2DTree>(11, 11));
+    gmw_structure gmw(std::make_unique<interval_2d_tree>(11, 11));
     gmw.initialize(graph, tree);
     EXPECT_EQ(gmw.get_cut_val(graphs::w_edge(0, 8), graphs::w_edge(0, 9)), 16);
 }
@@ -93,7 +93,7 @@ void testRandomGraph(int n, int maxWeight, std::shared_ptr<std::mt19937> seed) {
     std::shared_ptr<graphs::weighted_tree> tree(
         new graphs::weighted_tree(extractSingleRandomSpanningTree(*graph, seed)));
 
-    gmw_structure gmw(std::make_unique<Interval2DTree>(n + 1, n + 1));
+    gmw_structure gmw(std::make_unique<interval_2d_tree>(n + 1, n + 1));
     gmw.initialize(graph, tree);
     verifyCutVals(gmw, graph, tree);
 }

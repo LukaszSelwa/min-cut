@@ -10,12 +10,12 @@ void lca_computer::initialize() {
     int unusedIdx = 0;
 
     in_order_traverse(tree->rootIdx, &unusedIdx, &visitList);
-    minInOrder.Initialize(visitList.data(), visitList.data() + visitList.size());
+    minInOrder.initialize(visitList.data(), visitList.data() + visitList.size());
 }
 
 int lca_computer::calc_lca(int aIdx, int bIdx) {
     if (firstVisit[aIdx] > firstVisit[bIdx]) std::swap(aIdx, bIdx);
-    int reLca = minInOrder.Min(firstVisit[aIdx], firstVisit[bIdx]);
+    int reLca = minInOrder.min(firstVisit[aIdx], firstVisit[bIdx]);
     return reIndexInv[reLca];
 }
 

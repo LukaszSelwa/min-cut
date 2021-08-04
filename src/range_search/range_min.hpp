@@ -3,18 +3,18 @@
 
 #include <vector>
 
-class RangeMin {
+class range_min {
     std::vector<std::vector<int> > pow2mins;
     std::vector<int> florLog2lookup;
 
    public:
-    RangeMin() {}
-    void Initialize(int* begin, int* end);
+    range_min() {}
+    void initialize(int* begin, int* end);
     /* returns minimum value in range [beginIdx, endIdx]*/
-    int Min(int beginIdx, int endIdx);
+    int min(int beginIdx, int endIdx);
 
    private:
-    void SetUpLookup(size_t size);
+    void set_up_lookup(size_t size);
 };
 
 #endif /* RANGE_MIN */

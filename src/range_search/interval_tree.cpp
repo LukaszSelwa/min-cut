@@ -2,48 +2,48 @@
 
 #include "helper_functions.hpp"
 
-IntervalTree::IntervalTree(size_t size) : size(size) {
-    size_t log = ceilingLog(size);
+interval_tree::interval_tree(size_t size) : size(size) {
+    size_t log = log_ceil(size);
     nrLeaves = 1 << log;
     baseIntervals = std::vector<int>(2 * nrLeaves + 1, 0);
 }
 
-void IntervalTree::AddPoint(int idx, int val) { SetPoint(idx, val + PointVal(idx)); }
+void interval_tree::add_point(int idx, int val) { set_point(idx, val + get_point(idx)); }
 
-void IntervalTree::SetPoint(int idx, int val) {
-    int tIdx = getTreeIndex(idx);
+void interval_tree::set_point(int idx, int val) {
+    int tIdx = get_tree_index(idx);
     baseIntervals[tIdx] = val;
     while (tIdx > 1) {
-        tIdx = parentInterval(tIdx);
-        updateBaseInterval(tIdx);
+        tIdx = parent_interval(tIdx);
+        update_base_interval(tIdx);
     }
 }
 
-int IntervalTree::SumInRange(int begin, int end) {
+int interval_tree::sum(int begin, int end) {
     int sum = 0;
-    int tBegin = getTreeIndex(begin), tEnd = getTreeIndex(end);
+    int tBegin = get_tree_index(begin), tEnd = get_tree_index(end);
     while (tBegin <= tEnd) {
-        if (isRightChild(tBegin)) {
+        if (is_right_child(tBegin)) {
             sum += baseIntervals[tBegin];
             tBegin++;
         }
-        if (isLeftChild(tEnd)) {
+        if (is_left_child(tEnd)) {
             sum += baseIntervals[tEnd];
             tEnd--;
         }
-        tBegin = parentInterval(tBegin);
-        tEnd = parentInterval(tEnd);
+        tBegin = parent_interval(tBegin);
+        tEnd = parent_interval(tEnd);
     }
     return sum;
 }
 
-int IntervalTree::PointVal(int idx) { return baseIntervals[getTreeIndex(idx)]; }
+int interval_tree::get_point(int idx) { return baseIntervals[get_tree_index(idx)]; }
 
-void IntervalTree::updateBaseInterval(int tIdx) {
+void interval_tree::update_base_interval(int tIdx) {
     baseIntervals[tIdx] =
-        baseIntervals[leftChildInterval(tIdx)] + baseIntervals[rightChildInterval(tIdx)];
+        baseIntervals[left_child_interval(tIdx)] + baseIntervals[right_child_interval(tIdx)];
 }
 
-int IntervalTree::getTreeIndex(int idx) { return idx + nrLeaves; }
+int interval_tree::get_tree_index(int idx) { return idx + nrLeaves; }
 
-size_t IntervalTree::GetSize() const { return size; }
+size_t interval_tree::get_size() const { return size; }

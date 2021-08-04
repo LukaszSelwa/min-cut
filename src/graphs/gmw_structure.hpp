@@ -17,14 +17,14 @@ struct postord_range {
 };
 
 class gmw_structure {
-    std::unique_ptr<RangeSearchStructure> rs;
+    std::unique_ptr<range_2d> rs;
     int n;
 
     int get_descendant_cost(int u, int v);
     int get_independent_cost(int u, int v);
 
    public:
-    gmw_structure(std::unique_ptr<RangeSearchStructure> rs);
+    gmw_structure(std::unique_ptr<range_2d> rs);
     bool are_independent(int u, int v);
     bool is_crossinterested(graphs::w_edge e1, graphs::w_edge e2);
     bool is_crossinterested(int idx, postord_range pr);

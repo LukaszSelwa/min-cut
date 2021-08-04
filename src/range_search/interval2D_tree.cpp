@@ -2,46 +2,46 @@
 
 #include "helper_functions.hpp"
 
-Interval2DTree::Interval2DTree(size_t width, size_t height) : width(width), height(height) {
-    size_t hLog = ceilingLog(height);
+interval_2d_tree::interval_2d_tree(size_t width, size_t height) : width(width), height(height) {
+    size_t hLog = log_ceil(height);
     nrLeaves = 1 << hLog;
-    trees = std::vector<IntervalTree>(2 * nrLeaves + 1, IntervalTree(width));
+    trees = std::vector<interval_tree>(2 * nrLeaves + 1, interval_tree(width));
 }
 
-void Interval2DTree::AddPoint(int x, int y, int val) {
-    int tY = getTreeIndex(y);
-    trees[tY].AddPoint(x, val);
+void interval_2d_tree::add_point(int x, int y, int val) {
+    int tY = get_tree_index(y);
+    trees[tY].add_point(x, val);
     while (tY > 1) {
-        tY = parentInterval(tY);
-        updateBaseTree(tY, x);
+        tY = parent_interval(tY);
+        update_base_tree(tY, x);
     }
 }
 
-int Interval2DTree::GetSumInRectangle(int x0, int x1, int y0, int y1) {
+int interval_2d_tree::get_sum(int x0, int x1, int y0, int y1) {
     if (x0 > x1 || y0 > y1) return 0;
     int sum = 0;
-    int tY0 = getTreeIndex(y0), tY1 = getTreeIndex(y1);
+    int tY0 = get_tree_index(y0), tY1 = get_tree_index(y1);
     while (tY0 <= tY1) {
-        if (isRightChild(tY0)) {
-            sum += trees[tY0].SumInRange(x0, x1);
+        if (is_right_child(tY0)) {
+            sum += trees[tY0].sum(x0, x1);
             tY0++;
         }
-        if (isLeftChild(tY1)) {
-            sum += trees[tY1].SumInRange(x0, x1);
+        if (is_left_child(tY1)) {
+            sum += trees[tY1].sum(x0, x1);
             tY1--;
         }
-        tY0 = parentInterval(tY0);
-        tY1 = parentInterval(tY1);
+        tY0 = parent_interval(tY0);
+        tY1 = parent_interval(tY1);
     }
     return sum;
 }
 
-size_t Interval2DTree::GetWidth() { return width; }
-size_t Interval2DTree::GetHeight() { return height; }
+size_t interval_2d_tree::get_width() { return width; }
+size_t interval_2d_tree::get_height() { return height; }
 
-int Interval2DTree::getTreeIndex(int idx) { return idx + nrLeaves; }
+int interval_2d_tree::get_tree_index(int idx) { return idx + nrLeaves; }
 
-void Interval2DTree::updateBaseTree(int tY, int x) {
-    trees[tY].SetPoint(
-        x, trees[leftChildInterval(tY)].PointVal(x) + trees[rightChildInterval(tY)].PointVal(x));
+void interval_2d_tree::update_base_tree(int tY, int x) {
+    trees[tY].set_point(x, trees[left_child_interval(tY)].get_point(x) +
+                               trees[right_child_interval(tY)].get_point(x));
 }
