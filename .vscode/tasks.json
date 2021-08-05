@@ -42,7 +42,33 @@
                 "reveal": "always",
                 "panel": "shared"
             },
-        }
+        },
+        {
+            "label": "Build benchmark",
+            "type": "shell",
+            "command": "make",
+            "args": [
+                "build_benchmark"
+            ],
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+        },
+        {
+            "label": "Run benchmark",
+            "type": "shell",
+            "command": "make",
+            "args": [
+                "run_benchmark"
+            ],
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        },
     ],
     "inputs": [
         {
