@@ -10,7 +10,7 @@
             "request": "launch",
             "program": "${workspaceFolder}/tests/test_main.exe",
             "args": [
-                "--gtest_filter=RangeSearch_PointerIntervalTree.GetSumInRectangleTest"
+                "--gtest_filter=KargerAlgo_FindCost.SmallExample_5"
             ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

@@ -120,6 +120,5 @@ int calc_cost_bottomup(std::shared_ptr<graphs::weighted_tree>& tree, std::vector
     cost[idx] = delta[idx];
     for (auto& ed : tree->vertices[idx].children)
         cost[idx] += calc_cost_bottomup(tree, delta, cost, ed.destIdx, idx);
-    cost[idx];
     return cost[idx];
 }

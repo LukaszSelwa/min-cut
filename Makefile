@@ -20,6 +20,9 @@ T_OFILES = $(T_CFILES:$(T_SRCDIR)/%.cpp=$(T_OBJDIR)/%.o)
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(SRCDIR)/%.hpp
 	$(CC) $(CFLAGS) -o $@ -c $<
 
+$(T_OBJDIR)/utils/%.o: $(T_SRCDIR)/utils/%.cpp $(T_SRCDIR)/utils/%.hpp
+	$(CC) $(CFLAGS) -o $@ -c $<
+
 $(T_OBJDIR)/%.o: $(T_SRCDIR)/%.cpp
 	$(CC) $(CFLAGS) -o $@ -c $<
 

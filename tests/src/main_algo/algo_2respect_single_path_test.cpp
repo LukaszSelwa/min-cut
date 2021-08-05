@@ -6,14 +6,14 @@
 
 #include "../../../src/examples/graph_examples.hpp"
 #include "../../../src/graphs/random_graph_generation.hpp"
-#include "../../../src/main_algo/algo.hpp"
+#include "../../../src/main_algo/gmw_algo.hpp"
 #include "../../../src/spanning_trees_extractors/random_spanning_trees_extractor.hpp"
 
 TEST(MainAlgo_2respectSinglePath, SmallExample_1) {
     auto example = examples::get_example(1);
 
-    algo al(example.graph, example.spanningTree);
-    al.initialize_structures();
+    gmw_algo al(example.graph, example.spanningTree);
+    al.initialize();
     auto res = al.find_2respect_cut_single(0);
     EXPECT_EQ(res.val, 8);
     EXPECT_EQ(res.e1, graphs::w_edge(7, 3));
@@ -33,8 +33,8 @@ TEST(MainAlgo_2respectSinglePath, SmallExample_1) {
 TEST(MainAlgo_2respectSinglePath, SmallExample_2) {
     auto example = examples::get_example(2);
 
-    algo al(example.graph, example.spanningTree);
-    al.initialize_structures();
+    gmw_algo al(example.graph, example.spanningTree);
+    al.initialize();
     auto res = al.find_2respect_cut_single(0);
     EXPECT_EQ(res.val, 1);
     EXPECT_EQ(res.e1, graphs::w_edge(1, 4));
@@ -60,8 +60,8 @@ edge_pair brut_find_2respect_cut_in_single_hl_path(std::vector<graphs::w_edge> e
 
 void test_2respect_cut_in_single(std::shared_ptr<graphs::weighted_graph> graph,
                                  std::shared_ptr<graphs::weighted_tree> tree) {
-    algo al(graph, tree);
-    al.initialize_structures();
+    gmw_algo al(graph, tree);
+    al.initialize();
     auto gmw = al.gmw;
     auto hld = al.hld;
     for (size_t i = 0; i < hld->paths.size(); ++i) {

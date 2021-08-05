@@ -58,7 +58,9 @@
                 "\"MainAlgo_2respectSinglePath.*\"",
                 "\"MainAlgo_2respectPair.*\"",
                 "\"MainAlgo_FindCut.*\"",
-                "\"RangeSearch_PointerIntervalTree.*\""
+                "\"RangeSearch_PointerIntervalTree.*\"",
+                "\"KargerAlgo_Costs.*\"",
+                "\"KargerAlgo_FindCost.*\"",
             ],
             "default": "component"
         }

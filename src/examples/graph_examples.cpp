@@ -83,6 +83,50 @@ graph_example get_example(int nr) {
             e.spanningTree->add_child_edge(5, 6, 2);
             e.spanningTree->add_child_edge(2, 1, 5);
             break;
+
+        case 4:
+            e.graph = std::make_shared<weighted_graph>(7);
+            e.graph->add_edge(graphs::w_edge(0, 6, 25));
+            e.graph->add_edge(graphs::w_edge(0, 1, 16));
+            e.graph->add_edge(graphs::w_edge(0, 3, 20));
+            e.graph->add_edge(graphs::w_edge(0, 4, 39));
+            e.graph->add_edge(graphs::w_edge(0, 5, 15));
+            e.graph->add_edge(graphs::w_edge(1, 4, 35));
+            e.graph->add_edge(graphs::w_edge(1, 2, 35));
+            e.graph->add_edge(graphs::w_edge(2, 6, 39));
+            e.graph->add_edge(graphs::w_edge(2, 5, 3));
+            e.graph->add_edge(graphs::w_edge(2, 3, 9));
+            e.graph->add_edge(graphs::w_edge(2, 4, 1));
+            e.graph->add_edge(graphs::w_edge(4, 5, 10));
+            e.graph->add_edge(graphs::w_edge(4, 6, 38));
+
+            e.spanningTree = std::make_shared<weighted_tree>(7);
+            e.spanningTree->add_child_edge(0, 3, 20);
+            e.spanningTree->add_child_edge(0, 5, 15);
+            e.spanningTree->add_child_edge(5, 4, 10);
+            e.spanningTree->add_child_edge(4, 1, 35);
+            e.spanningTree->add_child_edge(1, 2, 35);
+            e.spanningTree->add_child_edge(2, 6, 39);
+            break;
+
+        case 5:
+            e.graph = std::make_shared<weighted_graph>(6);
+            e.graph->add_edge(graphs::w_edge(0, 1, 32));
+            e.graph->add_edge(graphs::w_edge(0, 2, 29));
+            e.graph->add_edge(graphs::w_edge(0, 3, 2));
+            e.graph->add_edge(graphs::w_edge(0, 4, 40));
+            e.graph->add_edge(graphs::w_edge(1, 5, 4));
+            e.graph->add_edge(graphs::w_edge(2, 5, 2));
+            e.graph->add_edge(graphs::w_edge(3, 5, 15));
+            e.graph->add_edge(graphs::w_edge(4, 5, 23));
+
+            e.spanningTree = std::make_shared<weighted_tree>(6);
+            e.spanningTree->add_child_edge(0, 3, 2);
+            e.spanningTree->add_child_edge(3, 5, 15);
+            e.spanningTree->add_child_edge(5, 2, 2);
+            e.spanningTree->add_child_edge(5, 1, 4);
+            e.spanningTree->add_child_edge(5, 4, 23);
+            break;
         default:
             throw "Unsupported graph example number";
     }

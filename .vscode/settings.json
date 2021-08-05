@@ -83,7 +83,16 @@
         "locale": "cpp",
         "queue": "cpp",
         "semaphore": "cpp",
-        "stack": "cpp"
+        "stack": "cpp",
+        "__functional_03": "cpp",
+        "codecvt": "cpp",
+        "csignal": "cpp",
+        "fstream": "cpp",
+        "future": "cpp",
+        "list": "cpp",
+        "strstream": "cpp",
+        "valarray": "cpp",
+        "cfenv": "cpp"
     },
     "cSpell.words": [
         "BINARIZED",

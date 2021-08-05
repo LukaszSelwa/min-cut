@@ -6,14 +6,14 @@
 
 #include "../../../src/examples/graph_examples.hpp"
 #include "../../../src/graphs/random_graph_generation.hpp"
-#include "../../../src/main_algo/algo.hpp"
+#include "../../../src/main_algo/gmw_algo.hpp"
 #include "../../../src/spanning_trees_extractors/random_spanning_trees_extractor.hpp"
 
 TEST(MainAlgo_2respectPair, SmallExample_1) {
     auto example = examples::get_example(1);
 
-    algo al(example.graph, example.spanningTree);
-    al.initialize_structures();
+    gmw_algo al(example.graph, example.spanningTree);
+    al.initialize();
     auto res = al.find_2respect_cut_pair(al.hld->interesting_pairs[0]);
     EXPECT_EQ(res.val, 11);
     EXPECT_EQ(res.e1, graphs::w_edge(5, 1));
@@ -40,8 +40,8 @@ edge_pair brut_find_2respect_cut_pair(graphs::interested_path_pair& ip,
 
 void test_2respect_pair(std::shared_ptr<graphs::weighted_graph> graph,
                         std::shared_ptr<graphs::weighted_tree> tree) {
-    algo al(graph, tree);
-    al.initialize_structures();
+    gmw_algo al(graph, tree);
+    al.initialize();
     auto gmw = al.gmw;
     auto hld = al.hld;
     for (auto& ip : al.hld->interesting_pairs) {
