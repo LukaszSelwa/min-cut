@@ -1,4 +1,4 @@
-#include "../helper_funcs/random_queue.hpp"
+#include "../utils/random_queue.hpp"
 #include "undirected_weighted_graph.hpp"
 
 namespace graphs {

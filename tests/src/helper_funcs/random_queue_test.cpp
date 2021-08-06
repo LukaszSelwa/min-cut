@@ -1,4 +1,4 @@
-#include "../../../src/helper_funcs/random_queue.hpp"
+#include "../../../src/utils/random_queue.hpp"
 
 #include <gtest/gtest.h>
 

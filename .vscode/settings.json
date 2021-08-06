@@ -92,7 +92,8 @@
         "list": "cpp",
         "strstream": "cpp",
         "valarray": "cpp",
-        "cfenv": "cpp"
+        "cfenv": "cpp",
+        "*.ipp": "cpp"
     },
     "cSpell.words": [
         "BINARIZED",

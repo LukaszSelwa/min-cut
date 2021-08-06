@@ -1,6 +1,6 @@
 CC 		= g++
-# CFLAGS 	= -g -Wall -std=c++17
-CFLAGS 	= -std=c++17 -O3
+CFLAGS 	= -g -Wall -std=c++17
+# CFLAGS 	= -std=c++17 -O3
 OBJDIR 	= build
 SRCDIR 	= src
 
@@ -56,4 +56,4 @@ run_benchmark: $(B_EXEMAIN)
 	./$(B_EXEMAIN)
 
 clean:
-	rm $(OFILES) $(T_OFILES) $(T_EXEMAIN) $(B_OBJDIR) $(B_EXEMAIN)
+	rm $(OFILES) $(T_OFILES) $(T_EXEMAIN) $(B_OFILES) $(B_EXEMAIN)

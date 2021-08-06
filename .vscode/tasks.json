@@ -87,6 +87,7 @@
                 "\"RangeSearch_PointerIntervalTree.*\"",
                 "\"KargerAlgo_Costs.*\"",
                 "\"KargerAlgo_FindCost.*\"",
+                "\"NaiveAlgo_Algo.*\"",
             ],
             "default": "component"
         }

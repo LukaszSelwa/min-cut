@@ -3,8 +3,8 @@
 namespace examples {
 using namespace graphs;
 
-graph_example get_example(int nr) {
-    graph_example e;
+input_graph get_example(int nr) {
+    input_graph e;
 
     switch (nr) {
         case 1:
@@ -29,6 +29,8 @@ graph_example get_example(int nr) {
             e.spanningTree->add_child_edge(2, 3, 4);
             e.spanningTree->add_child_edge(3, 7, 2);
             e.spanningTree->add_child_edge(5, 6, 1);
+
+            e.expectedMinCut = 4;
             break;
 
         case 2:
@@ -59,6 +61,8 @@ graph_example get_example(int nr) {
             e.spanningTree->add_child_edge(8, 5, 5);
             e.spanningTree->add_child_edge(8, 3, 0);
             e.spanningTree->add_child_edge(9, 7, 6);
+
+            e.expectedMinCut = 1;
             break;
 
         case 3:
@@ -107,6 +111,8 @@ graph_example get_example(int nr) {
             e.spanningTree->add_child_edge(4, 1, 35);
             e.spanningTree->add_child_edge(1, 2, 35);
             e.spanningTree->add_child_edge(2, 6, 39);
+
+            e.expectedMinCut = 28;
             break;
 
         case 5:
@@ -126,6 +132,8 @@ graph_example get_example(int nr) {
             e.spanningTree->add_child_edge(5, 2, 2);
             e.spanningTree->add_child_edge(5, 1, 4);
             e.spanningTree->add_child_edge(5, 4, 23);
+
+            e.expectedMinCut = 17;
             break;
         default:
             throw "Unsupported graph example number";

@@ -1,6 +1,6 @@
 #include "random_spanning_trees_extractor.hpp"
 
-#include "../helper_funcs/random_queue.hpp"
+#include "../utils/random_queue.hpp"
 
 /* resturns approximately 2 * log_2(graphSize) */
 size_t calcNumberOfSpanningTrees(size_t graphSize) {
