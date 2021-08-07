@@ -3,7 +3,6 @@
 #include <algorithm>
 #include <functional>
 #include <limits>
-#include <random>
 
 #include "../spanning_trees_extractors/random_spanning_trees_extractor.hpp"
 #include "../utils/functions.hpp"
@@ -12,10 +11,9 @@
 namespace heuristic {
 algo::algo(std::shared_ptr<graphs::weighted_graph> graph) : graph(graph) {}
 
-size_t algo::get_iterations_nr() { return std::max((size_t)1, log_ceil(graph->size)); }
+size_t algo::get_iterations_nr() { return 3 * std::max((size_t)1, log_ceil(graph->size)); }
 
-algo_result algo::run_iteration() {
-    auto seed = std::make_shared<std::mt19937>();
+algo_result algo::run_iteration(std::shared_ptr<std::mt19937> seed) {
     auto tree =
         std::make_shared<graphs::weighted_tree>(extractSingleRandomSpanningTree(*graph, seed));
     gmw_algo algo(graph, tree);
@@ -52,9 +50,10 @@ std::vector<bool> algo::get_cut(std::shared_ptr<graphs::weighted_tree> tree,
 algo_result algo::calc_min_cut() {
     algo_result result{.minCutVal = std::numeric_limits<int>::max()};
     size_t iterations = get_iterations_nr();
+    auto seed = std::make_shared<std::mt19937>();
 
     for (size_t i = 0; i < iterations; ++i) {
-        auto nResult = run_iteration();
+        auto nResult = run_iteration(seed);
         if (nResult.minCutVal < result.minCutVal) result = nResult;
     }
 

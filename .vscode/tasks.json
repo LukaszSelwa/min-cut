@@ -89,6 +89,7 @@
                 "\"KargerAlgo_FindCost.*\"",
                 "\"NaiveAlgo_Algo.*\"",
                 "\"MainAlgo_Heuristic.*\"",
+                "\"NaiveVsHeuristic.*\""
             ],
             "default": "component"
         }

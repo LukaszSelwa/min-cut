@@ -143,8 +143,7 @@ TEST(MongeMatrixMin_PartialMonge, RandomSmallTest) {
     int initBound = 30;
     int maxInc = 4;
 
-    std::random_device rd;
-    std::mt19937 seed(rd());
+    std::mt19937 seed;
     while (testCases--) test_random_partial_monge_matrix(maxSize, initBound, maxInc, seed);
 }
 
@@ -154,8 +153,7 @@ TEST(MongeMatrixMin_PartialMonge, RandomMediumTest) {
     int initBound = 50;
     int maxInc = 3;
 
-    std::random_device rd;
-    std::mt19937 seed(rd());
+    std::mt19937 seed;
     while (testCases--) test_random_partial_monge_matrix(maxSize, initBound, maxInc, seed);
 }
 
@@ -165,7 +163,6 @@ TEST(MongeMatrixMin_PartialMonge, RandomLargeTest) {
     int initBound = 50;
     int maxInc = 2;
 
-    std::random_device rd;
-    std::mt19937 seed(rd());
+    std::mt19937 seed;
     while (testCases--) test_random_partial_monge_matrix(maxSize, initBound, maxInc, seed);
 }

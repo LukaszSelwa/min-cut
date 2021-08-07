@@ -163,7 +163,7 @@ TEST(MongeMatrixMin_SMAWK, RandomSmallTest) {
     int maxInc = 4;
 
     std::random_device rd;
-    std::mt19937 seed(rd());
+    std::mt19937 seed;
     while (testCases--) test_random_monge_matrix(maxSize, initBound, maxInc, seed);
 }
 
@@ -174,7 +174,7 @@ TEST(MongeMatrixMin_SMAWK, RandomMediumTest) {
     int maxInc = 3;
 
     std::random_device rd;
-    std::mt19937 seed(rd());
+    std::mt19937 seed;
     while (testCases--) test_random_monge_matrix(maxSize, initBound, maxInc, seed);
 }
 
@@ -185,6 +185,6 @@ TEST(MongeMatrixMin_SMAWK, RandomLargeTest) {
     int maxInc = 2;
 
     std::random_device rd;
-    std::mt19937 seed(rd());
+    std::mt19937 seed;
     while (testCases--) test_random_monge_matrix(maxSize, initBound, maxInc, seed);
 }
