@@ -1,5 +1,6 @@
 #include "interval_tree.hpp"
 
+#include "../utils/functions.hpp"
 #include "helper_functions.hpp"
 
 interval_tree::interval_tree(size_t size) : size(size) {

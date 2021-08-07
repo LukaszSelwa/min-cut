@@ -1,6 +1,7 @@
 #include "interval2D_tree.hpp"
 
 #include "helper_functions.hpp"
+#include "../utils/functions.hpp"
 
 interval_2d_tree::interval_2d_tree(size_t width, size_t height) : width(width), height(height) {
     size_t hLog = log_ceil(height);

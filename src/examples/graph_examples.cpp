@@ -86,6 +86,8 @@ input_graph get_example(int nr) {
             e.spanningTree->add_child_edge(5, 2, 9);
             e.spanningTree->add_child_edge(5, 6, 2);
             e.spanningTree->add_child_edge(2, 1, 5);
+
+            e.expectedMinCut = 4;
             break;
 
         case 4:

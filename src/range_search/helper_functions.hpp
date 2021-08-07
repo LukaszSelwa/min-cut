@@ -2,8 +2,6 @@
 #define HELPER_FUNCTIONS
 #include <cstddef>
 
-size_t log_ceil(size_t x);
-
 int parent_interval(int tIdx);
 int left_child_interval(int tIdx);
 int right_child_interval(int tIdx);
