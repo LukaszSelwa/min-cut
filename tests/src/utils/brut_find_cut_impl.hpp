@@ -7,8 +7,8 @@
 #include <memory>
 #include <random>
 
+#include "../../../src/graph_generation/random_graph_generation.hpp"
 #include "../../../src/graphs/gmw_structure.hpp"
-#include "../../../src/graphs/random_graph_generation.hpp"
 #include "../../../src/graphs/undirected_weighted_graph.hpp"
 #include "../../../src/graphs/weighted_tree.hpp"
 #include "../../../src/main_algo/common.hpp"

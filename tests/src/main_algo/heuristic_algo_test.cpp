@@ -3,7 +3,7 @@
 #include <gtest/gtest.h>
 
 #include "../../../src/examples/graph_examples.hpp"
-#include "../../../src/graphs/random_graph_generation.hpp"
+#include "../../../src/graph_generation/random_graph_generation.hpp"
 
 TEST(MainAlgo_Heuristic, SmallExample_1) {
     auto example = examples::get_example(1);

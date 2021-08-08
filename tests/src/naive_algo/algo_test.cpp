@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "../../../src/examples/graph_examples.hpp"
-#include "../../../src/graphs/random_graph_generation.hpp"
+#include "../../../src/graph_generation/random_graph_generation.hpp"
 #include "../../../src/naive_algo/naive_algo.hpp"
 
 TEST(NaiveAlgo_Algo, SmallExample_1) {

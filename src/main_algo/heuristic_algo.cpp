@@ -11,7 +11,7 @@
 namespace heuristic {
 algo::algo(std::shared_ptr<graphs::weighted_graph> graph) : graph(graph) {}
 
-size_t algo::get_iterations_nr() { return 3 * std::max((size_t)1, log_ceil(graph->size)); }
+size_t algo::get_iterations_nr() { return std::max((size_t)10, log_ceil(graph->size)); }
 
 algo_result algo::run_iteration(std::shared_ptr<std::mt19937> seed) {
     auto tree =

@@ -7,8 +7,8 @@
 #include <random>
 
 #include "../../../src/examples/graph_examples.hpp"
+#include "../../../src/graph_generation/random_graph_generation.hpp"
 #include "../../../src/graphs/gmw_structure.hpp"
-#include "../../../src/graphs/random_graph_generation.hpp"
 #include "../../../src/range_search/segment_2d_point_tree.hpp"
 #include "../../../src/spanning_trees_extractors/random_spanning_trees_extractor.hpp"
 

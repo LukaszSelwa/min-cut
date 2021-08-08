@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "../../../src/examples/graph_examples.hpp"
-#include "../../../src/graphs/random_graph_generation.hpp"
+#include "../../../src/graph_generation/random_graph_generation.hpp"
 #include "../../../src/main_algo/heuristic_algo.hpp"
 #include "../../../src/naive_algo/naive_algo.hpp"
 
@@ -21,7 +21,7 @@ bool test_min_cut_random_graph(int n, int maxWeight, std::mt19937 seed) {
 }
 
 TEST(NaiveVsHeuristic, RandomSmallTest) {
-    int testCases = 200;
+    int testCases = 100;
     int maxN = 50;
     int maxWeight = 20;
 
@@ -35,7 +35,7 @@ TEST(NaiveVsHeuristic, RandomSmallTest) {
 }
 
 TEST(NaiveVsHeuristic, RandomMediumTest) {
-    int testCases = 20;
+    int testCases = 10;
     int maxN = 200;
     int maxWeight = 300;
 
@@ -50,7 +50,7 @@ TEST(NaiveVsHeuristic, RandomMediumTest) {
 
 TEST(NaiveVsHeuristic, RandomLargeTest) {
     int testCases = 1;
-    int maxN = 400;
+    int maxN = 300;
     int maxWeight = 400;
 
     std::random_device rd;

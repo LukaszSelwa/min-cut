@@ -1,5 +1,7 @@
+#include "random_graph_generation.hpp"
+
+#include "../graphs/undirected_weighted_graph.hpp"
 #include "../utils/random_queue.hpp"
-#include "undirected_weighted_graph.hpp"
 
 namespace graphs {
 

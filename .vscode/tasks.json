@@ -89,7 +89,10 @@
                 "\"KargerAlgo_FindCost.*\"",
                 "\"NaiveAlgo_Algo.*\"",
                 "\"MainAlgo_Heuristic.*\"",
-                "\"NaiveVsHeuristic.*\""
+                "\"NaiveVsHeuristic.*\"",
+                "\"Utils_PrefixTree.*\"",
+                "\"Utils_RandomWeightedQueue.*\"",
+                "\"RandomSpanningTreeExtractors.*\"",
             ],
             "default": "component"
         }

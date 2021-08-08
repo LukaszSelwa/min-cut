@@ -3,7 +3,7 @@
 #include <memory>
 #include <random>
 
-#include "undirected_weighted_graph.hpp"
+#include "../graphs/undirected_weighted_graph.hpp"
 namespace graphs {
 /**
  * Generates random graph with n nodes and m edges in O(n^2) time.

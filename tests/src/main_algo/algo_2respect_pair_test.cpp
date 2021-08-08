@@ -5,7 +5,7 @@
 #include <random>
 
 #include "../../../src/examples/graph_examples.hpp"
-#include "../../../src/graphs/random_graph_generation.hpp"
+#include "../../../src/graph_generation/random_graph_generation.hpp"
 #include "../../../src/main_algo/gmw_algo.hpp"
 #include "../../../src/spanning_trees_extractors/random_spanning_trees_extractor.hpp"
 
