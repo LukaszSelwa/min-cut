@@ -69,6 +69,19 @@
                 "panel": "shared"
             }
         },
+        {
+            "label": "clean",
+            "type": "shell",
+            "command": "make",
+            "args": [
+                "clean"
+            ],
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        },
     ],
     "inputs": [
         {
@@ -93,6 +106,7 @@
                 "\"Utils_PrefixTree.*\"",
                 "\"Utils_RandomWeightedQueue.*\"",
                 "\"RandomSpanningTreeExtractors.*\"",
+                "\"Genreate_RandomGraph.*\""
             ],
             "default": "component"
         }

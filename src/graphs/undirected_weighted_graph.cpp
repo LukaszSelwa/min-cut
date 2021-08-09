@@ -14,13 +14,13 @@ void weighted_graph::add_edge(const w_edge edge) {
 vertice& weighted_graph::operator[](size_t idx) { return vertices[idx]; }
 
 std::ostream& operator<<(std::ostream& o, const weighted_graph& graph) {
-    o << "graph[size: " << graph.size << "]{ ";
+    o << "graph[size: " << graph.size << "]{ \n";
     for (auto& v : graph.vertices) {
         o << " " << v.get_idx() << ": ";
         for (auto& e : v.neighbors) o << e << ", ";
-        o << "; ";
+        o << ";\n";
     }
-    o << "}";
+    o << "}\n";
     return o;
 }
 
