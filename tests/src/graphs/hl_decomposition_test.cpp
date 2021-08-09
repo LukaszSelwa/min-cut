@@ -11,8 +11,9 @@
 #include "../../../src/graph_generation/random_graph_generation.hpp"
 #include "../../../src/range_search/segment_2d_point_tree.hpp"
 #include "../../../src/spanning_trees_extractors/random_spanning_trees_extractor.hpp"
+#include "../utils/run_tests.hpp"
 
-void test_is_every_interesting_pair(graphs::weighted_graph& graph, graphs::weighted_tree& tree,
+bool test_is_every_interesting_pair(graphs::weighted_graph& graph, graphs::weighted_tree& tree,
                                     gmw_structure& gmw, graphs::hl_decomposition& hld) {
     size_t n = tree.size;
     std::vector<std::vector<bool>> found_interested(n, std::vector<bool>(n, false));
@@ -30,27 +31,32 @@ void test_is_every_interesting_pair(graphs::weighted_graph& graph, graphs::weigh
                 continue;
             if (gmw.is_crossinterested(v1.parentEdge, v2.parentEdge) &&
                 gmw.is_crossinterested(v2.parentEdge, v1.parentEdge)) {
-                ASSERT_TRUE(found_interested[v1.idx][v2.idx])
+                bool val = found_interested[v1.idx][v2.idx];
+                EXPECT_TRUE(val)
                     << "edges: " << v1.parentEdge << "; " << v2.parentEdge
                     << "are mutually CROSS-interested and should be included in interesting pairs "
                        "for graph:\n"
                     << graph << "\n and spanning tree: \n"
                     << tree;
+                if (!val) return false;
             }
             if (gmw.is_downinterested(v1.parentEdge, v2.parentEdge) &&
                 gmw.is_downinterested(v2.parentEdge, v1.parentEdge)) {
-                ASSERT_TRUE(found_interested[v1.idx][v2.idx])
+                bool val = found_interested[v1.idx][v2.idx];
+                EXPECT_TRUE(val)
                     << "edges: " << v1.parentEdge << "; " << v2.parentEdge
                     << "are mutually DOWN-interested and should be included in interesting pairs "
                        "for graph:\n"
                     << graph << "\n and spanning tree: \n"
                     << tree;
+                if (!val) return false;
             }
         }
     }
+    return true;
 }
 
-void test_number_of_interesting_pairs(graphs::weighted_graph& graph, graphs::weighted_tree& tree,
+bool test_number_of_interesting_pairs(graphs::weighted_graph& graph, graphs::weighted_tree& tree,
                                       graphs::hl_decomposition& hld) {
     size_t total_pairs = 0;
     for (auto& pair : hld.interesting_pairs) {
@@ -63,6 +69,7 @@ void test_number_of_interesting_pairs(graphs::weighted_graph& graph, graphs::wei
         << total_pairs << "for graph: \n"
         << graph << "and spanning tree: \n"
         << tree;
+    return total_pairs <= upper_bound;
 }
 
 void calc_bottom_interested(std::shared_ptr<graphs::weighted_tree> tree,
@@ -138,7 +145,7 @@ TEST(Graphs_HLDecomposition, SmallTest_3) {
     test_number_of_interesting_pairs(*graph, *tree, hld);
 }
 
-void hld_test_random_graph(int n, int maxWeight, std::shared_ptr<std::mt19937> seed) {
+bool hld_test_random_graph(int n, int maxWeight, std::shared_ptr<std::mt19937> seed) {
     std::uniform_int_distribution<> dist(n - 1, n * (n - 1) / 2);
     int m = dist(*seed);
     auto graph = graphs::generate_random_graph(n, m, maxWeight, seed);
@@ -152,8 +159,8 @@ void hld_test_random_graph(int n, int maxWeight, std::shared_ptr<std::mt19937> s
     graphs::hl_decomposition hld(tree);
     hld.initialize(gmw);
 
-    test_is_every_interesting_pair(*graph, *tree, *gmw, hld);
-    test_number_of_interesting_pairs(*graph, *tree, hld);
+    return test_is_every_interesting_pair(*graph, *tree, *gmw, hld) &&
+           test_number_of_interesting_pairs(*graph, *tree, hld);
 }
 
 TEST(Graphs_HLDecomposition, HLDRandomTest) {
@@ -164,7 +171,9 @@ TEST(Graphs_HLDecomposition, HLDRandomTest) {
     std::random_device rd;
     std::shared_ptr<std::mt19937> seed(new std::mt19937(rd()));
     std::uniform_int_distribution<> distN(1, maxN);
-    while (testCases--) hld_test_random_graph(distN(*seed), maxWeight, seed);
+
+    utils::run_multiple_tests(
+        testCases, [&]() { return hld_test_random_graph(distN(*seed), maxWeight, seed); });
 }
 
 TEST(Graphs_HLDecomposition, HLDRandomLargeTest) {
@@ -175,5 +184,7 @@ TEST(Graphs_HLDecomposition, HLDRandomLargeTest) {
     std::random_device rd;
     std::shared_ptr<std::mt19937> seed(new std::mt19937(rd()));
     std::uniform_int_distribution<> distN(1, maxN);
-    while (testCases--) hld_test_random_graph(distN(*seed), maxWeight, seed);
+
+    utils::run_multiple_tests(
+        testCases, [&]() { return hld_test_random_graph(distN(*seed), maxWeight, seed); });
 }

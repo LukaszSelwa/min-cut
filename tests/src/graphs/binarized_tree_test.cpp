@@ -11,6 +11,7 @@
 #include "../../../src/graphs/gmw_structure.hpp"
 #include "../../../src/range_search/segment_2d_point_tree.hpp"
 #include "../../../src/spanning_trees_extractors/random_spanning_trees_extractor.hpp"
+#include "../utils/run_tests.hpp"
 
 void test_visited_all_nodes(std::shared_ptr<graphs::weighted_tree> tree,
                             graphs::binarized_tree& bTree) {
@@ -27,7 +28,7 @@ void test_visited_all_nodes(std::shared_ptr<graphs::weighted_tree> tree,
     EXPECT_EQ(visit_ctr, exp_visit_ctr);
 }
 
-void test_visited_all_centroids(std::shared_ptr<graphs::weighted_tree> tree,
+bool test_visited_all_centroids(std::shared_ptr<graphs::weighted_tree> tree,
                                 graphs::binarized_tree& bTree) {
     std::vector<int> visit_ctr(tree->size, 0);
     std::vector<int> exp_visit_ctr(tree->size, 0);
@@ -41,9 +42,10 @@ void test_visited_all_centroids(std::shared_ptr<graphs::weighted_tree> tree,
     dfs(&bTree.centroids[0]);
     for (auto& v : tree->vertices) exp_visit_ctr[v.idx] = std::max(1, (int)v.children.size());
     EXPECT_EQ(visit_ctr, exp_visit_ctr);
+    return visit_ctr == exp_visit_ctr;
 }
 
-void test_centroids_size(std::shared_ptr<graphs::weighted_tree> tree,
+bool test_centroids_size(std::shared_ptr<graphs::weighted_tree> tree,
                          graphs::binarized_tree& bTree) {
     std::function<int(graphs::centroid*)> dfs = [&](graphs::centroid* c) -> int {
         int sizes[3] = {0, 0, 0};
@@ -54,6 +56,7 @@ void test_centroids_size(std::shared_ptr<graphs::weighted_tree> tree,
         for (int i = 0; i < 3; ++i) EXPECT_TRUE(sizes[i] <= size / 2);
         return size;
     };
+    return true;
 }
 
 int find_bottom_interested(graphs::w_edge ed, std::shared_ptr<graphs::weighted_tree> tree,
@@ -67,7 +70,7 @@ int find_bottom_interested(graphs::w_edge ed, std::shared_ptr<graphs::weighted_t
     return search(tree->rootIdx);
 }
 
-void test_crossinterested_points(graphs::binarized_tree& bTree,
+bool test_crossinterested_points(graphs::binarized_tree& bTree,
                                  std::shared_ptr<graphs::weighted_tree> tree,
                                  std::shared_ptr<graphs::weighted_graph> graph,
                                  std::shared_ptr<gmw_structure> gmw) {
@@ -76,14 +79,16 @@ void test_crossinterested_points(graphs::binarized_tree& bTree,
     };
     for (auto& v : tree->vertices) {
         if (v.idx == tree->rootIdx) continue;
-        ASSERT_EQ(bTree.find_bottom_crossinterested(v.parentEdge),
-                  find_bottom_interested(v.parentEdge, tree, is_crossinterested))
-            << "  Should find crossinterested point for edge: " << v.parentEdge
-            << "\n  in spanning tree: " << *tree << "\n   for " << *graph;
+        auto val = bTree.find_bottom_crossinterested(v.parentEdge);
+        auto exp = find_bottom_interested(v.parentEdge, tree, is_crossinterested);
+        EXPECT_EQ(val, exp) << "  Should find crossinterested point for edge: " << v.parentEdge
+                            << "\n  in spanning tree: " << *tree << "\n   for " << *graph;
+        if (val != exp) return false;
     }
+    return true;
 }
 
-void test_downinterested_points(graphs::binarized_tree& bTree,
+bool test_downinterested_points(graphs::binarized_tree& bTree,
                                 std::shared_ptr<graphs::weighted_tree> tree,
                                 std::shared_ptr<graphs::weighted_graph> graph,
                                 std::shared_ptr<gmw_structure> gmw) {
@@ -92,11 +97,13 @@ void test_downinterested_points(graphs::binarized_tree& bTree,
     };
     for (auto& v : tree->vertices) {
         if (v.idx == tree->rootIdx) continue;
-        ASSERT_EQ(bTree.find_bottom_downinterested(v.parentEdge),
-                  find_bottom_interested(v.parentEdge, tree, is_downinterested))
-            << "  Should find downinterested point for edge: " << v.parentEdge
-            << "\n  in spanning tree: " << *tree << "\n   for " << *graph;
+        auto val = bTree.find_bottom_downinterested(v.parentEdge);
+        auto exp = find_bottom_interested(v.parentEdge, tree, is_downinterested);
+        EXPECT_EQ(val, exp) << "  Should find downinterested point for edge: " << v.parentEdge
+                            << "\n  in spanning tree: " << *tree << "\n   for " << *graph;
+        if (val != exp) return false;
     }
+    return true;
 }
 
 TEST(Graphs_BinarizedTree, InitializeSmallTest_1) {
@@ -179,7 +186,7 @@ TEST(Graphs_BinarizedTree, CrossinterestedSmallTest_3) {
     EXPECT_EQ(bTree.find_bottom_crossinterested(graphs::w_edge(5, 6)), 5);
 }
 
-void test_b_tree_random_graph(int n, int maxWeight, std::shared_ptr<std::mt19937> seed) {
+bool test_b_tree_random_graph(int n, int maxWeight, std::shared_ptr<std::mt19937> seed) {
     std::uniform_int_distribution<> dist(n - 1, n * (n - 1) / 2);
     int m = dist(*seed);
     auto graph = graphs::generate_random_graph(n, m, maxWeight, seed);
@@ -192,9 +199,9 @@ void test_b_tree_random_graph(int n, int maxWeight, std::shared_ptr<std::mt19937
     graphs::binarized_tree bTree(tree, gmw);
     bTree.initialize();
 
-    test_visited_all_centroids(tree, bTree);
-    test_crossinterested_points(bTree, tree, graph, gmw);
-    test_downinterested_points(bTree, tree, graph, gmw);
+    return test_visited_all_centroids(tree, bTree) &&
+           test_crossinterested_points(bTree, tree, graph, gmw) &&
+           test_downinterested_points(bTree, tree, graph, gmw);
 }
 
 TEST(Graphs_BinarizedTree, RandomSmallTest) {
@@ -205,7 +212,8 @@ TEST(Graphs_BinarizedTree, RandomSmallTest) {
     std::random_device rd;
     std::shared_ptr<std::mt19937> seed(new std::mt19937(rd()));
     std::uniform_int_distribution<> distN(1, maxN);
-    while (testCases--) test_b_tree_random_graph(distN(*seed), maxWeight, seed);
+    utils::run_multiple_tests(
+        testCases, [&]() { return test_b_tree_random_graph(distN(*seed), maxWeight, seed); });
 }
 
 TEST(Graphs_BinarizedTree, RandomLargeTest) {
@@ -216,7 +224,8 @@ TEST(Graphs_BinarizedTree, RandomLargeTest) {
     std::random_device rd;
     std::shared_ptr<std::mt19937> seed(new std::mt19937());
     std::uniform_int_distribution<> distN(1, maxN);
-    while (testCases--) test_b_tree_random_graph(distN(*seed), maxWeight, seed);
+    utils::run_multiple_tests(
+        testCases, [&]() { return test_b_tree_random_graph(distN(*seed), maxWeight, seed); });
 }
 
 TEST(Graphs_BinarizedTree, DowninterestedSmallTest_1) {

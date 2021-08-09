@@ -8,7 +8,7 @@ namespace graphs {
 std::shared_ptr<graphs::weighted_graph> generate_random_graph(size_t n, size_t m, int maxWeight,
                                                               std::shared_ptr<std::mt19937> seed) {
     std::shared_ptr<graphs::weighted_graph> graph(new graphs::weighted_graph(n));
-    std::uniform_int_distribution<> distWeight(0, maxWeight);
+    std::uniform_int_distribution<> distWeight(1, maxWeight);
     std::vector<std::vector<bool> > adjMtx(n, std::vector<bool>(n, false));
 
     // generate random connected tree inside graph

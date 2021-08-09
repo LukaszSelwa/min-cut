@@ -54,3 +54,11 @@ TEST(MainAlgo_Heuristic, SmallExample_5) {
     std::vector<bool> expCut{1, 1, 1, 0, 1, 1};
     EXPECT_EQ(res.cut, expCut);
 }
+
+TEST(MainAlgo_Heuristic, SmallExample_6) {
+    auto example = examples::get_example(6);
+
+    heuristic::algo algo(example.graph);
+    auto res = algo.calc_min_cut();
+    EXPECT_EQ(res.minCutVal, 14);
+}

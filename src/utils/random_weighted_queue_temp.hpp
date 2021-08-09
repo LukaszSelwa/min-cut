@@ -9,7 +9,7 @@
 
 template <typename T>
 class random_weighted_queue {
-    std::mt19937 seed;
+    std::shared_ptr<std::mt19937> seed;
     std::vector<T> arr;
     std::vector<int> weights;
     int sum;
@@ -18,7 +18,7 @@ class random_weighted_queue {
     suffix_tree sTree;
 
    public:
-    random_weighted_queue(std::mt19937 seed);
+    random_weighted_queue(std::shared_ptr<std::mt19937> seed);
     void initialize(std::vector<T> arr, std::vector<int> weights);
     T pop();
     bool empty();

@@ -3,7 +3,8 @@
 #include <cmath>
 
 template <typename T>
-random_weighted_queue<T>::random_weighted_queue(std::mt19937 seed) : seed(seed), sTree(0) {}
+random_weighted_queue<T>::random_weighted_queue(std::shared_ptr<std::mt19937> seed)
+    : seed(seed), sTree(0) {}
 
 template <typename T>
 void random_weighted_queue<T>::initialize(std::vector<T> arr, std::vector<int> weights) {
@@ -22,7 +23,7 @@ void random_weighted_queue<T>::initialize(std::vector<T> arr, std::vector<int> w
 template <typename T>
 T random_weighted_queue<T>::pop() {
     std::uniform_real_distribution<double> dist(0, sum);
-    int val = std::lround(dist(seed));
+    int val = std::lround(dist(*seed));
     int idx = sTree.first_geq_idx(val);
 
     sTree.add_to_suffix(idx, -weights[idx]);

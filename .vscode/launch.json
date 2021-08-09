@@ -10,7 +10,7 @@
             "request": "launch",
             "program": "${workspaceFolder}/tests/test_main.exe",
             "args": [
-                "--gtest_filter=RandomSpanningTreeExtractors.WeightedSpanningTree"
+                "--gtest_filter=MainAlgo_Heuristic.SmallExample_6"
             ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

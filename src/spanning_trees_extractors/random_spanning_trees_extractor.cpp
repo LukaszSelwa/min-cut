@@ -40,7 +40,7 @@ graphs::weighted_tree extractSingleRandomSpanningTree(graphs::weighted_graph& gr
 }
 
 std::shared_ptr<graphs::weighted_tree> extractSingleRandomWeightedSpanningTree(
-    std::shared_ptr<graphs::weighted_graph> graph, std::mt19937 seed) {
+    std::shared_ptr<graphs::weighted_graph> graph, std::shared_ptr<std::mt19937> seed) {
     int n = graph->size;
     graphs::weighted_graph treeGraph(n);
     auto spanningTree = std::make_shared<graphs::weighted_tree>(n);

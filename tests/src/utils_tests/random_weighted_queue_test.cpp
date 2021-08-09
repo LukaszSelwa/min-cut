@@ -8,14 +8,14 @@
 #include <vector>
 
 TEST(Utils_RandomWeightedQueue, EmptyQueueTest) {
-    std::mt19937 seed;
+    auto seed = std::make_shared<std::mt19937>();
     random_weighted_queue<int> rq(seed);
     rq.initialize(std::vector<int>{}, std::vector<int>{});
     EXPECT_TRUE(rq.empty()) << "Queue should be empty";
 }
 
 TEST(Utils_RandomWeightedQueue, SingleElement_Test) {
-    std::mt19937 seed;
+    auto seed = std::make_shared<std::mt19937>();
     random_weighted_queue<int> rq(seed);
     rq.initialize(std::vector<int>{42}, std::vector<int>{2});
     ASSERT_FALSE(rq.empty()) << "Queue should not be empty";
@@ -24,7 +24,7 @@ TEST(Utils_RandomWeightedQueue, SingleElement_Test) {
 }
 
 TEST(Utils_RandomWeightedQueue, MultipleElements_Test) {
-    std::mt19937 seed;
+    auto seed = std::make_shared<std::mt19937>();
     random_weighted_queue<std::string> rq(seed);
 
     std::vector<std::string> in{"abc", "bca", "cab"};
@@ -38,7 +38,7 @@ TEST(Utils_RandomWeightedQueue, MultipleElements_Test) {
 }
 
 TEST(Utils_RandomWeightedQueue, ManyMultipleElements_Test) {
-    std::mt19937 seed;
+    auto seed = std::make_shared<std::mt19937>();
     random_weighted_queue<int> rq(seed);
 
     std::vector<int> in(100);

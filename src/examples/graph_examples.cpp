@@ -137,6 +137,22 @@ input_graph get_example(int nr) {
 
             e.expectedMinCut = 17;
             break;
+        case 6:
+            e.graph = std::make_shared<weighted_graph>(4);
+            e.graph->add_edge(graphs::w_edge(0, 1, 6));
+            e.graph->add_edge(graphs::w_edge(0, 2, 1));
+            e.graph->add_edge(graphs::w_edge(0, 3, 16));
+            e.graph->add_edge(graphs::w_edge(1, 3, 16));
+            e.graph->add_edge(graphs::w_edge(1, 2, 11));
+            e.graph->add_edge(graphs::w_edge(2, 3, 2));
+
+            e.spanningTree = std::make_shared<weighted_tree>(4);
+            e.spanningTree->add_child_edge(0, 1, 6);
+            e.spanningTree->add_child_edge(0, 2, 1);
+            e.spanningTree->add_child_edge(0, 3, 16);
+
+            e.expectedMinCut = 14;
+            break;
         default:
             throw "Unsupported graph example number";
     }

@@ -14,8 +14,7 @@ algo::algo(std::shared_ptr<graphs::weighted_graph> graph) : graph(graph) {}
 size_t algo::get_iterations_nr() { return std::max((size_t)10, log_ceil(graph->size)); }
 
 algo_result algo::run_iteration(std::shared_ptr<std::mt19937> seed) {
-    auto tree =
-        std::make_shared<graphs::weighted_tree>(extractSingleRandomSpanningTree(*graph, seed));
+    auto tree = extractSingleRandomWeightedSpanningTree(graph, seed);
     gmw_algo algo(graph, tree);
     algo.initialize();
     auto cut = algo.find_cut();
