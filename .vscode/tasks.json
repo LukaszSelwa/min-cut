@@ -103,6 +103,7 @@
                 "\"NaiveAlgo_Algo.*\"",
                 "\"MainAlgo_Heuristic.*\"",
                 "\"NaiveVsHeuristic.*\"",
+                "\"NaiveVsHeuristic.Better*\"",
                 "\"Utils_PrefixTree.*\"",
                 "\"Utils_RandomWeightedQueue.*\"",
                 "\"RandomSpanningTreeExtractors.*\"",

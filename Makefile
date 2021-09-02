@@ -1,6 +1,6 @@
 CC 		= g++
-CFLAGS 	= -g -Wall -std=c++17
-# CFLAGS 	= -std=c++17 -O3
+# CFLAGS 	= -g -Wall -std=c++17
+CFLAGS 	= -std=c++17 -O3
 OBJDIR 	= build
 SRCDIR 	= src
 

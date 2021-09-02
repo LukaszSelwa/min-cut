@@ -1,8 +1,10 @@
 #include "random_graph_generation.hpp"
 
 #include <algorithm>
+#include <iostream>
 
 #include "../graphs/undirected_weighted_graph.hpp"
+#include "../naive_algo/naive_algo.hpp"
 #include "../utils/random_queue.hpp"
 
 namespace graphs {
@@ -11,6 +13,9 @@ std::vector<int> divide_int(int val, size_t elements, std::shared_ptr<std::mt199
 
 void add_random_spanning_tree(std::vector<int> vertices, std::vector<std::vector<int>>& mtx,
                               int minWeight, int maxWeight, std::shared_ptr<std::mt19937> seed);
+
+std::vector<bool> random_subset(size_t size, size_t subset_size,
+                                std::shared_ptr<std::mt19937> seed);
 
 std::shared_ptr<graphs::weighted_graph> generate_random_graph(size_t n, size_t m, int maxWeight,
                                                               std::shared_ptr<std::mt19937> seed) {
@@ -80,7 +85,7 @@ std::shared_ptr<graphs::weighted_graph> generate_random_graph(std::vector<bool> 
         }
     }
 
-    int minWeight = (cutVal + nrSpanningTrees - 1) / nrSpanningTrees;
+    int minWeight = (cutVal + nrSpanningTrees) / nrSpanningTrees;
     int maxWeight = (3 * minWeight + 1) / 2;
 
     for (size_t itr = 0; itr < nrSpanningTrees; ++itr) {
@@ -130,6 +135,51 @@ void add_random_spanning_tree(std::vector<int> vertices, std::vector<std::vector
         connected.push(x);
         connected.push(y);
     }
+}
+
+std::vector<bool> random_subset(size_t size, size_t subset_size,
+                                std::shared_ptr<std::mt19937> seed) {
+    RandomQueue<int> rq(seed);
+    for (size_t i = 0; i < size; ++i) rq.push(i);
+    std::vector<bool> result(size, false);
+    for (size_t i = 0; i < subset_size; ++i) result[rq.pop()] = true;
+    return result;
+}
+
+algo_input generate_random_graph_input(size_t size, size_t cutSize, size_t cutEdges,
+                                       size_t nrSpanningTrees, int cutVal,
+                                       std::shared_ptr<std::mt19937> seed) {
+    auto cut = random_subset(size, cutSize, seed);
+    algo_input input;
+
+    for (int samples = 0; samples < 3; ++samples) {
+        input.graph = generate_random_graph(cut, cutVal, cutEdges, nrSpanningTrees, seed);
+        auto result = naive::algo(input.graph).calc_min_cut();
+        input.minCutVal = result.minCutVal;
+        input.minCut = result.cut;
+        if (validate_cuts(result.cut, cut)) {
+            input.minCut = cut;
+            return input;
+        }
+    }
+    std::cout << "FAILED GENERATING" << std::endl;
+    return input;
+}
+
+algo_input generate_fully_random_graph_input(size_t minSize, size_t maxSize, size_t maxCutVal,
+                                             size_t minNrSpanningTrees, size_t maxNrSpanningTrees,
+                                             std::shared_ptr<std::mt19937> seed) {
+    std::uniform_int_distribution<int> dist(minSize, maxSize);
+    size_t size = dist(*seed);
+    dist = std::uniform_int_distribution<int>(1, size - 1);
+    size_t cutSize = dist(*seed);
+    dist = std::uniform_int_distribution<int>(1, cutSize * (size - cutSize));
+    size_t cutEdges = dist(*seed);
+    dist = std::uniform_int_distribution<int>(minNrSpanningTrees, maxNrSpanningTrees);
+    size_t nrSpanningTrees = dist(*seed);
+    dist = std::uniform_int_distribution<int>(cutEdges, maxCutVal);
+    int cutVal = dist(*seed);
+    return generate_random_graph_input(size, cutSize, cutEdges, nrSpanningTrees, cutVal, seed);
 }
 
 }  // namespace graphs
