@@ -26,7 +26,7 @@ algo_input generate_random_graph_input(size_t size, size_t cutSize, size_t cutEd
 
 algo_input generate_fully_random_graph_input(size_t minSize, size_t maxSize, size_t maxCutVal,
                                              size_t minNrSpanningTrees, size_t maxNrSpanningTrees,
-                                             std::shared_ptr<std::mt19937> seed);
+                                             std::shared_ptr<std::mt19937> seed, int type = -1);
 
 }  // namespace graphs
 

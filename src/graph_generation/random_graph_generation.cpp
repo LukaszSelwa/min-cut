@@ -168,13 +168,22 @@ algo_input generate_random_graph_input(size_t size, size_t cutSize, size_t cutEd
 
 algo_input generate_fully_random_graph_input(size_t minSize, size_t maxSize, size_t maxCutVal,
                                              size_t minNrSpanningTrees, size_t maxNrSpanningTrees,
-                                             std::shared_ptr<std::mt19937> seed) {
+                                             std::shared_ptr<std::mt19937> seed, int type) {
     std::uniform_int_distribution<int> dist(minSize, maxSize);
     size_t size = dist(*seed);
     dist = std::uniform_int_distribution<int>(1, size - 1);
     size_t cutSize = dist(*seed);
-    dist = std::uniform_int_distribution<int>(1, cutSize * (size - cutSize));
+
+    int minCutEdges = 1;
+    int maxCutEdges = cutSize * (size - cutSize);
+    if (type == 0) {
+        maxCutEdges = std::min((int)size, maxCutEdges);
+    } else if (type == 1) {
+        minCutEdges = std::max(1, maxCutEdges / 2);
+    }
+    dist = std::uniform_int_distribution<int>(minCutEdges, maxCutEdges);
     size_t cutEdges = dist(*seed);
+
     dist = std::uniform_int_distribution<int>(minNrSpanningTrees, maxNrSpanningTrees);
     size_t nrSpanningTrees = dist(*seed);
     dist = std::uniform_int_distribution<int>(cutEdges, maxCutVal);
